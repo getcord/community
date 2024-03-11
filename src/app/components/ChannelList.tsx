@@ -1,3 +1,4 @@
+import styles from './channelList.module.css';
 import type { ServerGetUser, ServerUserData } from "@cord-sdk/types";
 import { EVERYONE_ORG_ID, USERS } from "@/consts";
 import { fetchCordRESTApi } from "@/app/fetchCordRESTApi";
@@ -54,7 +55,7 @@ export default async function ChannelList() {
   );
   // TODO: styling and functionality
   return (
-    <div>
+    <div className={styles.container}>
       <div>ALL CHANNELS LIST:</div>
       <ul>
         {allChannelsArray.map((channel) => {

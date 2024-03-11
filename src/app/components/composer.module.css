@@ -1,0 +1,7 @@
+.noPermission {
+  grid-area: 'composer';
+  background-color: var(--cord-grey-light);
+  padding: 16px;
+  color: var(--cord-grey-dark);
+  border-radius: 4px;
+}

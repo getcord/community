@@ -1,3 +1,5 @@
 .container {
   grid-area: header;
+  padding: 8px;
+  border-bottom: 2px solid var(--cord-grey-light);
 }

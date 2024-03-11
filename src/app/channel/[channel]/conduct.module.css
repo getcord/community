@@ -1,3 +1,13 @@
 .container {
-  grid-area: conduct
+  display: grid;
+  height: 100%;
+  grid-template-rows: 1fr auto;
+  grid-template-areas: 
+    "threads"
+    "composer";
+}
+
+.threads {
+  grid-area: threads;
+  overflow-y: auto;
 }
