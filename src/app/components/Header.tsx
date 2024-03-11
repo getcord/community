@@ -1,5 +1,7 @@
+import styles from './header.module.css';
+
 export default function Header() {
-  return <div>
+  return <div className={styles.container}>
     I&apos;M THE HEADER
   </div>
 }

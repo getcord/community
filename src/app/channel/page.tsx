@@ -1,7 +1,8 @@
-function Content() {
-  return <div>
-    I&apos;M THE CONTENT
+import Conduct from "./[channel]/Conduct";
+import styles from './styles.module.css';
+
+export default function Content() {
+  return <div className={styles.container}>
+    <Conduct />
   </div>
 };
-
-export default Content;
