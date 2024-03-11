@@ -2,13 +2,14 @@ import styles from './channelList.module.css';
 import type { ServerGetUser, ServerUserData } from "@cord-sdk/types";
 import { EVERYONE_ORG_ID, USERS } from "@/consts";
 import { fetchCordRESTApi } from "@/app/fetchCordRESTApi";
+import { ChannelButton } from "@/app/components/channelButton";
 
 export type Channel = {
   id: string;
   group: string | null;
 };
 
-export async function getAllChannels() {
+async function getAllChannels() {
   // TODO: update this to use logged in user id
   // TODO: update this to use myhoa or tom if you'd like to test admin users experience
   const user_id = USERS[0].user_id;
@@ -59,7 +60,14 @@ export default async function ChannelList() {
       <div>ALL CHANNELS LIST:</div>
       <ul>
         {allChannelsArray.map((channel) => {
-          return <li key={channel.id}>{channel.id}</li>;
+          return (
+            <ChannelButton
+              key={channel.id}
+              isActive={false}
+              channel={channel}
+              linkTo={`/${channel.id}`}
+            />
+          );
         })}
       </ul>
     </div>
