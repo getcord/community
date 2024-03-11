@@ -7,7 +7,6 @@ import { CORD_USER_COOKIE, GROUP_ID, USERS } from "@/consts";
 
 async function getData() {
   const { CORD_SECRET, CORD_APP_ID } = process.env;
-  console.log(process.env);
   if (!CORD_SECRET || !CORD_APP_ID) {
     console.error(
       "Missing CORD_SECRET or CORD_APP_ID env variable. Get it on console.cord.com and add it to .env"
