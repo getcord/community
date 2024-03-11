@@ -5,11 +5,11 @@ import "./cord.css";
 import "./cord-app.css";
 import { CORD_USER_COOKIE, GROUP_ID, USERS } from "@/consts";
 
-export async function getData() {
+async function getData() {
   const { CORD_SECRET, CORD_APP_ID } = process.env;
   if (!CORD_SECRET || !CORD_APP_ID) {
     console.error(
-      "Missing CORD_SECRET or CORD_APP_ID env variable. Get it on console.cord.com and add it to .env",
+      "Missing CORD_SECRET or CORD_APP_ID env variable. Get it on console.cord.com and add it to .env"
     );
     return { clientAuthToken: null, users: [], userIndex: -1 };
   }
@@ -17,7 +17,7 @@ export async function getData() {
   const userIdCookie = cookies().get(CORD_USER_COOKIE)?.value;
   let userIndex = Math.max(
     0,
-    USERS.findIndex((user) => user.user_id === userIdCookie),
+    USERS.findIndex((user) => user.user_id === userIdCookie)
   );
 
   await createAndPopulateGroup();
@@ -39,7 +39,7 @@ async function createAndPopulateGroup() {
   const { CORD_SECRET, CORD_APP_ID } = process.env;
   if (!CORD_SECRET || !CORD_APP_ID) {
     console.error(
-      "Missing CORD_SECRET or CORD_APP_ID env variable. Get it on console.cord.com and add it to .env",
+      "Missing CORD_SECRET or CORD_APP_ID env variable. Get it on console.cord.com and add it to .env"
     );
     return;
   }
