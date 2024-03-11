@@ -1,5 +1,5 @@
-import ChannelList from "../channelList/page";
-import Header from "../header/page";
+import ChannelList from "../components/ChannelList";
+import Header from "../components/Header";
 
 export default function Layout({children}: {
   children: React.ReactNode;
