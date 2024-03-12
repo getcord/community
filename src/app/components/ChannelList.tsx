@@ -57,19 +57,14 @@ export default async function ChannelList() {
   // TODO: styling and functionality
   return (
     <div className={styles.container}>
-      <div>ALL CHANNELS LIST:</div>
-      <ul>
-        {allChannelsArray.map((channel) => {
-          return (
-            <ChannelButton
-              key={channel.id}
-              isActive={false}
-              channel={channel}
-              linkTo={`/channel/${channel.id}`}
-            />
-          );
-        })}
-      </ul>
+      {allChannelsArray.map((channel) => (
+        <ChannelButton
+          key={channel.id}
+          isActive={false}
+          channel={channel}
+          linkTo={`/channel/${channel.id}`}
+        />
+      ))}
     </div>
   );
 }
