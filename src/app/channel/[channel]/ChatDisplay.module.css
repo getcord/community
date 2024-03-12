@@ -2,7 +2,7 @@
   display: grid;
   height: 100%;
   grid-template-rows: 1fr auto;
-  grid-template-areas: 
+  grid-template-areas:
     "threads"
     "composer";
 }

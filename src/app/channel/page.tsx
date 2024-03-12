@@ -1,9 +1,12 @@
-import Conduct from "./[channel]/Conduct";
-import styles from './styles.module.css';
+import ChannelDisplay from "./[channel]/page";
 
 export default function Content() {
-  return <div className={styles.container}>
-    {/* will be dynamic for which channel it is -> need to think this through, will there be a map? 🤔 */}
-    <Conduct />
-  </div>
-};
+  return (
+    <div>
+      THIS IS THE MAIN CHANNEL PAGE (BEFORE ID )
+      <ChannelDisplay params={{ channel: "code-of-conduct" }} />
+      {/* will be dynamic for which channel it is -> need to think this through, will there be a map? 🤔 */}
+      {/* // redirect to main channe eg chat */}
+    </div>
+  );
+}
