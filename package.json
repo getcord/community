@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@cord-sdk/react": "^1.36.0",
+    "@cord-sdk/react": "^1.36.1-canary.2",
     "@cord-sdk/server": "^1.36.0",
     "@heroicons/react": "^2.1.1",
     "@types/node": "20.4.5",

@@ -1,37 +1,39 @@
-"use client";
-
-import Composer from "@/app/components/Composer";
 import styles from "./chatDisplay.module.css";
-import { EVERYONE_ORG_ID } from "@/consts";
-import { Message, thread } from "@cord-sdk/react";
+import { experimental } from "@cord-sdk/react";
+import { ServerListMessages, MessageContent } from "@cord-sdk/types";
+import { fetchCordRESTApi } from "@/app/fetchCordRESTApi";
+import CordMessage from "./CordMessage";
 
-export default function ChatDisplay({ channelName }: { channelName: string }) {
-  const { threads, loading } = thread.useThreads({
-    filter: {
-      location: {
-        channel: channelName,
-      },
-    },
-    sortDirection: "descending",
-    initialFetchCount: 30,
-  });
+const getData = async () => {
+  const messages = await fetchCordRESTApi<ServerListMessages["messages"]>(
+    `threads/cord:e0b0d30d-926e-4b66-82b6-d6d7f8cc7809/messages`,
+    "GET"
+  );
+  return messages;
+};
+
+export default async function ChatDisplay({
+  channelName,
+}: {
+  channelName: string;
+}) {
+  const messages = await getData();
 
   return (
     <div className={styles.container}>
       <div className={styles.threads}>
-        {!loading &&
-          threads.length > 0 &&
-          threads.map((thread) => {
-            return <Message key={thread.id} threadId={thread.id} />;
+        {messages?.length > 0 &&
+          messages.map((message) => {
+            return <CordMessage key={message.id} message={message} />;
           })}
       </div>
       {/* pull this out into content & have a map of which channels have what kind of composer permissions? */}
-      <Composer
+      {/* <Composer
         type="NO_PERMISSION"
         groupId={EVERYONE_ORG_ID}
         location={{ channel: "announcements" }}
         threadName={`#announcements`}
-      />
+      /> */}
     </div>
   );
 }
