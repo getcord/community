@@ -1,8 +1,8 @@
-import styles from './channelList.module.css';
+import styles from "./channelList.module.css";
 import type { ServerGetUser, ServerUserData } from "@cord-sdk/types";
 import { EVERYONE_ORG_ID, USERS } from "@/consts";
 import { fetchCordRESTApi } from "@/app/fetchCordRESTApi";
-import { ChannelButton } from "@/app/components/channelButton";
+import { ChannelButton } from "@/app/components/ChannelButton";
 
 export type Channel = {
   id: string;
