@@ -65,7 +65,7 @@ export default async function ChannelList() {
               key={channel.id}
               isActive={false}
               channel={channel}
-              linkTo={`/${channel.id}`}
+              linkTo={`/channel/${channel.id}`}
             />
           );
         })}
