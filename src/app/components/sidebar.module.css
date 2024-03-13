@@ -1,0 +1,6 @@
+.container {
+  display: grid;
+  grid-area: sidebar;
+  overflow: hidden;
+  border-right: 2px solid var(--cord-grey);
+}

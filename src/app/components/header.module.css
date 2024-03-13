@@ -1,5 +1,5 @@
 .container {
   grid-area: header;
   padding: 8px;
-  border-bottom: 2px solid var(--cord-grey-light);
+  box-shadow: 0px 5px 10px var(--cord-grey-light);
 }

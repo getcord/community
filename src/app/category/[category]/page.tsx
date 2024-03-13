@@ -3,7 +3,7 @@ import ChatDisplay from "./ChatDisplay";
 export default function ChannelDisplay({
   params,
 }: {
-  params: { channel: string };
+  params: { category: string };
 }) {
-  return <ChatDisplay channelName={params.channel} />;
+  return <ChatDisplay channelName={params.category} />;
 }
