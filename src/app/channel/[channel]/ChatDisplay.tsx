@@ -1,6 +1,5 @@
 import styles from "./chatDisplay.module.css";
-import { experimental } from "@cord-sdk/react";
-import { ServerListMessages, MessageContent } from "@cord-sdk/types";
+import { ServerListMessages } from "@cord-sdk/types";
 import { fetchCordRESTApi } from "@/app/fetchCordRESTApi";
 import CordMessage from "./CordMessage";
 
@@ -30,7 +29,7 @@ export default async function ChatDisplay({
       {/* pull this out into content & have a map of which channels have what kind of composer permissions? */}
       {/* <Composer
         type="NO_PERMISSION"
-        groupId={EVERYONE_ORG_ID}
+        groupId={EVERYONE_GROUP_ID}
         location={{ channel: "announcements" }}
         threadName={`#announcements`}
       /> */}

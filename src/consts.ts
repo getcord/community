@@ -2,9 +2,12 @@ export const GROUP_ID = "samplecord";
 export const CORD_USER_COOKIE = "cord-next-next-user-id";
 
 export const CORD_API_URL = "https://api.cord.com/v1/";
+export const CORD_DOCS_URL = "https://docs.cord.com";
+export const CORD_CONSOLE_URL = "https://console.cord.com";
+
 export const CORD_APP_ID = process.env.CORD_APP_ID!;
 export const CORD_SECRET = process.env.CORD_SECRET!;
-export const EVERYONE_ORG_ID = "community_all";
+export const EVERYONE_GROUP_ID = "community_all";
 
 export const USERS = [
   {

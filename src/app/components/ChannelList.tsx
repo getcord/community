@@ -1,6 +1,6 @@
 import styles from "./channelList.module.css";
 import type { ServerGetUser, ServerUserData } from "@cord-sdk/types";
-import { EVERYONE_ORG_ID, USERS } from "@/consts";
+import { EVERYONE_GROUP_ID, USERS } from "@/consts";
 import { fetchCordRESTApi } from "@/app/fetchCordRESTApi";
 import { ChannelButton } from "@/app/components/ChannelButton";
 
@@ -33,7 +33,10 @@ async function getAllChannels() {
           return acc;
         },
         // Special channel: everyone starts with general in their list
-        { "code-of-conduct": EVERYONE_ORG_ID } as Record<string, string | null>
+        { "code-of-conduct": EVERYONE_GROUP_ID } as Record<
+          string,
+          string | null
+        >
       );
     return availableChannels;
   } catch (error) {
