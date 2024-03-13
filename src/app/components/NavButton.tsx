@@ -10,7 +10,6 @@ function NavIcon({
   iconFor: string;
   type?: "resources" | "category";
 }) {
-  console.log({ iconFor });
   if (type === "resources") {
     switch (iconFor) {
       case "REST API Reference":
