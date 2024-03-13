@@ -1,0 +1,28 @@
+.button {
+  display: grid;
+  align-items: center;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: "icon label";
+  grid-gap: 8px;
+  padding: 0 20px;
+  font-size: 14px;
+  line-height: 30px;
+  min-height: 28px;
+  border: none;
+  cursor: pointer;
+  color: var(--cord-grey-dark);
+  text-decoration: none;
+}
+
+.button:hover {
+  background-color: var(--cord-grey-light);
+}
+
+.buttonActive {
+  color: var(--color-white);
+}
+
+.buttonLabel {
+  grid-area: label;
+  text-align: left;
+}
