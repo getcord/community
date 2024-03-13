@@ -3,15 +3,15 @@ import styles from "./navButton.module.css";
 import { DocumentTextIcon, CodeBracketIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
-function NavIcon({
-  iconFor,
+function NavItemPrefix({
+  navFor,
   type,
 }: {
-  iconFor: string;
+  navFor: string;
   type?: "resources" | "category";
 }) {
   if (type === "resources") {
-    switch (iconFor) {
+    switch (navFor) {
       case "REST API Reference":
         return <CodeBracketIcon width={"14px"} />;
       case "Documentation":
@@ -25,10 +25,10 @@ function NavIcon({
     return (
       <span
         className={cx(styles.categoryPrefix, {
-          [styles.red]: iconFor === "announcements",
-          [styles.orange]: iconFor === "documentation",
-          [styles.green]: iconFor === "API",
-          [styles.orange]: iconFor === "customization",
+          [styles.colorOrange]: navFor === "Announcements",
+          [styles.colorPurple]: navFor === "Documentation",
+          [styles.colorBlue]: navFor === "API",
+          [styles.colorGreen]: navFor === "Customization",
         })}
       ></span>
     );
@@ -53,7 +53,7 @@ export function NavButton({
         [styles.buttonActive]: isActive,
       })}
     >
-      <NavIcon iconFor={value} type={type} />
+      <NavItemPrefix navFor={value} type={type} />
       <span className={styles.buttonName}>{value}</span>
     </Link>
   );

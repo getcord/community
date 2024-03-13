@@ -2,7 +2,7 @@
   display: grid;
   align-items: center;
   grid-template-columns: auto 1fr auto;
-  grid-template-areas: "icon label";
+  grid-template-areas: "icon name";
   grid-gap: 8px;
   padding: 0 20px;
   font-size: 14px;
@@ -22,7 +22,27 @@
   color: var(--color-white);
 }
 
-.buttonLabel {
-  grid-area: label;
+.buttonName {
+  grid-area: name;
   text-align: left;
+}
+
+.categoryPrefix {
+  width: 12px;
+  height: 12px;
+  background-color: var(--cord-green-light);
+}
+
+.colorOrange {
+  background-color: var(--cord-orange);
+}
+
+.colorGreen {
+  background-color: var(--cord-green);
+}
+.colorBlue {
+  background-color: var(--cord-blue-light);
+}
+.colorPurple {
+  background-color: var(--cord-purple-light);
 }
