@@ -1,6 +1,6 @@
 .noPermission {
   grid-area: "composer";
-  background-color: var(--cord-grey-light);
+  background-color: var(--cord-grey);
   padding: 16px;
   color: var(--cord-grey-dark);
   border-radius: 4px;
@@ -9,12 +9,19 @@
 .container {
   padding: 24px;
   gap: 16px;
+}
+
+.inputsContainer {
   display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 16px;
+  max-width: 900px;
 }
 
 .inputContainer {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
   gap: 8px;
 }
 
@@ -23,23 +30,16 @@
 }
 
 .input {
-  width: 100%;
-  padding: 20px;
-  /* border: 1px solid #ccc; */
+  outline: none;
+  border: 1px solid var(--cord-grey);
   transition: border-color 0.3s;
+  padding: 6px;
 }
 
-.submitButton {
-  justify-self: end;
-  padding: 8px 16px;
-  background-color: var(--cord-purple-light);
-  color: var(--cord-grey-dark);
+.input:focus {
   border: none;
-  cursor: pointer;
-}
-
-.submitButton:hover {
-  background-color: var(--cord-purple-highlight); /* Button color on hover */
+  border: 1px solid var(--cord-grey-dark);
+  transition: border-color 0.3s;
 }
 
 .cord-composer {

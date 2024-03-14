@@ -1,19 +1,20 @@
 "use client";
-import { ComponentProps, useCallback, useState } from "react";
+
+import { useCallback, useState } from "react";
 import type { ThreadSummary } from "@cord-sdk/types";
+import { EVERYONE_GROUP_ID } from "@/consts";
 import { Composer as CordComposer } from "@cord-sdk/react";
 import styles from "./composer.module.css";
+import { redirect } from "next/navigation";
 
-interface Props extends ComponentProps<typeof CordComposer> {}
-
-export default function Composer(props: Props) {
+export default function Composer() {
   const [title, setTitle] = useState("");
 
-  // Fix type
   const handleComposerOnSend = useCallback(
     ({ thread }: { thread: ThreadSummary | null }) => {
       console.log({ thread, title: thread?.firstMessage?.metadata["title"] });
-      // close the composer,
+      setTitle("");
+      redirect("/");
       // generate a slug from the title (threadmetadata.title) and message content
       // got to that slug (or maybe refresh the page?)
     },
@@ -22,29 +23,36 @@ export default function Composer(props: Props) {
 
   return (
     <div className={styles.container}>
-      <div className={styles.inputContainer}>
-        <label htmlFor="titleInput" className={styles.label}>
-          Title:
-        </label>
-        <input
-          className={styles.input}
-          id="titleInput"
-          type="text"
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-        />
-      </div>
-      <CordComposer
-        style={{ width: "100%", display: "block" }}
-        {...props}
-        threadMetadata={{ ...props.threadMetadata, title }}
-        onSend={handleComposerOnSend}
-        showExpanded={true}
-      />
+      <h3>Start a new discussion</h3>
+      <section className={styles.inputsContainer}>
+        <div className={styles.inputContainer}>
+          <label htmlFor="titleInput" className={styles.label}>
+            Title:
+          </label>
+          <textarea
+            className={styles.input}
+            id="titleInput"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+          />
+        </div>
+        <div className={styles.inputContainer}>
+          <label htmlFor="titleInput" className={styles.label}>
+            Message:
+          </label>
 
-      {/* <button className={styles.submitButton}>
+          <CordComposer
+            groupId={EVERYONE_GROUP_ID}
+            showExpanded={true}
+            onSend={handleComposerOnSend}
+            size={"large"}
+          />
+        </div>
+
+        {/* <button className={styles.submitButton}>
         CAN THIS BUTTON BE THE DEFAULT SUBMIT BUTTON?
       </button> */}
+      </section>
     </div>
   );
 }
