@@ -15,8 +15,9 @@ const CordIntegration = ({
         <CordProvider clientAuthToken={clientAuthToken}>
           {children}
         </CordProvider>
-        
-      ): <p>something went wrong</p>}
+      ) : (
+        <p>something went wrong</p>
+      )}
     </div>
   );
 };
