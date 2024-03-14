@@ -1,5 +1,14 @@
 .container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas: "signin-header header";
   grid-area: header;
   padding: 8px;
   box-shadow: 0px 5px 10px var(--cord-grey-light);
+}
+
+.signinButton {
+  background-color: var(--cord-purple-light);
+  padding: 12px 24px;
+  grid-area: signin;
 }
