@@ -1,7 +1,47 @@
 .noPermission {
-  grid-area: 'composer';
+  grid-area: "composer";
   background-color: var(--cord-grey-light);
   padding: 16px;
   color: var(--cord-grey-dark);
   border-radius: 4px;
+}
+
+.container {
+  padding: 24px;
+  gap: 16px;
+  display: grid;
+}
+
+.inputContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.label {
+  font-size: 0.8rem;
+}
+
+.input {
+  width: 100%;
+  padding: 20px;
+  /* border: 1px solid #ccc; */
+  transition: border-color 0.3s;
+}
+
+.submitButton {
+  justify-self: end;
+  padding: 8px 16px;
+  background-color: var(--cord-purple-light);
+  color: var(--cord-grey-dark);
+  border: none;
+  cursor: pointer;
+}
+
+.submitButton:hover {
+  background-color: var(--cord-purple-highlight); /* Button color on hover */
+}
+
+.cord-composer {
+  border: none;
 }
