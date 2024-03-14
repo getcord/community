@@ -1,7 +1,8 @@
+import Link from "next/link";
 import styles from "./threadsheader.module.css";
 import cx from "classnames";
 
-export default async function ThreadsHeader({
+export default function ThreadsHeader({
   permissions,
 }: {
   permissions: string;
@@ -16,12 +17,15 @@ export default async function ThreadsHeader({
       </div>
 
       {permissions !== "NOT_VISIBLE" && (
-        <button
-          className={styles.actionButton}
-          disabled={permissions === "READ"}
-        >
-          + Start a discussion
-        </button>
+        <Link href="/newpost">
+          {" "}
+          <button
+            className={styles.actionButton}
+            disabled={permissions === "READ"}
+          >
+            + Start a discussion
+          </button>
+        </Link>
       )}
     </div>
   );
