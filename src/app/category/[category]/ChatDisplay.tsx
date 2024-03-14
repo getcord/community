@@ -1,18 +1,10 @@
 import styles from "./chatDisplay.module.css";
-import { ServerListMessages } from "@cord-sdk/types";
 import { fetchCordRESTApi } from "@/app/fetchCordRESTApi";
 import ThreadsHeader from "@/app/components/ThreadsHeader";
 import { CORD_USER_COOKIE } from "@/consts";
 import type { ServerUserData, ServerGetUser } from "@cord-sdk/types";
 import { cookies } from "next/headers";
 import ThreadList from "@/app/components/ThreadList";
-const getData = async () => {
-  const messages = await fetchCordRESTApi<ServerListMessages["messages"]>(
-    `threads/cord:e0b0d30d-926e-4b66-82b6-d6d7f8cc7809/messages`,
-    "GET"
-  );
-  return messages;
-};
 
 // TODO: move this into a permissions context
 async function getAllCategoriesPermissions() {
@@ -52,26 +44,24 @@ export default async function ChatDisplay({
   channelName: string;
 }) {
   const userIdCookie = cookies().get(CORD_USER_COOKIE);
-  const messages = await getData();
-  const permissions = await getAllCategoriesPermissions();
-  function getPermissionForChannel() {
-    if (!userIdCookie || !permissions || !permissions[channelName]) {
+  async function getPermissionForChannel() {
+    const categoryPermissions = await getAllCategoriesPermissions();
+    if (
+      !userIdCookie ||
+      !categoryPermissions ||
+      !categoryPermissions[channelName]
+    ) {
       return "NOT_VISIBLE";
     }
-    return permissions[channelName].permission;
+    return categoryPermissions[channelName].permission;
   }
+
+  const permissions = await getPermissionForChannel();
 
   return (
     <div className={styles.container}>
-      <ThreadsHeader permissions={getPermissionForChannel()} />
+      <ThreadsHeader permissions={permissions} />
       <ThreadList category={channelName} />
-      {/* pull this out into content & have a map of which channels have what kind of composer permissions? */}
-      {/* <Composer
-        type="NO_PERMISSION"
-        groupId={EVERYONE_GROUP_ID}
-        location={{ channel: "announcements" }}
-        threadName={`#announcements`}
-      /> */}
     </div>
   );
 }
