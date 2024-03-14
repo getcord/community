@@ -3,7 +3,7 @@ import type { ServerUserData } from "@cord-sdk/types";
 import { CORD_CONSOLE_URL, CORD_DOCS_URL, USERS } from "@/consts";
 import { fetchCordRESTApi } from "@/app/fetchCordRESTApi";
 import { NavButton } from "@/app/components/NavButton";
-import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
+import { mapCategoryEndpointsToTitles } from "@/utils";
 
 export type Category = {
   id: string;
@@ -69,8 +69,8 @@ export default async function Sidebar() {
                 <NavButton
                   key={category}
                   isActive={false}
-                  value={category}
-                  linkTo={`/category/${category.toLowerCase()}`}
+                  value={mapCategoryEndpointsToTitles(category)}
+                  linkTo={`/category/${category}`}
                   type="category"
                 />
               ))}
