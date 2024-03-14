@@ -2,7 +2,7 @@ import styles from "./chatDisplay.module.css";
 import { ServerListMessages } from "@cord-sdk/types";
 import { fetchCordRESTApi } from "@/app/fetchCordRESTApi";
 import CordMessage from "./CordMessage";
-import ThreadHeader from "@/app/category/[category]/ThreadHeader";
+import ThreadsHeader from "@/app/category/[category]/ThreadsHeader";
 import { CORD_USER_COOKIE } from "@/consts";
 import type { ServerUserData, ServerGetUser } from "@cord-sdk/types";
 import { cookies } from "next/headers";
@@ -63,7 +63,7 @@ export default async function ChatDisplay({
 
   return (
     <div className={styles.container}>
-      <ThreadHeader permissions={getPermissionForChannel()} />
+      <ThreadsHeader permissions={getPermissionForChannel()} />
       <div className={styles.threads}>
         {messages?.length > 0 &&
           messages.map((message) => {

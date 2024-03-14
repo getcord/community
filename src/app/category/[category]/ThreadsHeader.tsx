@@ -1,7 +1,7 @@
-import styles from "./threadheader.module.css";
+import styles from "./threadsheader.module.css";
 import cx from "classnames";
 
-export default async function ThreadHeader({
+export default async function ThreadsHeader({
   permissions,
 }: {
   permissions: string;
