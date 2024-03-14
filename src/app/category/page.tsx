@@ -1,7 +1,8 @@
 import ThreadList from "../components/ThreadList";
 
-export default function Content() {
+export default function Content({ params }: { params: { category: string } }) {
+  const category = params ? params.category : 'all'
   return (
-      <ThreadList />
+      <ThreadList category={category} />
   );
 }

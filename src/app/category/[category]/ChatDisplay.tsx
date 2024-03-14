@@ -1,11 +1,11 @@
 import styles from "./chatDisplay.module.css";
 import { ServerListMessages } from "@cord-sdk/types";
 import { fetchCordRESTApi } from "@/app/fetchCordRESTApi";
-import CordMessage from "./CordMessage";
 import ThreadsHeader from "@/app/category/[category]/ThreadsHeader";
 import { CORD_USER_COOKIE } from "@/consts";
 import type { ServerUserData, ServerGetUser } from "@cord-sdk/types";
 import { cookies } from "next/headers";
+import ThreadList from "@/app/components/ThreadList";
 const getData = async () => {
   const messages = await fetchCordRESTApi<ServerListMessages["messages"]>(
     `threads/cord:e0b0d30d-926e-4b66-82b6-d6d7f8cc7809/messages`,
@@ -64,12 +64,7 @@ export default async function ChatDisplay({
   return (
     <div className={styles.container}>
       <ThreadsHeader permissions={getPermissionForChannel()} />
-      <div className={styles.threads}>
-        {messages?.length > 0 &&
-          messages.map((message) => {
-            return <CordMessage key={message.id} message={message} />;
-          })}
-      </div>
+      <ThreadList category={channelName} />
       {/* pull this out into content & have a map of which channels have what kind of composer permissions? */}
       {/* <Composer
         type="NO_PERMISSION"
