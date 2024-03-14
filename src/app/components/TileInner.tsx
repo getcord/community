@@ -5,8 +5,11 @@ import {
   EntityMetadata,
   ThreadParticipant,
 } from "@cord-sdk/types";
+import { LockClosedIcon } from "@heroicons/react/24/outline";
 import styles from "./tile.module.css";
 import Link from "next/link";
+import { getTypedMetadata } from "@/utils";
+import { PushPinSvg } from "./PushPinSVG";
 
 type ServerThread = {
   id: string;
@@ -31,16 +34,31 @@ export default function TileInner({
   const data = threadHooks.useThread(threadID);
   const thread = data.thread ?? serverThread;
 
+  const metadata = getTypedMetadata(thread.metadata);
+  const showIcons = metadata.admin || metadata.pinned;
+
   return (
     <tr className={styles.container}>
       <td>
-        <Link className={styles.link} href={`/post/${threadID}`} >
-        {/* will update to thread name */}
-        <h4 className={styles.threadName}>{thread.id}</h4>
-        {/* only for pinned / locked? */}
-        <p className={`${styles.messageSnippet}`}>
-          {thread.firstMessage?.plaintext}
-        </p>
+        <Link className={styles.link} href={`/post/${threadID}`}>
+          {/* will update to thread name */}
+          <div className={styles.heading}>
+            {showIcons && (
+              <span className={styles.icons}>
+                {metadata.admin && (
+                  <LockClosedIcon width="14px" strokeWidth={3} />
+                )}
+                {metadata.pinned && (
+                  <PushPinSvg className={`${styles.pinIcon}`} />
+                )}
+              </span>
+            )}
+            <h4 className={styles.threadName}>{thread.id}</h4>
+          </div>
+          {/* only for pinned / locked? */}
+          <p className={`${styles.messageSnippet}`}>
+            {thread.firstMessage?.plaintext}
+          </p>
         </Link>
       </td>
       <td>

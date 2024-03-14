@@ -4,15 +4,17 @@ import Tile from "@/app/components/Tile";
 import { buildQueryParams, fetchCordRESTApi } from "@/app/fetchCordRESTApi";
 
 const getThreadsData = async (category: string) => {
-  const queries = [{
-    field: "filter",
-    value: JSON.stringify({
-      metadata: {
-        category,
-      },
-    }),
-  }];
-  const queryParams = category !== 'all' ?  buildQueryParams(queries) : '';
+  const queries = [
+    {
+      field: "filter",
+      value: JSON.stringify({
+        metadata: {
+          category,
+        },
+      }),
+    },
+  ];
+  const queryParams = category !== "all" ? buildQueryParams(queries) : "";
   const result = await fetchCordRESTApi<ServerListThreads>(
     `threads${queryParams}`,
     "GET"
@@ -20,12 +22,15 @@ const getThreadsData = async (category: string) => {
   return result;
 };
 
+// TODO: put pinned threads to the top
+
 export default async function ThreadList({ category }: { category: string }) {
   // do we want this to update? Probably? In that case we need to useThreads as well
-  const {threads, pagination} = await getThreadsData(category); 
+  const { threads, pagination } = await getThreadsData(category);
 
-  if (threads.length < 1 && pagination.total === 0) { // flickering -> to be fixed
-    return <p>No posts yet!</p>
+  if (threads.length < 1 && pagination.total === 0) {
+    // flickering -> to be fixed
+    return <p>No posts yet!</p>;
   }
 
   return (

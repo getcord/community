@@ -7,10 +7,27 @@
   cursor: pointer;
 }
 
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+}
+
+.pinIcon {
+  stroke-width: 4;
+  height: 13px;
+  width: 13px;
+}
+
 .messageSnippet {
   display: -webkit-box;
   -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;  
+  -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
