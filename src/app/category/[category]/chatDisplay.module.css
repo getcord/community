@@ -1,8 +1,9 @@
 .container {
   display: grid;
   height: 100%;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: auto 1fr auto;
   grid-template-areas:
+    "threads-header"
     "threads"
     "composer";
 }

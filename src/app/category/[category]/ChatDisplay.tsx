@@ -20,6 +20,7 @@ export default async function ChatDisplay({
 
   return (
     <div className={styles.container}>
+      <ThreadHeader permissions={getPermissionForChannel()} />
       <div className={styles.threads}>
         {messages?.length > 0 &&
           messages.map((message) => {
