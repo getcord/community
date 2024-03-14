@@ -6,7 +6,7 @@ export const CATEGORIES = [
   "documentation",
 ] as const;
 
-type Category = (typeof CATEGORIES)[number];
+export type Category = (typeof CATEGORIES)[number];
 
 export interface Metadata {
   pinned: boolean;
