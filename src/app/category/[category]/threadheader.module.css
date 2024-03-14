@@ -1,0 +1,10 @@
+.container {
+  display: grid;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 24px;
+  grid-template-rows: auto;
+  grid-template-columns: 3fr auto;
+  grid-template-areas: "filters action-button";
+}
+
