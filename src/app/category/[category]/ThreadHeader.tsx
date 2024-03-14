@@ -6,7 +6,6 @@ export default async function ThreadHeader({
 }: {
   permissions: string;
 }) {
-  console.log({ permissions });
   return (
     <div className={cx(styles.container)}>
       <div className={styles.filters}>
