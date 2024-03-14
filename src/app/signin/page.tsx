@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 
 export default function SignIn() {
   async function create(formData: FormData) {
+    "use server";
+
     const name = formData.get("name");
     if (!name || typeof name !== "string") {
       return;
