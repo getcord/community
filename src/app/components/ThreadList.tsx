@@ -17,14 +17,12 @@ export default async function ThreadList() {
   return (
     <table className={styles.container}>
       <tbody className={styles.table}>
-        <thead>
-          <tr>
-            <th>Post</th>
-            <th>Participants</th>
-            <th>Replies</th>
-            <th>Activity</th>
-          </tr>
-        </thead>
+        <tr>
+          <th>Post</th>
+          <th>Participants</th>
+          <th>Replies</th>
+          <th>Activity</th>
+        </tr>
         {threads?.length > 0 &&
           threads.map((thread) => {
             return (
