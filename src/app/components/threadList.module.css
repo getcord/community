@@ -1,0 +1,12 @@
+.container {
+  height: 100%;
+  border-collapse: collapse;
+  padding: 8px;
+  display: flex;
+}
+
+.table {
+  overflow-y: auto;
+  padding: 16px;
+  vertical-align: middle;
+}

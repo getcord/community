@@ -1,0 +1,24 @@
+.container {
+  border-bottom: 2px solid var(--cord-grey-light);
+}
+
+.messageSnippet {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+}
+
+.column {
+  padding: 8px;
+  align-self: center;
+}
+
+.participants {
+  display: flex;
+  justify-content: center;
+}
+.replies {
+  color: var(--cord-grey-dark);
+  font-weight: bold;
+}
