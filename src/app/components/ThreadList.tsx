@@ -13,15 +13,20 @@ const getThreadsData = async (category: string) => {
     }),
   }];
   const queryParams = category !== 'all' ?  buildQueryParams(queries) : '';
-  const { threads } = await fetchCordRESTApi<ServerListThreads>(
+  const result = await fetchCordRESTApi<ServerListThreads>(
     `threads${queryParams}`,
     "GET"
   );
-  return threads;
+  return result;
 };
 
 export default async function ThreadList({ category }: { category: string }) {
-  const threads = await getThreadsData(category);
+  // do we want this to update? Probably? In that case we need to useThreads as well
+  const {threads, pagination} = await getThreadsData(category); 
+
+  if (threads.length < 1 && pagination.total === 0) { // flickering -> to be fixed
+    return <p>No posts yet!</p>
+  }
 
   return (
     <table className={styles.container}>
