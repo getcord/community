@@ -38,10 +38,10 @@ export default async function RootLayout({
     <html lang="en">
       <body>
         <CordIntegration clientAuthToken={clientAuthToken}>
-        <div className={styles.dashboard}>
-          <Sidebar />
-          <Header />
-          {children}
+          <div className={styles.dashboard}>
+            <Sidebar />
+            <Header />
+            <div className={styles.content}>{children}</div>
           </div>
         </CordIntegration>
       </body>
