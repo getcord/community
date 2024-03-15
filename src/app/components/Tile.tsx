@@ -16,6 +16,7 @@ const getThreadData = async (threadID: string, thread: CoreThreadData) => {
     total: thread.total,
     lastMessage: messages[messages.length - 1],
     participants: thread.participants,
+    name: thread.name,
   };
   return serverThread;
 };

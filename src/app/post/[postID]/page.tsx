@@ -12,8 +12,7 @@ export default function Post({ params }: { params?: { postID: string } }) {
 
   return (
     <div>
-      {/* update with thread name on metadata */}
-      <h1>{thread.thread?.id}</h1>
+      <h1>{thread.thread?.name}</h1>
       <Message threadId={threadID} />
     </div>
   );

@@ -18,6 +18,7 @@ type ServerThread = {
   total: number;
   lastMessage: CoreMessageData;
   participants: ThreadParticipant[];
+  name: string;
 };
 
 /*
@@ -41,7 +42,6 @@ export default function TileInner({
     <tr className={styles.container}>
       <td>
         <Link className={styles.link} href={`/post/${threadID}`}>
-          {/* will update to thread name */}
           <div className={styles.heading}>
             {showIcons && (
               <span className={styles.icons}>
@@ -53,7 +53,7 @@ export default function TileInner({
                 )}
               </span>
             )}
-            <h4 className={styles.threadName}>{thread.id}</h4>
+            <h3 className={styles.threadName}>{thread.name}</h3>
           </div>
           {/* only for pinned / locked? */}
           <p className={`${styles.messageSnippet}`}>
