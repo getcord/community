@@ -4,30 +4,21 @@ import Tile from '@/app/components/Tile';
 import { buildQueryParams, fetchCordRESTApi } from '@/app/fetchCordRESTApi';
 
 const getThreadsData = async (category: string) => {
-  const categoryFilter = [
-    {
-      field: 'filter',
-      value: JSON.stringify({
-        metadata: {
-          pinned: false,
-          category,
-        },
-      }),
-    },
-  ];
-  const pinnedFilter = [
-    {
-      field: 'filter',
-      value: JSON.stringify({
-        metadata: {
-          pinned: true,
-        },
-      }),
-    },
-  ];
+  const getFilter = (category: string | null, pinned: boolean) => ([
+      {
+        field: 'filter',
+        value: JSON.stringify({
+          metadata: {
+            pinned,
+            ...(category && { category })
+          },
+        }),
+      },
+    ]);
+  const actualCategory = category !== 'all' ? category : null
   const categoryQueryParams =
-    category !== 'all' ? buildQueryParams(categoryFilter) : '';
-  const pinnedQueryParams = buildQueryParams(pinnedFilter);
+     buildQueryParams(getFilter(actualCategory, false))
+  const pinnedQueryParams = buildQueryParams(getFilter(actualCategory, true));
   const pinnedResults = await fetchCordRESTApi<ServerListThreads>(
     `threads${pinnedQueryParams}`,
     'GET',
@@ -36,6 +27,7 @@ const getThreadsData = async (category: string) => {
     `threads${categoryQueryParams}`,
     'GET',
   );
+  console.log(JSON.stringify(categoryResults.threads, null, 2));
   return {
     threads: [...pinnedResults.threads, ...categoryResults.threads],
     total: pinnedResults.pagination.total + categoryResults.pagination.total,
