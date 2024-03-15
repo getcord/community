@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext } from 'react';
 import type { ClientMessageData } from '@cord-sdk/types';
 import { experimental } from '@cord-sdk/react';
 import styles from './composer.module.css';
@@ -12,8 +12,10 @@ import {
 } from '@cord-sdk/react/dist/mjs/types/experimental';
 import { NewPostInputContext } from '@/app/contexts/newPostInputContext';
 import { EVERYONE_GROUP_ID } from '@/consts';
+import { useRouter } from 'next/navigation';
 
 function DatCordComposer(props: ComposerProps) {
+  const router = useRouter();
   const { setTitle, setCategory, title } = useContext(NewPostInputContext);
 
   const datCordOnSubmit = useCallback(
@@ -21,10 +23,10 @@ function DatCordComposer(props: ComposerProps) {
       if (!title || !message) {
         return;
       }
-
+      router.push('/');
       props.onSubmit({ message });
     },
-    [title, props],
+    [title, props, router],
   );
 
   return (
@@ -108,7 +110,6 @@ function DatCordSendButton(props: SendButtonProps) {
 export default function Composer() {
   const { title, category } = useContext(NewPostInputContext);
 
-  console.log({ category, cat: category.toLowerCase() });
   return (
     <div className={styles.container}>
       <experimental.Replace
