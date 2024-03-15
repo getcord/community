@@ -27,7 +27,7 @@ function DatCordComposer(props: ComposerProps) {
   );
 
   return (
-    <div>
+    <>
       <h3>Start a new discussion</h3>
       <section className={styles.inputsContainer}>
         <div className={styles.inputContainer}>
@@ -49,26 +49,31 @@ function DatCordComposer(props: ComposerProps) {
           />
         </div>
       </section>
-      <experimental.CordComposer
-        {...props}
-        onSubmit={(message) => {
-          datCordOnSubmit(message);
-        }}
-        onKeyDown={({ event }: { event: React.KeyboardEvent }) => {
-          if (event.key === "Enter") {
-            return;
-          }
-          props.onKeyDown({ event });
-        }}
-        onResetState={() => {
-          if (!title) {
-            return;
-          }
-          setTitle("");
-          props.onResetState();
-        }}
-      />
-    </div>
+      <div className={styles.inputContainer}>
+        <label htmlFor="titleInput" className={styles.label}>
+          Message:
+        </label>
+        <experimental.CordComposer
+          {...props}
+          onSubmit={(message) => {
+            datCordOnSubmit(message);
+          }}
+          onKeyDown={({ event }: { event: React.KeyboardEvent }) => {
+            if (event.key === "Enter") {
+              return;
+            }
+            props.onKeyDown({ event });
+          }}
+          onResetState={() => {
+            if (!title) {
+              return;
+            }
+            setTitle("");
+            props.onResetState();
+          }}
+        />
+      </div>
+    </>
   );
 }
 
@@ -100,30 +105,25 @@ export default function Composer() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.inputContainer}>
-        <label htmlFor="titleInput" className={styles.label}>
-          Message:
-        </label>
-        <experimental.Replace
-          replace={{
-            ComposerLayout: CommunityComposerLayout,
-            Composer: DatCordComposer,
-            SendButton: DatCordSendButton,
+      <experimental.Replace
+        replace={{
+          ComposerLayout: CommunityComposerLayout,
+          Composer: DatCordComposer,
+          SendButton: DatCordSendButton,
+        }}
+      >
+        <experimental.SendComposer
+          createThread={{
+            groupID: "samplecord",
+            location: { page: "posts" },
+            name: title,
+            metadata: { category },
+            // FIX: error sating window is not defined (this is due to next js client side
+            // components being server-side rendered first, then hydrated )
+            url: window.location.href,
           }}
-        >
-          <experimental.SendComposer
-            createThread={{
-              groupID: "samplecord",
-              location: { page: "posts" },
-              name: title,
-              metadata: { category },
-              // FIX: error sating window is not defined (this is due to next js client side
-              // components being server-side rendered first, then hydrated )
-              url: window.location.href,
-            }}
-          />
-        </experimental.Replace>
-      </div>
+        />
+      </experimental.Replace>
     </div>
   );
 }
