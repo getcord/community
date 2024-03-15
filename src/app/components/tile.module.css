@@ -1,10 +1,10 @@
 .link {
   all: unset;
+  cursor: pointer;
 }
 
 .container {
   border-bottom: 2px solid var(--cord-grey-light);
-  cursor: pointer;
 }
 
 .heading {
@@ -22,6 +22,10 @@
   stroke-width: 4;
   height: 13px;
   width: 13px;
+}
+
+.category {
+  width: fit-content;
 }
 
 .messageSnippet {

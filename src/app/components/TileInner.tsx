@@ -5,10 +5,12 @@ import {
   EntityMetadata,
   ThreadParticipant,
 } from '@cord-sdk/types';
+import cx from 'classnames';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
 import styles from './tile.module.css';
 import Link from 'next/link';
-import { getTypedMetadata } from '@/utils';
+import { NavButton } from '@/app/components/NavButton';
+import { getTypedMetadata, mapCategoryEndpointsToTitles } from '@/utils';
 import { PushPinSvg } from './PushPinSVG';
 
 type ServerThread = {
@@ -41,25 +43,31 @@ export default function TileInner({
   return (
     <tr className={styles.container}>
       <td>
-        <Link className={styles.link} href={`/post/${threadID}`}>
-          <div className={styles.heading}>
-            {showIcons && (
-              <span className={styles.icons}>
-                {metadata.admin && (
-                  <LockClosedIcon width="14px" strokeWidth={3} />
-                )}
-                {metadata.pinned && (
-                  <PushPinSvg className={`${styles.pinIcon}`} />
-                )}
-              </span>
-            )}
-            <h3 className={styles.threadName}>{thread.name}</h3>
-          </div>
-          {/* only for pinned / locked? */}
-          <p className={`${styles.messageSnippet}`}>
-            {thread.firstMessage?.plaintext}
-          </p>
+        <Link
+          className={cx(styles.heading, styles.link)}
+          href={`/post/${threadID}`}
+        >
+          {showIcons && (
+            <span className={styles.icons}>
+              {metadata.admin && (
+                <LockClosedIcon width="14px" strokeWidth={3} />
+              )}
+              {metadata.pinned && (
+                <PushPinSvg className={`${styles.pinIcon}`} />
+              )}
+            </span>
+          )}
+          <h3 className={styles.threadName}>{thread.name}</h3>
         </Link>
+        <NavButton
+          isActive={false}
+          value={mapCategoryEndpointsToTitles(metadata.category)}
+          linkTo={`/category/${metadata.category}`}
+          type="category"
+        />
+        <p className={`${styles.messageSnippet}`}>
+          {thread.firstMessage?.plaintext}
+        </p>
       </td>
       <td>
         <div className={`${styles.participants} ${styles.column}`}>
