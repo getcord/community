@@ -5,6 +5,7 @@
 
 .container {
   border-bottom: 2px solid var(--cord-grey-light);
+  height: 0;
 }
 
 .heading {
