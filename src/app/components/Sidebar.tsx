@@ -50,21 +50,6 @@ export default async function Sidebar() {
             <NavButton isActive={false} value={'All Topics'} linkTo={`/`} />
           </li>
         </ul>
-        <section className={styles.navlistContainer}>
-          <span className={styles.navlistTitle}>Resources</span>
-          <ul className={styles.navItems}>
-            {resources.map((resource) => (
-              <li key={resource.id} className={styles.listItem}>
-                <NavButton
-                  isActive={false}
-                  value={resource.id}
-                  linkTo={resource.linkTo}
-                  type="resources"
-                />
-              </li>
-            ))}
-          </ul>
-        </section>
         {categories && (
           <section className={styles.navlistContainer}>
             <span className={styles.navlistTitle}>Categories</span>
@@ -82,6 +67,21 @@ export default async function Sidebar() {
             </ul>
           </section>
         )}
+        <section className={styles.navlistContainer}>
+          <span className={styles.navlistTitle}>Resources</span>
+          <ul className={styles.navItems}>
+            {resources.map((resource) => (
+              <li key={resource.id} className={styles.listItem}>
+                <NavButton
+                  isActive={false}
+                  value={resource.id}
+                  linkTo={resource.linkTo}
+                  type="resources"
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
       </section>
     </div>
   );
