@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.threadName {
+  margin: 0;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+}
+
+.pinIcon {
+  stroke-width: 4;
+  height: 24px;
+  width: 24px;
+}
