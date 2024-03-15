@@ -1,6 +1,6 @@
 'use client';
 
-import { Composer, Message, thread as threadHooks } from '@cord-sdk/react';
+import { Thread, thread as threadHooks } from '@cord-sdk/react';
 import styles from './post.module.css';
 import { getTypedMetadata, mapCategoryEndpointsToTitles } from '@/utils';
 import { NavButton } from '@/app/components/NavButton';
@@ -32,8 +32,7 @@ export default function Post({ params }: { params?: { postID: string } }) {
         linkTo={`/${metadata.category}`}
         isActive={false}
       />
-      <Message threadId={threadID} />
-      <Composer groupId="community_all" threadId={threadID} />
+      <Thread threadId={threadID} />
     </div>
   );
 }
