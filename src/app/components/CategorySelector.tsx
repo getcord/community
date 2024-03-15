@@ -10,7 +10,7 @@ const CategorySelector = ({
   permissions,
 }: {
   label: string;
-  onChange: () => void;
+  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   permissions: "READ" | "READ_WRITE";
 }) => {
   const [categories, setCategories] = useState<string[]>([]);

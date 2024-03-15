@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import type { ClientMessageData } from "@cord-sdk/types";
 import { experimental } from "@cord-sdk/react";
 import styles from "./composer.module.css";
@@ -10,9 +10,11 @@ import {
   ComposerProps,
   SendButtonProps,
 } from "@cord-sdk/react/dist/mjs/types/experimental";
+import { NewPostInputContext } from "@/app/contexts/newPostInputContext";
 
 function DatCordComposer(props: ComposerProps) {
-  const [title, setTitle] = useState("");
+  const { setTitle, setCategory, title } = useContext(NewPostInputContext);
+
   const datCordOnSubmit = useCallback(
     ({ message }: { message: Partial<ClientMessageData> }) => {
       if (!title || !message) {
@@ -25,25 +27,48 @@ function DatCordComposer(props: ComposerProps) {
   );
 
   return (
-    <experimental.CordComposer
-      {...props}
-      onSubmit={(message) => {
-        datCordOnSubmit(message);
-      }}
-      onKeyDown={({ event }: { event: React.KeyboardEvent }) => {
-        if (event.key === "Enter") {
-          return;
-        }
-        props.onKeyDown({ event });
-      }}
-      onResetState={() => {
-        if (!title) {
-          return;
-        }
-        setTitle("");
-        props.onResetState();
-      }}
-    />
+    <div>
+      <h3>Start a new discussion</h3>
+      <section className={styles.inputsContainer}>
+        <div className={styles.inputContainer}>
+          <CategorySelector
+            permissions="READ_WRITE"
+            label={"Please select a category"}
+            onChange={(event) => setCategory(event.target.value)}
+          />
+        </div>
+        <div className={styles.inputContainer}>
+          <label htmlFor="titleInput" className={styles.label}>
+            Title:
+          </label>
+          <textarea
+            className={styles.input}
+            id="titleInput"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+          />
+        </div>
+      </section>
+      <experimental.CordComposer
+        {...props}
+        onSubmit={(message) => {
+          datCordOnSubmit(message);
+        }}
+        onKeyDown={({ event }: { event: React.KeyboardEvent }) => {
+          if (event.key === "Enter") {
+            return;
+          }
+          props.onKeyDown({ event });
+        }}
+        onResetState={() => {
+          if (!title) {
+            return;
+          }
+          setTitle("");
+          props.onResetState();
+        }}
+      />
+    </div>
   );
 }
 
@@ -71,33 +96,10 @@ function DatCordSendButton(props: SendButtonProps) {
 }
 
 export default function Composer() {
-  const [title, setTitle] = useState("");
+  const { title, category } = useContext(NewPostInputContext);
 
   return (
     <div className={styles.container}>
-      <h3>Start a new discussion</h3>
-      <section className={styles.inputsContainer}>
-        <div className={styles.inputContainer}>
-          <CategorySelector
-            permissions="READ_WRITE"
-            label={"Please select a category"}
-            onChange={() => {
-              console.log("ON CHANGE");
-            }}
-          />
-        </div>
-        <div className={styles.inputContainer}>
-          <label htmlFor="titleInput" className={styles.label}>
-            Title:
-          </label>
-          <textarea
-            className={styles.input}
-            id="titleInput"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-          />
-        </div>
-      </section>
       <div className={styles.inputContainer}>
         <label htmlFor="titleInput" className={styles.label}>
           Message:
@@ -114,6 +116,9 @@ export default function Composer() {
               groupID: "samplecord",
               location: { page: "posts" },
               name: title,
+              metadata: { category },
+              // FIX: error sating window is not defined (this is due to next js client side
+              // components being server-side rendered first, then hydrated )
               url: window.location.href,
             }}
           />
