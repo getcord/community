@@ -11,6 +11,7 @@ import {
   SendButtonProps,
 } from "@cord-sdk/react/dist/mjs/types/experimental";
 import { NewPostInputContext } from "@/app/contexts/newPostInputContext";
+import { EVERYONE_GROUP_ID } from "@/consts";
 
 function DatCordComposer(props: ComposerProps) {
   const { setTitle, setCategory, title } = useContext(NewPostInputContext);
@@ -107,6 +108,7 @@ function DatCordSendButton(props: SendButtonProps) {
 export default function Composer() {
   const { title, category } = useContext(NewPostInputContext);
 
+  console.log({ category, cat: category.toLowerCase() });
   return (
     <div className={styles.container}>
       <experimental.Replace
@@ -118,10 +120,10 @@ export default function Composer() {
       >
         <experimental.SendComposer
           createThread={{
-            groupID: "samplecord",
+            groupID: EVERYONE_GROUP_ID,
             location: { page: "posts" },
             name: title,
-            metadata: { category },
+            metadata: { category: category.toLowerCase(), pinned: false },
             // FIX: error sating window is not defined (this is due to next js client side
             // components being server-side rendered first, then hydrated )
             url: window.location.href,
