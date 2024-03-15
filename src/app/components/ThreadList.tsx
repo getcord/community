@@ -1,32 +1,29 @@
-import styles from './threadList.module.css';
-import { ServerListThreads } from '@cord-sdk/types';
-import Tile from '@/app/components/Tile';
-import { buildQueryParams, fetchCordRESTApi } from '@/app/fetchCordRESTApi';
+import styles from "./threadList.module.css";
+import { ServerListThreads } from "@cord-sdk/types";
+import Tile from "@/app/components/Tile";
+import { buildQueryParams, fetchCordRESTApi } from "@/app/fetchCordRESTApi";
 
 const getThreadsData = async (category: string) => {
-  const getFilter = (category: string | null, pinned: boolean) => ([
-      {
-        field: 'filter',
-        value: JSON.stringify({
-          metadata: {
-            pinned,
-            ...(category && { category })
-          },
-        }),
-      },
-    ]);
-  const actualCategory = category !== 'all' ? category : null
-  const categoryQueryParams =
-     buildQueryParams(getFilter(actualCategory, false))
+  const getFilter = (category: string | null, pinned: boolean) => [
+    {
+      field: "filter",
+      value: JSON.stringify({
+        metadata: {
+          pinned,
+          ...(category && { category }),
+        },
+      }),
+    },
+  ];
+  const actualCategory = category !== "all" ? category : null;
+  const categoryQueryParams = buildQueryParams(
+    getFilter(actualCategory, false)
+  );
   const pinnedQueryParams = buildQueryParams(getFilter(actualCategory, true));
-  const pinnedResults = await fetchCordRESTApi<ServerListThreads>(
-    `threads${pinnedQueryParams}`,
-    'GET',
-  );
-  const categoryResults = await fetchCordRESTApi<ServerListThreads>(
-    `threads${categoryQueryParams}`,
-    'GET',
-  );
+  const [pinnedResults, categoryResults] = await Promise.all([
+    fetchCordRESTApi<ServerListThreads>(`threads${pinnedQueryParams}`, "GET"),
+    fetchCordRESTApi<ServerListThreads>(`threads${categoryQueryParams}`, "GET"),
+  ]);
   return {
     threads: [...pinnedResults.threads, ...categoryResults.threads],
     total: pinnedResults.pagination.total + categoryResults.pagination.total,
