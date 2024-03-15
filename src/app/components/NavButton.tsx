@@ -1,6 +1,10 @@
 import cx from 'classnames';
 import styles from './navButton.module.css';
-import { DocumentTextIcon, CodeBracketIcon } from '@heroicons/react/24/outline';
+import {
+  DocumentTextIcon,
+  CodeBracketIcon,
+  HomeIcon,
+} from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
 function NavItemPrefix({
@@ -10,6 +14,9 @@ function NavItemPrefix({
   navFor: string;
   type?: 'resources' | 'category';
 }) {
+  if (navFor === 'All Topics') {
+    return <HomeIcon width="14px" />;
+  }
   if (type === 'resources') {
     switch (navFor) {
       case 'REST API Reference':

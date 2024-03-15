@@ -1,6 +1,6 @@
 import styles from './sidebar.module.css';
 import type { ServerUserData } from '@cord-sdk/types';
-import { CORD_CONSOLE_URL, CORD_DOCS_URL, USERS } from '@/consts';
+import { CORD_CONSOLE_URL, CORD_DOCS_URL } from '@/consts';
 import { fetchCordRESTApi } from '@/app/fetchCordRESTApi';
 import { NavButton } from '@/app/components/NavButton';
 import { mapCategoryEndpointsToTitles } from '@/utils';
@@ -45,36 +45,41 @@ export default async function Sidebar() {
   return (
     <div className={styles.container}>
       <section className={styles.scrollableContainer}>
-        <NavButton isActive={false} value={'All Topics'} linkTo={`/`} />
-
+        <ul className={styles.navItems}>
+          <li className={styles.listItem}>
+            <NavButton isActive={false} value={'All Topics'} linkTo={`/`} />
+          </li>
+        </ul>
         <section className={styles.navlistContainer}>
           <span className={styles.navlistTitle}>Resources</span>
-          <div className={styles.navItems}>
+          <ul className={styles.navItems}>
             {resources.map((resource) => (
-              <NavButton
-                key={resource.id}
-                isActive={false}
-                value={resource.id}
-                linkTo={resource.linkTo}
-                type="resources"
-              />
+              <li key={resource.id} className={styles.listItem}>
+                <NavButton
+                  isActive={false}
+                  value={resource.id}
+                  linkTo={resource.linkTo}
+                  type="resources"
+                />
+              </li>
             ))}
-          </div>
+          </ul>
         </section>
         {categories && (
           <section className={styles.navlistContainer}>
             <span className={styles.navlistTitle}>Categories</span>
-            <div className={styles.navItems}>
+            <ul className={styles.navItems}>
               {categories.map((category) => (
-                <NavButton
-                  key={category}
-                  isActive={false}
-                  value={mapCategoryEndpointsToTitles(category)}
-                  linkTo={`/category/${category}`}
-                  type="category"
-                />
+                <li key={category} className={styles.listItem}>
+                  <NavButton
+                    isActive={false}
+                    value={mapCategoryEndpointsToTitles(category)}
+                    linkTo={`/category/${category}`}
+                    type="category"
+                  />
+                </li>
               ))}
-            </div>
+            </ul>
           </section>
         )}
       </section>
