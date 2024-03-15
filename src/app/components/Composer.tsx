@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useCallback, useContext, useState } from "react";
-import type { ClientMessageData } from "@cord-sdk/types";
-import { experimental } from "@cord-sdk/react";
-import styles from "./composer.module.css";
-import CategorySelector from "@/app/components/CategorySelector";
+import { useCallback, useContext, useState } from 'react';
+import type { ClientMessageData } from '@cord-sdk/types';
+import { experimental } from '@cord-sdk/react';
+import styles from './composer.module.css';
+import CategorySelector from '@/app/components/CategorySelector';
 import {
   ComposerLayoutProps,
   ComposerProps,
   SendButtonProps,
-} from "@cord-sdk/react/dist/mjs/types/experimental";
-import { NewPostInputContext } from "@/app/contexts/newPostInputContext";
-import { EVERYONE_GROUP_ID } from "@/consts";
+} from '@cord-sdk/react/dist/mjs/types/experimental';
+import { NewPostInputContext } from '@/app/contexts/newPostInputContext';
+import { EVERYONE_GROUP_ID } from '@/consts';
 
 function DatCordComposer(props: ComposerProps) {
   const { setTitle, setCategory, title } = useContext(NewPostInputContext);
@@ -24,7 +24,7 @@ function DatCordComposer(props: ComposerProps) {
 
       props.onSubmit({ message });
     },
-    [title, props]
+    [title, props],
   );
 
   return (
@@ -34,7 +34,7 @@ function DatCordComposer(props: ComposerProps) {
         <div className={styles.inputContainer}>
           <CategorySelector
             permissions="READ_WRITE"
-            label={"Please select a category"}
+            label={'Please select a category'}
             onChange={(event) => setCategory(event.target.value)}
           />
         </div>
@@ -59,7 +59,7 @@ function DatCordComposer(props: ComposerProps) {
               datCordOnSubmit(message);
             }}
             onKeyDown={({ event }: { event: React.KeyboardEvent }) => {
-              if (event.key === "Enter") {
+              if (event.key === 'Enter') {
                 return;
               }
               props.onKeyDown({ event });
@@ -68,7 +68,7 @@ function DatCordComposer(props: ComposerProps) {
               if (!title) {
                 return;
               }
-              setTitle("");
+              setTitle('');
               props.onResetState();
             }}
           />
@@ -80,14 +80,14 @@ function DatCordComposer(props: ComposerProps) {
 
 function CommunityComposerLayout(props: ComposerLayoutProps) {
   const sendButton = props.toolbarItems?.find(
-    (item) => item.name === "sendButton"
+    (item) => item.name === 'sendButton',
   );
 
   return (
     <>
       <experimental.ComposerLayout
         toolbarItems={props.toolbarItems?.filter(
-          (item) => item.name !== "sendButton"
+          (item) => item.name !== 'sendButton',
         )}
         textEditor={props.textEditor}
       ></experimental.ComposerLayout>
@@ -121,7 +121,7 @@ export default function Composer() {
         <experimental.SendComposer
           createThread={{
             groupID: EVERYONE_GROUP_ID,
-            location: { page: "posts" },
+            location: { page: 'posts' },
             name: title,
             metadata: { category: category.toLowerCase(), pinned: false },
             // FIX: error sating window is not defined (this is due to next js client side

@@ -1,27 +1,27 @@
-import { fetchCordRESTApi } from "@/app/fetchCordRESTApi";
-import { CORD_USER_COOKIE, NEXT_URL_COOKIE } from "@/consts";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { fetchCordRESTApi } from '@/app/fetchCordRESTApi';
+import { CORD_USER_COOKIE, NEXT_URL_COOKIE } from '@/consts';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export default function SignIn() {
   async function create(formData: FormData) {
-    "use server";
+    'use server';
 
-    const name = formData.get("name");
-    if (!name || typeof name !== "string") {
+    const name = formData.get('name');
+    if (!name || typeof name !== 'string') {
       return;
     }
 
-    await fetchCordRESTApi(`users/${name}`, "PUT", JSON.stringify({ name }));
+    await fetchCordRESTApi(`users/${name}`, 'PUT', JSON.stringify({ name }));
     // Temporarily out logged in/logged out states using cookies, will be adding auth0
     // and removing most of this
     // any logged in user, should belong to the community_all group
     await fetchCordRESTApi(
-      "groups/community_all/members",
-      "POST",
+      'groups/community_all/members',
+      'POST',
       JSON.stringify({
         add: [name],
-      })
+      }),
     );
 
     cookies().set(CORD_USER_COOKIE, name);
@@ -30,7 +30,7 @@ export default function SignIn() {
       cookies().delete(NEXT_URL_COOKIE);
       redirect(urlCallback.value);
     }
-    redirect("/");
+    redirect('/');
   }
 
   return (

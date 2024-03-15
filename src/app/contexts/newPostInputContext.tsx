@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { createContext, useMemo, useState } from "react";
+import { createContext, useMemo, useState } from 'react';
 
 type NewPostInputContextProps = {
   setTitle: (title: string) => void;
@@ -10,14 +10,14 @@ type NewPostInputContextProps = {
 };
 export const NewPostInputContext = createContext<NewPostInputContextProps>({
   setTitle: () => {},
-  title: "",
+  title: '',
   setCategory: () => {},
-  category: "",
+  category: '',
 });
 
 export function NewPostInputProvider(props: React.PropsWithChildren<unknown>) {
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
+  const [title, setTitle] = useState('');
+  const [category, setCategory] = useState('');
 
   const value = useMemo(
     () => ({
@@ -26,7 +26,7 @@ export function NewPostInputProvider(props: React.PropsWithChildren<unknown>) {
       title,
       setTitle,
     }),
-    [category, title]
+    [category, title],
   );
 
   return (

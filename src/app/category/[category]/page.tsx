@@ -1,4 +1,4 @@
-import ChatDisplay from "./ChatDisplay";
+import ChatDisplay from './ChatDisplay';
 
 export default function ChannelDisplay({
   params,

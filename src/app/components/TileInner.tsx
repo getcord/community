@@ -1,15 +1,15 @@
-"use client";
-import { thread as threadHooks, Timestamp, Avatar } from "@cord-sdk/react";
+'use client';
+import { thread as threadHooks, Timestamp, Avatar } from '@cord-sdk/react';
 import {
   CoreMessageData,
   EntityMetadata,
   ThreadParticipant,
-} from "@cord-sdk/types";
-import { LockClosedIcon } from "@heroicons/react/24/outline";
-import styles from "./tile.module.css";
-import Link from "next/link";
-import { getTypedMetadata } from "@/utils";
-import { PushPinSvg } from "./PushPinSVG";
+} from '@cord-sdk/types';
+import { LockClosedIcon } from '@heroicons/react/24/outline';
+import styles from './tile.module.css';
+import Link from 'next/link';
+import { getTypedMetadata } from '@/utils';
+import { PushPinSvg } from './PushPinSVG';
 
 type ServerThread = {
   id: string;
@@ -66,7 +66,7 @@ export default function TileInner({
           {thread.participants.map((participant) => (
             <Avatar
               key={participant.userID}
-              userId={participant.userID ?? ""}
+              userId={participant.userID ?? ''}
             />
           ))}
         </div>

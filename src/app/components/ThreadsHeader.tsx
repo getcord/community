@@ -1,6 +1,6 @@
-import Link from "next/link";
-import styles from "./threadsheader.module.css";
-import cx from "classnames";
+import Link from 'next/link';
+import styles from './threadsheader.module.css';
+import cx from 'classnames';
 
 export default function ThreadsHeader({
   permissions,
@@ -16,12 +16,12 @@ export default function ThreadsHeader({
         FILTERS WOULD APPEAR HERE
       </div>
 
-      {permissions !== "NOT_VISIBLE" && (
+      {permissions !== 'NOT_VISIBLE' && (
         <Link href="/newpost">
-          {" "}
+          {' '}
           <button
             className={styles.actionButton}
-            disabled={permissions === "READ"}
+            disabled={permissions === 'READ'}
           >
             + Start a discussion
           </button>

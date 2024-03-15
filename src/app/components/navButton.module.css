@@ -2,7 +2,7 @@
   display: grid;
   align-items: center;
   grid-template-columns: auto 1fr auto;
-  grid-template-areas: "icon name";
+  grid-template-areas: 'icon name';
   grid-gap: 8px;
   padding: 0 20px;
   font-size: 14px;

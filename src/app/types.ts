@@ -1,9 +1,9 @@
 export const CATEGORIES = [
-  "api",
-  "components",
-  "announcements",
-  "customization",
-  "documentation",
+  'api',
+  'components',
+  'announcements',
+  'customization',
+  'documentation',
 ] as const;
 
 export type Category = (typeof CATEGORIES)[number];

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { CordProvider } from "@cord-sdk/react";
+import { CordProvider } from '@cord-sdk/react';
 
 type Props = {
   clientAuthToken: string | null;

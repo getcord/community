@@ -1,9 +1,9 @@
-import styles from "./sidebar.module.css";
-import type { ServerUserData } from "@cord-sdk/types";
-import { CORD_CONSOLE_URL, CORD_DOCS_URL, USERS } from "@/consts";
-import { fetchCordRESTApi } from "@/app/fetchCordRESTApi";
-import { NavButton } from "@/app/components/NavButton";
-import { mapCategoryEndpointsToTitles } from "@/utils";
+import styles from './sidebar.module.css';
+import type { ServerUserData } from '@cord-sdk/types';
+import { CORD_CONSOLE_URL, CORD_DOCS_URL, USERS } from '@/consts';
+import { fetchCordRESTApi } from '@/app/fetchCordRESTApi';
+import { NavButton } from '@/app/components/NavButton';
+import { mapCategoryEndpointsToTitles } from '@/utils';
 
 export type Category = {
   id: string;
@@ -15,15 +15,15 @@ export type Category = {
 
 const resources = [
   {
-    id: "Documentation",
+    id: 'Documentation',
     linkTo: `${CORD_DOCS_URL}`,
   },
   {
-    id: "REST API Reference",
+    id: 'REST API Reference',
     linkTo: `${CORD_DOCS_URL}/rest-apis`,
   },
   {
-    id: "Cord Console",
+    id: 'Cord Console',
     linkTo: `${CORD_CONSOLE_URL}`,
   },
 ];
@@ -31,7 +31,7 @@ const resources = [
 async function getAllCategories() {
   try {
     const allCategories = (
-      await fetchCordRESTApi<ServerUserData>("users/all_categories_holder")
+      await fetchCordRESTApi<ServerUserData>('users/all_categories_holder')
     ).metadata as Record<string, string>;
     return Object.keys(allCategories);
   } catch (error) {
@@ -45,7 +45,7 @@ export default async function Sidebar() {
   return (
     <div className={styles.container}>
       <section className={styles.scrollableContainer}>
-        <NavButton isActive={false} value={"All Topics"} linkTo={`/`} />
+        <NavButton isActive={false} value={'All Topics'} linkTo={`/`} />
 
         <section className={styles.navlistContainer}>
           <span className={styles.navlistTitle}>Resources</span>

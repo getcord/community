@@ -3,9 +3,9 @@
   height: 100%;
   grid-template-rows: auto 1fr auto;
   grid-template-areas:
-    "threads-header"
-    "threads"
-    "composer";
+    'threads-header'
+    'threads'
+    'composer';
 }
 
 .threads {

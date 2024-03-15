@@ -1,15 +1,15 @@
-import { CoreMessageData, CoreThreadData } from "@cord-sdk/types";
-import { fetchCordRESTApi } from "../fetchCordRESTApi";
-import TileInner from "./TileInner";
-import { ComponentProps } from "react";
+import { CoreMessageData, CoreThreadData } from '@cord-sdk/types';
+import { fetchCordRESTApi } from '../fetchCordRESTApi';
+import TileInner from './TileInner';
+import { ComponentProps } from 'react';
 
 const getThreadData = async (threadID: string, thread: CoreThreadData) => {
   const messages = await fetchCordRESTApi<CoreMessageData[]>(
     `threads/${threadID}/messages`,
-    "GET"
+    'GET',
   );
 
-  const serverThread: ComponentProps<typeof TileInner>["serverThread"] = {
+  const serverThread: ComponentProps<typeof TileInner>['serverThread'] = {
     id: thread.id,
     firstMessage: messages[0],
     metadata: thread.metadata,

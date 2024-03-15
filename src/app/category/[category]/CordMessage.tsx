@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { experimental, thread } from "@cord-sdk/react";
-import { MessageContent, CoreMessageData } from "@cord-sdk/types";
+import { experimental, thread } from '@cord-sdk/react';
+import { MessageContent, CoreMessageData } from '@cord-sdk/types';
 
 export default function CordMessage({
   message: serverMessage,

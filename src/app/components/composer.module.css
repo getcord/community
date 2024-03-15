@@ -1,5 +1,5 @@
 .noPermission {
-  grid-area: "composer";
+  grid-area: 'composer';
   background-color: var(--cord-grey);
   padding: 16px;
   color: var(--cord-grey-dark);

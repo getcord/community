@@ -1,12 +1,12 @@
-import styles from "./threadList.module.css";
-import { ServerListThreads } from "@cord-sdk/types";
-import Tile from "@/app/components/Tile";
-import { buildQueryParams, fetchCordRESTApi } from "@/app/fetchCordRESTApi";
+import styles from './threadList.module.css';
+import { ServerListThreads } from '@cord-sdk/types';
+import Tile from '@/app/components/Tile';
+import { buildQueryParams, fetchCordRESTApi } from '@/app/fetchCordRESTApi';
 
 const getThreadsData = async (category: string) => {
   const getFilter = (category: string | null, pinned: boolean) => [
     {
-      field: "filter",
+      field: 'filter',
       value: JSON.stringify({
         metadata: {
           pinned,
@@ -15,14 +15,14 @@ const getThreadsData = async (category: string) => {
       }),
     },
   ];
-  const actualCategory = category !== "all" ? category : null;
+  const actualCategory = category !== 'all' ? category : null;
   const categoryQueryParams = buildQueryParams(
-    getFilter(actualCategory, false)
+    getFilter(actualCategory, false),
   );
   const pinnedQueryParams = buildQueryParams(getFilter(actualCategory, true));
   const [pinnedResults, categoryResults] = await Promise.all([
-    fetchCordRESTApi<ServerListThreads>(`threads${pinnedQueryParams}`, "GET"),
-    fetchCordRESTApi<ServerListThreads>(`threads${categoryQueryParams}`, "GET"),
+    fetchCordRESTApi<ServerListThreads>(`threads${pinnedQueryParams}`, 'GET'),
+    fetchCordRESTApi<ServerListThreads>(`threads${categoryQueryParams}`, 'GET'),
   ]);
   return {
     threads: [...pinnedResults.threads, ...categoryResults.threads],

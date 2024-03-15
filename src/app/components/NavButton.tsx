@@ -1,34 +1,34 @@
-import cx from "classnames";
-import styles from "./navButton.module.css";
-import { DocumentTextIcon, CodeBracketIcon } from "@heroicons/react/24/outline";
-import Link from "next/link";
+import cx from 'classnames';
+import styles from './navButton.module.css';
+import { DocumentTextIcon, CodeBracketIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 
 function NavItemPrefix({
   navFor,
   type,
 }: {
   navFor: string;
-  type?: "resources" | "category";
+  type?: 'resources' | 'category';
 }) {
-  if (type === "resources") {
+  if (type === 'resources') {
     switch (navFor) {
-      case "REST API Reference":
-        return <CodeBracketIcon width={"14px"} />;
-      case "Documentation":
-        return <DocumentTextIcon width={"14px"} />;
-      case "Cord Console":
-        return <DocumentTextIcon width={"14px"} />;
+      case 'REST API Reference':
+        return <CodeBracketIcon width={'14px'} />;
+      case 'Documentation':
+        return <DocumentTextIcon width={'14px'} />;
+      case 'Cord Console':
+        return <DocumentTextIcon width={'14px'} />;
     }
   }
 
-  if (type === "category") {
+  if (type === 'category') {
     return (
       <span
         className={cx(styles.categoryPrefix, {
-          [styles.colorOrange]: navFor === "Announcements",
-          [styles.colorPurple]: navFor === "Documentation",
-          [styles.colorBlue]: navFor === "API",
-          [styles.colorGreen]: navFor === "Customization",
+          [styles.colorOrange]: navFor === 'Announcements',
+          [styles.colorPurple]: navFor === 'Documentation',
+          [styles.colorBlue]: navFor === 'API',
+          [styles.colorGreen]: navFor === 'Customization',
         })}
       ></span>
     );
@@ -44,7 +44,7 @@ export function NavButton({
   value: string;
   linkTo: string;
   isActive: boolean;
-  type?: "category" | "resources";
+  type?: 'category' | 'resources';
 }) {
   return (
     <Link

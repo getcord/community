@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Message, thread as threadHooks } from "@cord-sdk/react";
+import { Message, thread as threadHooks } from '@cord-sdk/react';
 
 export default function Post({ params }: { params?: { postID: string } }) {
-  const threadID = decodeURIComponent(params?.postID || "");
+  const threadID = decodeURIComponent(params?.postID || '');
   const thread = threadHooks.useThread(threadID);
 
   if (!params?.postID) {
