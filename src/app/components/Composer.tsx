@@ -48,31 +48,31 @@ function DatCordComposer(props: ComposerProps) {
             onChange={(event) => setTitle(event.target.value)}
           />
         </div>
+        <div className={styles.inputContainer}>
+          <label htmlFor="titleInput" className={styles.label}>
+            Message:
+          </label>
+          <experimental.CordComposer
+            {...props}
+            onSubmit={(message) => {
+              datCordOnSubmit(message);
+            }}
+            onKeyDown={({ event }: { event: React.KeyboardEvent }) => {
+              if (event.key === "Enter") {
+                return;
+              }
+              props.onKeyDown({ event });
+            }}
+            onResetState={() => {
+              if (!title) {
+                return;
+              }
+              setTitle("");
+              props.onResetState();
+            }}
+          />
+        </div>
       </section>
-      <div className={styles.inputContainer}>
-        <label htmlFor="titleInput" className={styles.label}>
-          Message:
-        </label>
-        <experimental.CordComposer
-          {...props}
-          onSubmit={(message) => {
-            datCordOnSubmit(message);
-          }}
-          onKeyDown={({ event }: { event: React.KeyboardEvent }) => {
-            if (event.key === "Enter") {
-              return;
-            }
-            props.onKeyDown({ event });
-          }}
-          onResetState={() => {
-            if (!title) {
-              return;
-            }
-            setTitle("");
-            props.onResetState();
-          }}
-        />
-      </div>
     </>
   );
 }
@@ -83,7 +83,7 @@ function CommunityComposerLayout(props: ComposerLayoutProps) {
   );
 
   return (
-    <div>
+    <>
       <experimental.ComposerLayout
         toolbarItems={props.toolbarItems?.filter(
           (item) => item.name !== "sendButton"
@@ -92,12 +92,16 @@ function CommunityComposerLayout(props: ComposerLayoutProps) {
       ></experimental.ComposerLayout>
 
       {sendButton?.element}
-    </div>
+    </>
   );
 }
 
 function DatCordSendButton(props: SendButtonProps) {
-  return <button onClick={props.onClick}>SEND BUTTON</button>;
+  return (
+    <button onClick={props.onClick} className={styles.submitButton}>
+      Submit
+    </button>
+  );
 }
 
 export default function Composer() {
