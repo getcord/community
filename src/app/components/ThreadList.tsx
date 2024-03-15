@@ -1,34 +1,52 @@
-import styles from "./threadList.module.css";
-import { ServerListThreads } from "@cord-sdk/types";
-import Tile from "@/app/components/Tile";
-import { buildQueryParams, fetchCordRESTApi } from "@/app/fetchCordRESTApi";
+import styles from './threadList.module.css';
+import { ServerListThreads } from '@cord-sdk/types';
+import Tile from '@/app/components/Tile';
+import { buildQueryParams, fetchCordRESTApi } from '@/app/fetchCordRESTApi';
 
 const getThreadsData = async (category: string) => {
-  const queries = [
+  const categoryFilter = [
     {
-      field: "filter",
+      field: 'filter',
       value: JSON.stringify({
         metadata: {
+          pinned: false,
           category,
         },
       }),
     },
   ];
-  const queryParams = category !== "all" ? buildQueryParams(queries) : "";
-  const result = await fetchCordRESTApi<ServerListThreads>(
-    `threads${queryParams}`,
-    "GET"
+  const pinnedFilter = [
+    {
+      field: 'filter',
+      value: JSON.stringify({
+        metadata: {
+          pinned: true,
+        },
+      }),
+    },
+  ];
+  const categoryQueryParams =
+    category !== 'all' ? buildQueryParams(categoryFilter) : '';
+  const pinnedQueryParams = buildQueryParams(pinnedFilter);
+  const pinnedResults = await fetchCordRESTApi<ServerListThreads>(
+    `threads${pinnedQueryParams}`,
+    'GET',
   );
-  return result;
+  const categoryResults = await fetchCordRESTApi<ServerListThreads>(
+    `threads${categoryQueryParams}`,
+    'GET',
+  );
+  return {
+    threads: [...pinnedResults.threads, ...categoryResults.threads],
+    total: pinnedResults.pagination.total + categoryResults.pagination.total,
+  };
 };
-
-// TODO: put pinned threads to the top
 
 export default async function ThreadList({ category }: { category: string }) {
   // do we want this to update? Probably? In that case we need to useThreads as well
-  const { threads, pagination } = await getThreadsData(category);
+  const { threads, total } = await getThreadsData(category);
 
-  if (threads.length < 1 && pagination.total === 0) {
+  if (threads.length < 1 && total === 0) {
     // flickering -> to be fixed
     return <p>No posts yet!</p>;
   }
