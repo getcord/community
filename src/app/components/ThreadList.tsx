@@ -27,7 +27,6 @@ const getThreadsData = async (category: string) => {
     `threads${categoryQueryParams}`,
     'GET',
   );
-  console.log(JSON.stringify(categoryResults.threads, null, 2));
   return {
     threads: [...pinnedResults.threads, ...categoryResults.threads],
     total: pinnedResults.pagination.total + categoryResults.pagination.total,
