@@ -1,26 +1,12 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import type { ThreadSummary } from "@cord-sdk/types";
-import { EVERYONE_GROUP_ID } from "@/consts";
-import { Composer as CordComposer } from "@cord-sdk/react";
+import { useState } from "react";
+import { experimental } from "@cord-sdk/react";
 import styles from "./composer.module.css";
-import { redirect } from "next/navigation";
 import CategorySelector from "@/app/components/CategorySelector";
 
 export default function Composer() {
   const [title, setTitle] = useState("");
-
-  const handleComposerOnSend = useCallback(
-    ({ thread }: { thread: ThreadSummary | null }) => {
-      console.log({ thread, title: thread?.firstMessage?.metadata["title"] });
-      setTitle("");
-      redirect("/");
-      // generate a slug from the title (threadmetadata.title) and message content
-      // got to that slug (or maybe refresh the page?)
-    },
-    []
-  );
 
   return (
     <div className={styles.container}>
@@ -46,19 +32,22 @@ export default function Composer() {
             onChange={(event) => setTitle(event.target.value)}
           />
         </div>
-        <div className={styles.inputContainer}>
-          <label htmlFor="titleInput" className={styles.label}>
-            Message:
-          </label>
-
-          <CordComposer
-            groupId={EVERYONE_GROUP_ID}
-            showExpanded={true}
-            onSend={handleComposerOnSend}
-            size={"large"}
-          />
-        </div>
       </section>
+      <div className={styles.inputContainer}>
+        <label htmlFor="titleInput" className={styles.label}>
+          Message:
+        </label>
+        <experimental.Replace>
+          <experimental.SendComposer
+            createThread={{
+              groupID: "samplecord",
+              location: { page: "posts" },
+              name: title,
+              url: window.location.href,
+            }}
+          />
+        </experimental.Replace>
+      </div>
     </div>
   );
 }
