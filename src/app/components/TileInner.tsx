@@ -1,5 +1,5 @@
 'use client';
-import { thread as threadHooks, Timestamp, Avatar } from '@cord-sdk/react';
+import { thread as threadHooks, experimental, Avatar } from '@cord-sdk/react';
 import {
   CoreMessageData,
   EntityMetadata,
@@ -9,8 +9,7 @@ import cx from 'classnames';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
 import styles from './tile.module.css';
 import Link from 'next/link';
-import { NavButton } from '@/app/components/NavButton';
-import { getTypedMetadata, mapCategoryEndpointsToTitles } from '@/utils';
+import { getTypedMetadata } from '@/utils';
 import { PushPinSvg } from './PushPinSVG';
 import { CategoryPills } from '@/app/components/CategoryPills';
 
@@ -83,7 +82,8 @@ export default function TileInner({
         </p>
       </td>
       <td>
-        <Timestamp
+        <experimental.Timestamp
+          type="message"
           className={`${styles.activity} ${styles.column}`}
           value={
             thread.lastMessage?.updatedTimestamp ??
