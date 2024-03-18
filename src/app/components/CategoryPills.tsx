@@ -10,7 +10,6 @@ export function CategoryPills({ categories }: { categories: Category[] }) {
         categories.map((category) => (
           <NavButton
             key={category}
-            isActive={false}
             value={mapCategoryEndpointsToTitles(category)}
             linkTo={`/category/${category}`}
             type="category"

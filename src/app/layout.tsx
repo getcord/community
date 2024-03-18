@@ -5,6 +5,7 @@ import CordIntegration from './CordIntegration';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import styles from './styles.module.css';
+import { Category } from '@/app/types';
 
 async function getData() {
   const { CORD_SECRET, CORD_APP_ID } = process.env;
@@ -17,8 +18,22 @@ async function getData() {
   const clientAuthToken = getClientAuthToken(CORD_APP_ID, CORD_SECRET, {
     user_id: 'khadija',
   });
+  const categoriesResponse = await fetch(`http:localhost:3000/api/categories`, {
+    method: 'GET',
+    headers: {
+      'Content-type': 'application/json',
+    },
+  });
+  let categories: Category[];
+  if (categoriesResponse.status !== 200) {
+    categories = [];
+  } else {
+    categories = (await categoriesResponse.json()).data;
+  }
+
   return {
     clientAuthToken,
+    categories,
   };
 }
 
@@ -32,14 +47,14 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { clientAuthToken } = await getData();
+  const { clientAuthToken, categories } = await getData();
 
   return (
     <html lang="en">
       <body>
         <CordIntegration clientAuthToken={clientAuthToken}>
           <div className={styles.dashboard}>
-            <Sidebar />
+            <Sidebar categories={categories} />
             <Header />
             <div className={styles.content}>{children}</div>
           </div>

@@ -11,15 +11,10 @@
   cursor: pointer;
   color: var(--cord-grey-dark);
   text-decoration: none;
-  padding: 0 20px;
 }
 
 .button:hover {
   color: var(--cord-purple-dark);
-}
-
-.buttonActive {
-  background-color: var(--cord-grey-light);
 }
 
 .buttonName {
