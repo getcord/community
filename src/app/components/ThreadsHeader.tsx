@@ -9,13 +9,6 @@ export default function ThreadsHeader({
 }) {
   return (
     <div className={styles.container}>
-      <div className={styles.filters}>
-        {/* 
-         TODO: fetch all tags and put them in a dropdown menu button
-         */}
-        FILTERS WOULD APPEAR HERE
-      </div>
-
       {permissions !== 'NOT_VISIBLE' && (
         <Link
           href="/newpost"
