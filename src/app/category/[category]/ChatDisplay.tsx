@@ -5,6 +5,7 @@ import { CORD_USER_COOKIE } from '@/consts';
 import type { ServerUserData, ServerGetUser } from '@cord-sdk/types';
 import { cookies } from 'next/headers';
 import ThreadList from '@/app/components/ThreadList';
+import { Category } from '@/app/types';
 
 // TODO: move this into a permissions context
 async function getAllCategoriesPermissions() {
@@ -27,12 +28,12 @@ async function getAllCategoriesPermissions() {
       .sort((a, b) => a[0].localeCompare(b[0]))
       .reduce((acc, [key, value]) => {
         if (groups.includes(value)) {
-          acc[key] = { permission: 'READ_WRITE', group: value };
+          acc[key as Category] = { permission: 'READ_WRITE', group: value };
         } else {
-          acc[key] = { permission: 'READ', group: value };
+          acc[key as Category] = { permission: 'READ', group: value };
         }
         return acc;
-      }, {} as Record<string, { permission: string; group: string }>);
+      }, {} as Record<Category, { permission: string; group: string }>);
   } catch (error) {
     console.error(error);
   }
@@ -41,7 +42,7 @@ async function getAllCategoriesPermissions() {
 export default async function ChatDisplay({
   channelName,
 }: {
-  channelName: string;
+  channelName: Category;
 }) {
   const userIdCookie = cookies().get(CORD_USER_COOKIE);
   async function getPermissionForChannel() {
@@ -60,7 +61,7 @@ export default async function ChatDisplay({
 
   return (
     <div className={styles.container}>
-      <ThreadsHeader permissions={permissions} />
+      <ThreadsHeader permissions={permissions} category={channelName} />
       <ThreadList category={channelName} />
     </div>
   );

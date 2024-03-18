@@ -36,9 +36,13 @@ const NewPostInputContext = createContext<NewPostInputContextProps>({
   categories: [],
 });
 
-function NewPostInputProvider(props: React.PropsWithChildren<unknown>) {
+function NewPostInputProvider(
+  props: React.PropsWithChildren<{ defaultCategory?: Category }>,
+) {
   const [title, setTitle] = useState('');
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[]>(
+    props.defaultCategory ? [props.defaultCategory] : [],
+  );
 
   const value = useMemo(
     () => ({
@@ -181,9 +185,14 @@ function ComposerImpl() {
   );
 }
 
-export default function Composer() {
+export default function Composer({
+  defaultCategory,
+}: {
+  defaultCategory?: Category;
+}) {
+  console.log(defaultCategory);
   return (
-    <NewPostInputProvider>
+    <NewPostInputProvider defaultCategory={defaultCategory}>
       <ComposerImpl />
     </NewPostInputProvider>
   );
