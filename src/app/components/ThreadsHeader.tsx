@@ -8,7 +8,7 @@ export default function ThreadsHeader({
   permissions: string;
 }) {
   return (
-    <div className={cx(styles.container)}>
+    <div className={styles.container}>
       <div className={styles.filters}>
         {/* 
          TODO: fetch all tags and put them in a dropdown menu button
@@ -17,15 +17,13 @@ export default function ThreadsHeader({
       </div>
 
       {permissions !== 'NOT_VISIBLE' && (
-        <Link href="/newpost" aria-label="start a discussion">
-          {' '}
-          <button
-            className={styles.actionButton}
-            disabled={permissions === 'READ'}
-          >
-            + Start a discussion
-          </button>
-        </Link>
+        <Link
+          href="/newpost"
+          aria-label="start a discussion"
+          className={cx(styles.actionButton, {
+            [styles.disabled]: permissions === 'READ',
+          })}
+        >+ Start a discussion</Link>
       )}
     </div>
   );

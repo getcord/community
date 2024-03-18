@@ -7,6 +7,30 @@
   grid-template-columns: 3fr auto;
   grid-template-areas: 'filters action-button';
 }
+.filters {
+  grid-area: filters;
+}
+
+.actionButton {
+  grid-area: action-button;
+  text-decoration: none;
+  padding: 10px 20px;
+  border: none;
+  color: var(--cord-white);
+  background-color: var(--cord-purple);
+  width: fit-content;
+  cursor: pointer;
+}
+
+:not(.disabled).actionButton:hover {
+  background-color: var(--cord-purple-dark);
+}
+
+.actionButton.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
 
 @media (max-width: 1020px) {
   .container {
@@ -19,25 +43,4 @@
   .actionButton {
     max-width: 180px;
   }
-}
-
-.filters {
-  grid-area: filters;
-}
-
-.actionButton {
-  grid-area: action-button;
-  padding: 10px 20px;
-  border: none;
-  color: var(--cord-white);
-  background-color: var(--cord-purple);
-}
-
-:not(:disabled).actionButton:hover {
-  background-color: var(--cord-purple-dark);
-}
-
-.actionButton:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
 }
