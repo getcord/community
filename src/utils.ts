@@ -12,8 +12,11 @@ export function mapCategoryEndpointsToTitles(category: string) {
   return capitalizeFirstLetter(category);
 }
 
-export function getTypedMetadata(data: EntityMetadata): Metadata {
+export function getTypedMetadata(data: EntityMetadata | undefined): Metadata {
   const metadata: Metadata = { pinned: false, admin: false, categories: [] };
+  if (!data) {
+    return metadata;
+  }
   if (typeof data.pinned === 'boolean') {
     metadata.pinned = data.pinned;
   }
