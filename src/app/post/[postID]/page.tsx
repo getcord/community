@@ -6,6 +6,7 @@ import { getTypedMetadata, mapCategoryEndpointsToTitles } from '@/utils';
 import { NavButton } from '@/app/components/NavButton';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
 import { PushPinSvg } from '@/app/components/PushPinSVG';
+import { CategoryPills } from '@/app/components/CategoryPills';
 
 export default function Post({ params }: { params?: { postID: string } }) {
   const threadID = decodeURIComponent(params?.postID || '');
@@ -26,12 +27,7 @@ export default function Post({ params }: { params?: { postID: string } }) {
         </span>
         <h1 className={styles.threadName}>{thread.thread?.name}</h1>
       </div>
-      <NavButton
-        type="category"
-        value={mapCategoryEndpointsToTitles(metadata.category || '')}
-        linkTo={`/${metadata.category}`}
-        isActive={false}
-      />
+      <CategoryPills categories={metadata.categories} />
       <Thread threadId={threadID} />
     </div>
   );

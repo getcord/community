@@ -124,7 +124,7 @@ export default function Composer() {
             groupID: EVERYONE_GROUP_ID,
             location: { page: 'posts' },
             name: title,
-            metadata: { category: category.toLowerCase(), pinned: false },
+            metadata: { [category]: true, pinned: false },
             // FIX: error sating window is not defined (this is due to next js client side
             // components being server-side rendered first, then hydrated )
             url: window.location.href,

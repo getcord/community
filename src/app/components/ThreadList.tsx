@@ -10,7 +10,7 @@ const getThreadsData = async (category: string) => {
       value: JSON.stringify({
         metadata: {
           pinned,
-          ...(category && { category }),
+          ...(category && { [category]: true }),
         },
       }),
     },

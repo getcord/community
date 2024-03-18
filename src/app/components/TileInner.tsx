@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { NavButton } from '@/app/components/NavButton';
 import { getTypedMetadata, mapCategoryEndpointsToTitles } from '@/utils';
 import { PushPinSvg } from './PushPinSVG';
+import { CategoryPills } from '@/app/components/CategoryPills';
 
 type ServerThread = {
   id: string;
@@ -60,12 +61,7 @@ export default function TileInner({
           )}
           <h3 className={styles.threadName}>{thread.name}</h3>
         </Link>
-        <NavButton
-          isActive={false}
-          value={mapCategoryEndpointsToTitles(metadata.category)}
-          linkTo={`/category/${metadata.category}`}
-          type="category"
-        />
+        <CategoryPills categories={metadata.categories} />
         <p className={`${styles.messageSnippet}`}>
           {thread.firstMessage?.plaintext}
         </p>

@@ -29,11 +29,7 @@ const CategorySelector = ({
         if (!response.ok) {
           throw new Error('Failed to fetch categories');
         }
-        const writecategories = (await response.json()).data;
-        const newcategories: string[] = writecategories.map((cat: string) =>
-          mapCategoryEndpointsToTitles(cat),
-        );
-        setCategories(newcategories);
+        setCategories((await response.json()).data);
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
@@ -56,7 +52,7 @@ const CategorySelector = ({
         <option value="">--Please choose an option--</option>
         {categories.map((option) => (
           <option key={option} value={option}>
-            {option}
+            {mapCategoryEndpointsToTitles(option)}
           </option>
         ))}
       </select>
