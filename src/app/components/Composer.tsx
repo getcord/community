@@ -1,6 +1,12 @@
 'use client';
 
-import { useCallback, useContext } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 import type { ClientMessageData } from '@cord-sdk/types';
 import { experimental } from '@cord-sdk/react';
 import styles from './composer.module.css';
@@ -10,9 +16,45 @@ import {
   ComposerProps,
   SendButtonProps,
 } from '@cord-sdk/react/dist/mjs/types/experimental';
-import { NewPostInputContext } from '@/app/contexts/newPostInputContext';
 import { EVERYONE_GROUP_ID } from '@/consts';
 import { useRouter } from 'next/navigation';
+
+// We create a context as it is the easiest way to share data across replaced
+// Composer components
+type NewPostInputContextProps = {
+  setTitle: (title: string) => void;
+  title: string;
+  setCategory: (category: string) => void;
+  category: string;
+};
+
+const NewPostInputContext = createContext<NewPostInputContextProps>({
+  setTitle: () => {},
+  title: '',
+  setCategory: () => {},
+  category: '',
+});
+
+function NewPostInputProvider(props: React.PropsWithChildren<unknown>) {
+  const [title, setTitle] = useState('');
+  const [category, setCategory] = useState('');
+
+  const value = useMemo(
+    () => ({
+      category,
+      setCategory,
+      title,
+      setTitle,
+    }),
+    [category, title],
+  );
+
+  return (
+    <NewPostInputContext.Provider value={value}>
+      {props.children}
+    </NewPostInputContext.Provider>
+  );
+}
 
 function DatCordComposer(props: ComposerProps) {
   const router = useRouter();
@@ -107,7 +149,7 @@ function DatCordSendButton(props: SendButtonProps) {
   );
 }
 
-export default function Composer() {
+function ComposerImpl() {
   const { title, category } = useContext(NewPostInputContext);
 
   return (
@@ -132,5 +174,13 @@ export default function Composer() {
         />
       </experimental.Replace>
     </div>
+  );
+}
+
+export default function Composer() {
+  return (
+    <NewPostInputProvider>
+      <ComposerImpl />
+    </NewPostInputProvider>
   );
 }
