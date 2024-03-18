@@ -190,7 +190,6 @@ export default function Composer({
 }: {
   defaultCategory?: Category;
 }) {
-  console.log(defaultCategory);
   return (
     <NewPostInputProvider defaultCategory={defaultCategory}>
       <ComposerImpl />
