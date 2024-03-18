@@ -41,18 +41,15 @@ async function getAllCategories() {
 
 export default async function Sidebar() {
   const categories = await getAllCategories();
-  // TODO: styling and functionality
   return (
-    <div className={styles.container}>
-      <section className={styles.scrollableContainer}>
-        <ul className={styles.navItems}>
-          <li className={styles.listItem}>
-            <NavButton isActive={false} value={'All Topics'} linkTo={`/`} />
-          </li>
-        </ul>
+    <nav className={styles.container}>
+      <ul className={styles.navItems}>
+        <li className={styles.listItem}>
+          <NavButton isActive={false} value={'All Topics'} linkTo={`/`} />
+        </li>
         {categories && (
-          <section className={styles.navlistContainer}>
-            <span className={styles.navlistTitle}>Categories</span>
+          <li>
+            <h4 className={styles.navlistTitle}>Categories</h4>
             <ul className={styles.navItems}>
               {categories.map((category) => (
                 <li key={category} className={styles.listItem}>
@@ -65,10 +62,10 @@ export default async function Sidebar() {
                 </li>
               ))}
             </ul>
-          </section>
+          </li>
         )}
-        <section className={styles.navlistContainer}>
-          <span className={styles.navlistTitle}>Resources</span>
+        <li>
+          <h4 className={styles.navlistTitle}>Resources</h4>
           <ul className={styles.navItems}>
             {resources.map((resource) => (
               <li key={resource.id} className={styles.listItem}>
@@ -81,8 +78,8 @@ export default async function Sidebar() {
               </li>
             ))}
           </ul>
-        </section>
-      </section>
-    </div>
+        </li>
+      </ul>
+    </nav>
   );
 }

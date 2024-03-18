@@ -1,19 +1,12 @@
 .container {
-  display: grid;
   grid-area: sidebar;
-  overflow: hidden;
+  overflow: auto;
   border-right: 2px solid var(--cord-grey);
   min-width: 200px;
 }
 
-.scrollableContainer {
-  padding: 8px 0;
-  height: 100%;
-  overflow: auto;
-}
-
 .navlistContainer {
-  padding: 20px 0;
+  padding-top: 20px;
 }
 
 .navlistTitle {
@@ -31,8 +24,8 @@
 .navItems {
   list-style: none;
   margin-inline-start: 0;
+  margin-block-end: 0;
   padding-inline-start: 0;
-  padding-top: 8px;
 }
 
 .listItem {
