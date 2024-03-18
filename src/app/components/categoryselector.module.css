@@ -1,15 +1,31 @@
-.inputContainer {
-  margin-bottom: 20px;
+.container{
+  display: flex
 }
 
-.label {
-  font-weight: bold;
+.categoryPill {
+  border-radius: 12px;
+  margin: 2px;
+  padding: 4px;
+  padding-inline: 12px;
 }
 
-.select {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.colorLightGreen {
+  background-color: var(--cord-green-light);
+}
+
+.colorOrange {
+  background-color: var(--cord-orange);
+}
+.colorGreen {
+  background-color: var(--cord-green);
+}
+.colorBlue {
+  background-color: var(--cord-blue-light);
+}
+.colorPurple {
+  background-color: var(--cord-purple-light);
+}
+
+.selected {
+  border: solid black medium;
 }

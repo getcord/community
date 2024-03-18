@@ -7,7 +7,7 @@ import {
   useMemo,
   useState,
 } from 'react';
-import type { ClientMessageData } from '@cord-sdk/types';
+import type { ClientMessageData, EntityMetadata } from '@cord-sdk/types';
 import { experimental } from '@cord-sdk/react';
 import styles from './composer.module.css';
 import CategorySelector from '@/app/components/CategorySelector';
@@ -18,35 +18,36 @@ import {
 } from '@cord-sdk/react/dist/mjs/types/experimental';
 import { EVERYONE_GROUP_ID } from '@/consts';
 import { useRouter } from 'next/navigation';
+import { CATEGORIES, Category } from '@/app/types';
 
 // We create a context as it is the easiest way to share data across replaced
 // Composer components
 type NewPostInputContextProps = {
   setTitle: (title: string) => void;
   title: string;
-  setCategory: (category: string) => void;
-  category: string;
+  setCategories: (categories: Category[]) => void;
+  categories: Category[];
 };
 
 const NewPostInputContext = createContext<NewPostInputContextProps>({
   setTitle: () => {},
   title: '',
-  setCategory: () => {},
-  category: '',
+  setCategories: (_categories) => {},
+  categories: [],
 });
 
 function NewPostInputProvider(props: React.PropsWithChildren<unknown>) {
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('');
+  const [categories, setCategories] = useState<Category[]>([]);
 
   const value = useMemo(
     () => ({
-      category,
-      setCategory,
       title,
       setTitle,
+      categories,
+      setCategories,
     }),
-    [category, title],
+    [categories, title],
   );
 
   return (
@@ -58,7 +59,8 @@ function NewPostInputProvider(props: React.PropsWithChildren<unknown>) {
 
 function DatCordComposer(props: ComposerProps) {
   const router = useRouter();
-  const { setTitle, setCategory, title } = useContext(NewPostInputContext);
+  const { title, setTitle, categories, setCategories } =
+    useContext(NewPostInputContext);
 
   const datCordOnSubmit = useCallback(
     ({ message }: { message: Partial<ClientMessageData> }) => {
@@ -77,9 +79,9 @@ function DatCordComposer(props: ComposerProps) {
       <section className={styles.inputsContainer}>
         <div className={styles.inputContainer}>
           <CategorySelector
-            permissions="READ_WRITE"
-            label={'Please select a category'}
-            onChange={(event) => setCategory(event.target.value)}
+            categories={CATEGORIES.map((c) => c)}
+            selectedValues={categories}
+            onSelectedValuesChange={setCategories}
           />
         </div>
         <div className={styles.inputContainer}>
@@ -150,7 +152,9 @@ function DatCordSendButton(props: SendButtonProps) {
 }
 
 function ComposerImpl() {
-  const { title, category } = useContext(NewPostInputContext);
+  const { title, categories } = useContext(NewPostInputContext);
+  const metadata: EntityMetadata = { pinned: false };
+  categories.forEach((category) => (metadata[category] = true));
 
   return (
     <div className={styles.container}>
@@ -166,7 +170,7 @@ function ComposerImpl() {
             groupID: EVERYONE_GROUP_ID,
             location: { page: 'posts' },
             name: title,
-            metadata: { [category]: true, pinned: false },
+            metadata,
             // FIX: error sating window is not defined (this is due to next js client side
             // components being server-side rendered first, then hydrated )
             url: window.location.href,

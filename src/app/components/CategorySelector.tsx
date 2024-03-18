@@ -1,61 +1,70 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
+import cx from 'classnames';
 import styles from './categoryselector.module.css';
 import { mapCategoryEndpointsToTitles } from '@/utils';
+import { Category } from '@/app/types';
+
+function CategoryPill({
+  category,
+  selected,
+  onChange,
+}: {
+  category: Category;
+  selected: boolean;
+  onChange: (category: Category) => void;
+}) {
+  return (
+    <span
+      className={cx(styles.categoryPill, {
+        [styles.colorOrange]: category === 'announcements',
+        [styles.colorPurple]: category === 'documentation',
+        [styles.colorBlue]: category === 'api',
+        [styles.colorGreen]: category === 'customization',
+        [styles.colorLightGreen]: category === 'components',
+        [styles.selected]: selected,
+      })}
+      onClick={() => onChange(category)}
+    >
+      {mapCategoryEndpointsToTitles(category)}
+    </span>
+  );
+}
 
 export default function CategorySelector({
-  label,
-  onChange,
-  permissions,
+  categories,
+  selectedValues,
+  onSelectedValuesChange,
 }: {
-  label: string;
-  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-  permissions: 'READ' | 'READ_WRITE';
+  categories: Category[];
+  selectedValues: Category[];
+  onSelectedValuesChange: (selectedValues: Category[]) => void;
 }) {
-  const [categories, setCategories] = useState<string[]>([]);
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const url = new URL('http://localhost:3000/api/categories');
-        url.searchParams.append('permissions', permissions);
-
-        const response = await fetch(url.href, {
-          method: 'GET',
-          headers: {
-            'Content-type': 'application/json',
-          },
-        });
-        if (!response.ok) {
-          throw new Error('Failed to fetch categories');
-        }
-        setCategories((await response.json()).data);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
+  const handleSelectionChange = useCallback(
+    (category: Category) => {
+      if (selectedValues.includes(category)) {
+        onSelectedValuesChange(
+          selectedValues.filter((value) => value !== category),
+        );
+      } else {
+        onSelectedValuesChange([...selectedValues, category]);
       }
-    };
-
-    fetchCategories();
-  }, [permissions]);
+    },
+    [selectedValues, onSelectedValuesChange],
+  );
 
   return (
-    <>
-      <label className={styles.label} htmlFor="category">
-        {label}
-      </label>
-      <select
-        className={styles.select}
-        name="category"
-        id="category"
-        onChange={onChange}
-      >
-        <option value="">--Please choose an option--</option>
-        {categories.map((option) => (
-          <option key={option} value={option}>
-            {mapCategoryEndpointsToTitles(option)}
-          </option>
+    <div className={styles.container}>
+      {categories &&
+        categories.map((category) => (
+          <CategoryPill
+            key={category}
+            category={category}
+            selected={selectedValues.includes(category)}
+            onChange={handleSelectionChange}
+          />
         ))}
-      </select>
-    </>
+    </div>
   );
 }
