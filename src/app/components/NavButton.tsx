@@ -53,6 +53,7 @@ export function NavButton({
   isActive: boolean;
   type?: 'category' | 'resources';
 }) {
+  if (value === "") return null;
   return (
     <Link
       href={linkTo}
