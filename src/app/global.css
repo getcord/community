@@ -18,23 +18,6 @@ body {
   --cord-white: #FFFFFF
 }
 
-@font-face {
-  font-family: Lato;
-  src: url('/static/lato-bold.woff2') format('woff2');
-  font-weight: 700;
-}
-
-@font-face {
-  font-family: Lato;
-  src: url('/static/lato-regular.woff2') format('woff2');
-  font-weight: 400;
-} 
-@font-face {
-  font-family: Lato;
-  src: url('/static/lato-black.woff2') format('woff2');
-  font-weight: 900;
-}   
-
 html,
 body {
   height: 100%;

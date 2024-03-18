@@ -2,7 +2,7 @@ import Link from 'next/link';
 import styles from './header.module.css';
 import { CORD_USER_COOKIE } from '@/consts';
 import { cookies } from 'next/headers';
-import logo from '@/app/static/cord-logo.png';
+import logo from '@/static/cord-logo.png';
 import Image from 'next/image';
 
 export default function Header() {
