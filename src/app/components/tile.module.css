@@ -10,13 +10,19 @@
 
 .heading {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 8px;
 }
 
 .icons {
   display: flex;
   align-items: center;
+  /* margin bottom to align with threadName */
+  margin-bottom: 3px;
+}
+
+.threadName {
+  margin-bottom: 0;
 }
 
 .pinIcon {
