@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './categoryselector.module.css';
 import { mapCategoryEndpointsToTitles } from '@/utils';
 
-const CategorySelector = ({
+export default function CategorySelector({
   label,
   onChange,
   permissions,
@@ -12,7 +12,7 @@ const CategorySelector = ({
   label: string;
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   permissions: 'READ' | 'READ_WRITE';
-}) => {
+}) {
   const [categories, setCategories] = useState<string[]>([]);
   useEffect(() => {
     const fetchCategories = async () => {
@@ -58,6 +58,4 @@ const CategorySelector = ({
       </select>
     </>
   );
-};
-
-export default CategorySelector;
+}
