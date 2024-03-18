@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import styles from './styles.module.css';
 import { Category } from '@/app/types';
+import { SERVER_HOST } from '@/consts';
 
 async function getData() {
   const { CORD_SECRET, CORD_APP_ID } = process.env;
@@ -18,7 +19,7 @@ async function getData() {
   const clientAuthToken = getClientAuthToken(CORD_APP_ID, CORD_SECRET, {
     user_id: 'khadija',
   });
-  const categoriesResponse = await fetch(`http:localhost:3000/api/categories`, {
+  const categoriesResponse = await fetch(`${SERVER_HOST}/api/categories`, {
     method: 'GET',
     headers: {
       'Content-type': 'application/json',
