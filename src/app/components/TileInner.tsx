@@ -46,6 +46,7 @@ export default function TileInner({
         <Link
           className={cx(styles.heading, styles.link)}
           href={`/post/${threadID}`}
+          aria-label={thread.name}
         >
           {showIcons && (
             <span className={styles.icons}>
@@ -71,7 +72,8 @@ export default function TileInner({
       </td>
       <td>
         <div className={`${styles.participants} ${styles.column}`}>
-          {thread.participants.map((participant) => (
+          {/* let's not have an ever growing list of avatars */}
+          {thread.participants.slice(0, 3).map((participant) => (
             <Avatar
               key={participant.userID}
               userId={participant.userID ?? ''}

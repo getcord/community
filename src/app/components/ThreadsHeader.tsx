@@ -17,7 +17,7 @@ export default function ThreadsHeader({
       </div>
 
       {permissions !== 'NOT_VISIBLE' && (
-        <Link href="/newpost">
+        <Link href="/newpost" aria-label="start a discussion">
           {' '}
           <button
             className={styles.actionButton}

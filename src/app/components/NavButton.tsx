@@ -59,6 +59,7 @@ export function NavButton({
       className={cx(styles.button, {
         [styles.buttonActive]: isActive,
       })}
+      aria-label={value}
     >
       <NavItemPrefix navFor={value} type={type} />
       <span className={styles.buttonName}>{value}</span>
