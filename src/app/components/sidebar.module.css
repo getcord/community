@@ -28,10 +28,6 @@
   padding-inline-start: 0;
 }
 
-.listItem {
-  padding: 0 20px;
-}
-
 .listItem:hover {
   background-color: var(--cord-grey-light);
 }

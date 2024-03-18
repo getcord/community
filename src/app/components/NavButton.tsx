@@ -1,3 +1,5 @@
+'use client';
+
 import cx from 'classnames';
 import styles from './navButton.module.css';
 import {
@@ -6,6 +8,7 @@ import {
   HomeIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 function NavItemPrefix({
   navFor,
@@ -50,15 +53,18 @@ export function NavButton({
 }: {
   value: string;
   linkTo: string;
-  isActive: boolean;
+  isActive?: boolean;
   type?: 'category' | 'resources';
 }) {
-  if (value === "") return null;
+  const pathname = usePathname();
+  if (value === '') return null;
+
   return (
     <Link
       href={linkTo}
       className={cx(styles.button, {
-        [styles.buttonActive]: isActive,
+        [styles.buttonActive]:
+          isActive === undefined ? pathname === linkTo : isActive,
       })}
       aria-label={value}
     >

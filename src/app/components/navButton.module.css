@@ -11,11 +11,11 @@
   cursor: pointer;
   color: var(--cord-grey-dark);
   text-decoration: none;
-  width: fit-content;
+  padding: 0 20px;
 }
 
 .buttonActive {
-  color: var(--color-white);
+  background-color: var(--cord-grey-light);
 }
 
 .buttonName {

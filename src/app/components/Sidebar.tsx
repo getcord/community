@@ -45,7 +45,7 @@ export default async function Sidebar() {
     <nav className={styles.container}>
       <ul className={styles.navItems}>
         <li className={styles.listItem}>
-          <NavButton isActive={false} value={'All Topics'} linkTo={`/`} />
+          <NavButton value={'All Topics'} linkTo={`/`} />
         </li>
         {categories && (
           <li>
@@ -54,7 +54,6 @@ export default async function Sidebar() {
               {categories.map((category) => (
                 <li key={category} className={styles.listItem}>
                   <NavButton
-                    isActive={false}
                     value={mapCategoryEndpointsToTitles(category)}
                     linkTo={`/category/${category}`}
                     type="category"
