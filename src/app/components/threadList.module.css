@@ -9,3 +9,7 @@
   padding: 16px;
   vertical-align: middle;
 }
+
+.tableHeader {
+  display: none;
+}
