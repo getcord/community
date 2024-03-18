@@ -38,3 +38,10 @@ export function getTypedMetadata(data: EntityMetadata | undefined): Metadata {
   }
   return metadata;
 }
+
+export function slugify(title: string) {
+  return title
+    .trim()
+    .replaceAll(/[^(a-zA-Z|\d|\s)]+/g, '')
+    .replaceAll(' ', '-');
+}

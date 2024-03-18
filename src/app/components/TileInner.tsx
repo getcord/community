@@ -9,7 +9,7 @@ import cx from 'classnames';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
 import styles from './tile.module.css';
 import Link from 'next/link';
-import { getTypedMetadata } from '@/utils';
+import { getTypedMetadata, slugify } from '@/utils';
 import { PushPinSvg } from './PushPinSVG';
 import { CategoryPills } from '@/app/components/CategoryPills';
 
@@ -45,7 +45,7 @@ export default function TileInner({
       <td>
         <Link
           className={cx(styles.heading, styles.link)}
-          href={`/post/${threadID}`}
+          href={`/post/${threadID}/${slugify(thread.name)}`}
           aria-label={thread.name}
         >
           {showIcons && (
