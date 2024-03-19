@@ -1,0 +1,41 @@
+.container {
+  display: grid;
+  grid-gap: 18px;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: 1fr auto;
+  grid-template-areas: 
+  "threads threads"
+  "composer composer";
+}
+
+.containerWithDrawer {
+  display: grid;
+  grid-gap: 18px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr auto;
+  grid-template-areas: 
+    "threads thread-details"
+    "composer thread-details";
+}
+
+.drawer {
+  display: flex;
+  flex-direction: column;
+  grid-area: thread-details;
+  border-left: 1px solid var(--cord-grey);
+  padding-left: 8px;
+}
+
+.drawerHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.drawerClose {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background-color: inherit;
+  cursor: pointer;
+}

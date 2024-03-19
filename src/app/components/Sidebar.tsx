@@ -8,6 +8,7 @@ import cx from 'classnames';
 import CategoryPill from './CategoryPill';
 import Link from 'next/link';
 import {
+  ChatBubbleLeftRightIcon,
   CodeBracketIcon,
   DocumentTextIcon,
   HomeIcon,
@@ -26,7 +27,7 @@ const resources = [
     id: 'Cord Console',
     linkTo: `${CORD_CONSOLE_URL}`,
   },
-];
+] as const;
 
 export default function Sidebar({ categories }: { categories?: Category[] }) {
   const pathname = usePathname();
@@ -83,6 +84,14 @@ export default function Sidebar({ categories }: { categories?: Category[] }) {
             ))}
           </ul>
         </li>
+        <h4 className={styles.navlistTitle}>Support chat</h4>
+        <ul className={styles.navItems}>
+          <li className={styles.listItem}>
+            <Link href="/support" aria-label="support" className={styles.link}>
+              <ResourceItem resourceName="Support" />
+            </Link>
+          </li>
+        </ul>
       </ul>
     </nav>
   );
@@ -107,5 +116,7 @@ function NavItemPrefix({ navFor }: { navFor: string }) {
       return <DocumentTextIcon width={'14px'} />;
     case 'Cord Console':
       return <DocumentTextIcon width={'14px'} />;
+    case 'Support':
+      return <ChatBubbleLeftRightIcon width={'14px'} />;
   }
 }
