@@ -15,7 +15,14 @@ body {
   --cord-blue-light: #CAE3FF;
   --cord-green: #71BC8F;
   --cord-green-light: #C8EDD7;
-  --cord-white: #FFFFFF
+  --cord-white: #FFFFFF;
+
+  /* category colors */
+  --cat-components: var(--cord-green-light);
+  --cat-announcements: var(--cord-orange);
+  --cat-customization: var(--cord-green);
+  --cat-api: var(--cord-blue-light);    
+  --cat-documentation: var(--cord-purple-light);
 }
 
 html,

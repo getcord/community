@@ -10,25 +10,31 @@ function CategoryPill({
   category,
   selected,
   onChange,
+  id,
 }: {
   category: Category;
   selected: boolean;
   onChange: (category: Category) => void;
+  id: string;
 }) {
+  const pillID = `${id}-${category}`;
+
   return (
-    <span
-      className={cx(styles.categoryPill, {
-        [styles.colorOrange]: category === 'announcements',
-        [styles.colorPurple]: category === 'documentation',
-        [styles.colorBlue]: category === 'api',
-        [styles.colorGreen]: category === 'customization',
-        [styles.colorLightGreen]: category === 'components',
+    <label
+      htmlFor={pillID}
+      className={cx(styles.categoryPill, styles[category], {
         [styles.selected]: selected,
       })}
-      onClick={() => onChange(category)}
     >
+      <input
+        type="checkbox"
+        name="category"
+        id={pillID}
+        checked={selected}
+        onClick={() => onChange(category)}
+      />
       {mapCategoryEndpointsToTitles(category)}
-    </span>
+    </label>
   );
 }
 
@@ -36,10 +42,12 @@ export default function CategorySelector({
   categories,
   selectedValues,
   onSelectedValuesChange,
+  id,
 }: {
   categories: Category[];
   selectedValues: Category[];
   onSelectedValuesChange: (selectedValues: Category[]) => void;
+  id: string;
 }) {
   const handleSelectionChange = useCallback(
     (category: Category) => {
@@ -60,6 +68,7 @@ export default function CategorySelector({
         categories.map((category) => (
           <CategoryPill
             key={category}
+            id={id}
             category={category}
             selected={selectedValues.includes(category)}
             onChange={handleSelectionChange}

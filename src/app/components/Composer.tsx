@@ -82,7 +82,11 @@ function DatCordComposer(props: ComposerProps) {
       <h3>Start a new discussion</h3>
       <section className={styles.inputsContainer}>
         <div className={styles.inputContainer}>
+          <label htmlFor="categorySelector" className={styles.label}>
+            Category:
+          </label>
           <CategorySelector
+            id="categorySelector"
             categories={CATEGORIES.map((c) => c)}
             selectedValues={categories}
             onSelectedValuesChange={setCategories}

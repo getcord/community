@@ -1,31 +1,71 @@
 .container{
-  display: flex
+  display: flex;
+  gap: 4px;
 }
 
 .categoryPill {
-  border-radius: 12px;
-  margin: 2px;
-  padding: 4px;
-  padding-inline: 12px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  border-radius: 4px;
+  padding: 4px 12px;
+  cursor: pointer;
+  background-color: var(--cord-grey);
 }
 
-.colorLightGreen {
-  background-color: var(--cord-green-light);
+.categoryPill input {
+  display: none;
 }
 
-.colorOrange {
-  background-color: var(--cord-orange);
+.components.selected {
+  background-color: var(--cat-components);
 }
-.colorGreen {
-  background-color: var(--cord-green);
+.announcements.selected {
+  background-color: var(--cat-announcements);
 }
-.colorBlue {
-  background-color: var(--cord-blue-light);
+.customization.selected {
+  background-color: var(--cat-customization);
 }
-.colorPurple {
-  background-color: var(--cord-purple-light);
+.api.selected {
+  background-color: var(--cat-api);
+}
+.documentation.selected {
+  background-color: var(--cat-documentation);
 }
 
-.selected {
-  border: solid black medium;
+.components:hover {
+  background-color: var(--cat-components);
+}
+.announcements:hover {
+  background-color: var(--cat-announcements);
+}
+.customization:hover {
+  background-color: var(--cat-customization);
+}
+.api:hover {
+  background-color: var(--cat-api);
+}
+.documentation:hover {
+  background-color: var(--cat-documentation);
+}
+
+.components:active {
+  background-color: var(--cat-components);
+  filter: saturate(0.5);
+}
+.announcements:active {
+  background-color: var(--cat-announcements);
+  filter: saturate(0.5);
+}
+.customization:active {
+  background-color: var(--cat-customization);
+  filter: saturate(0.5);
+}
+.api:active {
+  background-color: var(--cat-api);
+  filter: saturate(0.5);
+}
+.documentation:active {
+  background-color: var(--cat-documentation);
+  filter: saturate(0.5);
 }
