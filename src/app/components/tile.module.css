@@ -8,6 +8,11 @@
   height: 0;
 }
 
+.container td:not(:first-child) {
+  width: 1%;
+  padding: 4px;
+}
+
 .heading {
   display: flex;
   align-items: flex-end;
