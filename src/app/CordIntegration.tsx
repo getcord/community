@@ -11,13 +11,9 @@ const CordIntegration = ({
 }: React.PropsWithChildren<Props>) => {
   return (
     <div>
-      {clientAuthToken ? (
         <CordProvider clientAuthToken={clientAuthToken}>
           {children}
         </CordProvider>
-      ) : (
-        <p>something went wrong</p>
-      )}
     </div>
   );
 };
