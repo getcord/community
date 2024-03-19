@@ -10,7 +10,9 @@ export default function Header() {
 
   return (
     <div className={styles.container}>
+      <Link href="/" aria-label="home">
       <Image alt="cord logo" src={logo} height={40}/>
+      </Link>
       {!userIdCookie && (
         <Link href="/signin" className={styles.signinButton} aria-label="sign in">
           Sign in to comment
