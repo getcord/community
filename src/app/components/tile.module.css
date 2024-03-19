@@ -4,7 +4,7 @@
 }
 
 .container {
-  border-bottom: 2px solid var(--cord-grey-light);
+  border-bottom: 1px solid var(--cord-grey);
   height: 0;
 }
 
