@@ -42,7 +42,8 @@
 }
 
 .listItemActive {
-  background-color: var(--cord-grey-light);
+  background-color: var(--cord-purple-light);
+  color: var(--cord-purple-dark);
 }
 
 .listItem:hover {
