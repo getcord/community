@@ -44,3 +44,7 @@ html .cord-component {
 html .cord-component .cord-tooltip {
   color: white;
 }
+
+html .cord-component.cord-timestamp {
+  color: var(--cord-grey-dark);
+}

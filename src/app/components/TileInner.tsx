@@ -84,7 +84,7 @@ export default function TileInner({
       <td>
         <experimental.Timestamp
           type="message"
-          className={`${styles.activity} ${styles.column}`}
+          className={styles.column}
           value={
             thread.lastMessage?.updatedTimestamp ??
             thread.lastMessage?.createdTimestamp
