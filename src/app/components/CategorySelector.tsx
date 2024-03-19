@@ -31,7 +31,7 @@ function CategoryPill({
         name="category"
         id={pillID}
         checked={selected}
-        onClick={() => onChange(category)}
+        onChange={() => onChange(category)}
       />
       {mapCategoryEndpointsToTitles(category)}
     </label>
