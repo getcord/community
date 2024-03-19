@@ -2,6 +2,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  /* These are here so that with or without text, the pill 
+  will take up the same height */
+  min-height: 1em;
+  line-height: 1;
 }
 
 .icon {
