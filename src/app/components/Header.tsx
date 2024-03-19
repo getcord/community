@@ -9,7 +9,8 @@ export default function Header() {
   const userIdCookie = cookies().get(CORD_USER_COOKIE);
 
   return (
-    <div className={styles.container}>
+    <header className={styles.container}>
+      <div className={styles.content}>
       <Link href="/" aria-label="home">
       <Image alt="cord logo" src={logo} height={40}/>
       </Link>
@@ -18,6 +19,7 @@ export default function Header() {
           Sign in to comment
         </Link>
       )}
-    </div>
+      </div>
+    </header>
   );
 }

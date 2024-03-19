@@ -1,10 +1,16 @@
 .container {
+  /* 20px to match sidebar text */
+  padding: 8px 20px;
+  box-shadow: 0px 5px 10px var(--cord-grey);
+}
+
+.content {
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-areas: 'signin-header header';
   grid-area: header;
-  padding: 8px;
-  box-shadow: 0px 5px 10px var(--cord-grey-light);
+  margin: 0 auto;
+  max-width: calc(var(--max-sidebar-width) + var(--max-content-width));
 }
 
 .signinButton {

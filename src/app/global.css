@@ -23,6 +23,10 @@ body {
   --cat-customization: var(--cord-green);
   --cat-api: var(--cord-blue-light);    
   --cat-documentation: var(--cord-purple-light);
+
+  /* sizing */
+  --max-sidebar-width: 250px;
+  --max-content-width: 1110px;
 }
 
 html,

@@ -54,9 +54,9 @@ export default async function RootLayout({
     <html lang="en">
       <body>
         <CordIntegration clientAuthToken={clientAuthToken}>
-          <div className={styles.dashboard}>
+          <Header />
+          <div className={styles.outlet}>
             <Sidebar categories={categories} />
-            <Header />
             <div className={styles.content}>{children}</div>
           </div>
         </CordIntegration>
