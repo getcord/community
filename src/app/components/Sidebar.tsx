@@ -2,11 +2,16 @@
 
 import styles from './sidebar.module.css';
 import { CORD_CONSOLE_URL, CORD_DOCS_URL } from '@/consts';
-import { NavButton } from '@/app/components/NavButton';
-import { mapCategoryEndpointsToTitles } from '@/utils';
 import { usePathname } from 'next/navigation';
 import { Category } from '@/app/types';
 import cx from 'classnames';
+import CategoryPill from './CategoryPill';
+import Link from 'next/link';
+import {
+  CodeBracketIcon,
+  DocumentTextIcon,
+  HomeIcon,
+} from '@heroicons/react/24/outline';
 
 const resources = [
   {
@@ -34,7 +39,9 @@ export default function Sidebar({ categories }: { categories?: Category[] }) {
             [styles.listItemActive]: pathname === '/',
           })}
         >
-          <NavButton value={'All Topics'} linkTo={`/`} />
+          <Link href="/" aria-label="home" className={styles.link}>
+            <ResourceItem resourceName="All Topics" />
+          </Link>
         </li>
         {categories && (
           <li>
@@ -48,10 +55,13 @@ export default function Sidebar({ categories }: { categories?: Category[] }) {
                       pathname === `/category/${category}`,
                   })}
                 >
-                  <NavButton
-                    value={mapCategoryEndpointsToTitles(category)}
-                    linkTo={`/category/${category}`}
-                  />
+                  <Link
+                    className={styles.link}
+                    href={`/category/${category}`}
+                    aria-label={category}
+                  >
+                    <CategoryPill category={category as Category} />
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -62,7 +72,13 @@ export default function Sidebar({ categories }: { categories?: Category[] }) {
           <ul className={styles.navItems}>
             {resources.map((resource) => (
               <li key={resource.id} className={styles.listItem}>
-                <NavButton value={resource.id} linkTo={resource.linkTo} />
+                <Link
+                  href={resource.linkTo}
+                  aria-label={resource.id}
+                  className={styles.link}
+                >
+                  <ResourceItem resourceName={resource.id} />
+                </Link>
               </li>
             ))}
           </ul>
@@ -70,4 +86,26 @@ export default function Sidebar({ categories }: { categories?: Category[] }) {
       </ul>
     </nav>
   );
+}
+
+export function ResourceItem({ resourceName }: { resourceName: string }) {
+  return (
+    <span className={styles.resourceContainer}>
+      <NavItemPrefix navFor={resourceName} />
+      <span>{resourceName}</span>
+    </span>
+  );
+}
+
+function NavItemPrefix({ navFor }: { navFor: string }) {
+  switch (navFor) {
+    case 'All Topics':
+      return <HomeIcon width={'14px'} />;
+    case 'REST API Reference':
+      return <CodeBracketIcon width={'14px'} />;
+    case 'Docs':
+      return <DocumentTextIcon width={'14px'} />;
+    case 'Cord Console':
+      return <DocumentTextIcon width={'14px'} />;
+  }
 }
