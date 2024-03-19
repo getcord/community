@@ -21,25 +21,3 @@
   grid-area: name;
   text-align: left;
 }
-
-.categoryPrefix {
-  width: 12px;
-  height: 12px;
-  background-color: var(--cord-green-light);
-}
-
-.components {
-  background-color: var(--cat-components);
-}
-.announcements {
-  background-color: var(--cat-announcements);
-}
-.customization {
-  background-color: var(--cat-customization);
-}
-.api {
-  background-color: var(--cat-api);
-}
-.documentation {
-  background-color: var(--cat-documentation);
-}

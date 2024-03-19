@@ -45,3 +45,7 @@ export function slugify(title: string) {
     .replaceAll(/[^(a-zA-Z|\d|\s)]+/g, '')
     .replaceAll(' ', '-');
 }
+
+export function isCategory(value: string): value is Category {
+  return CATEGORIES.includes(value.toLowerCase() as Category);
+}

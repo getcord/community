@@ -10,7 +10,7 @@ import cx from 'classnames';
 
 const resources = [
   {
-    id: 'Documentation',
+    id: 'Docs',
     linkTo: `${CORD_DOCS_URL}`,
   },
   {
@@ -51,7 +51,6 @@ export default function Sidebar({ categories }: { categories?: Category[] }) {
                   <NavButton
                     value={mapCategoryEndpointsToTitles(category)}
                     linkTo={`/category/${category}`}
-                    type="category"
                   />
                 </li>
               ))}
@@ -63,11 +62,7 @@ export default function Sidebar({ categories }: { categories?: Category[] }) {
           <ul className={styles.navItems}>
             {resources.map((resource) => (
               <li key={resource.id} className={styles.listItem}>
-                <NavButton
-                  value={resource.id}
-                  linkTo={resource.linkTo}
-                  type="resources"
-                />
+                <NavButton value={resource.id} linkTo={resource.linkTo} />
               </li>
             ))}
           </ul>

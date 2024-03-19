@@ -1,4 +1,16 @@
 .container {
   display: flex;
+  gap: 8px;
+  padding: 4px 0;
   width: fit-content;
+}
+
+.link {
+  all: unset;
+  cursor: pointer;
+  color: var(--cord-grey-dark);
+}
+
+.link:hover {
+  color: var(--cord-purple-dark);
 }
