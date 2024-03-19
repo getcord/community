@@ -31,12 +31,7 @@ function NavItemPrefix({
   if (type === 'category') {
     return (
       <span
-        className={cx(styles.categoryPrefix, {
-          [styles.colorOrange]: navFor === 'Announcements',
-          [styles.colorPurple]: navFor === 'Documentation',
-          [styles.colorBlue]: navFor === 'API',
-          [styles.colorGreen]: navFor === 'Customization',
-        })}
+        className={cx(styles.categoryPrefix, styles[navFor.toLowerCase()])}
       ></span>
     );
   }

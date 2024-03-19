@@ -28,15 +28,18 @@
   background-color: var(--cord-green-light);
 }
 
-.colorOrange {
-  background-color: var(--cord-orange);
+.components {
+  background-color: var(--cat-components);
 }
-.colorGreen {
-  background-color: var(--cord-green);
+.announcements {
+  background-color: var(--cat-announcements);
 }
-.colorBlue {
-  background-color: var(--cord-blue-light);
+.customization {
+  background-color: var(--cat-customization);
 }
-.colorPurple {
-  background-color: var(--cord-purple-light);
+.api {
+  background-color: var(--cat-api);
+}
+.documentation {
+  background-color: var(--cat-documentation);
 }
