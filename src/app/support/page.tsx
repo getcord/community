@@ -1,7 +1,9 @@
+import ThreadDetails from './[threadId]/page';
+
 export default function SupportPage({
-  children,
+  params,
 }: {
-  children: React.ReactNode;
+  params?: { threadId: string };
 }) {
-  return <>{children}</>;
+  return params?.threadId ? <ThreadDetails /> : null;
 }
