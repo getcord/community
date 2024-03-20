@@ -1,0 +1,20 @@
+.drawer {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--cord-grey);
+  padding-left: 8px;
+}
+
+.drawerHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.drawerClose {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background-color: inherit;
+  cursor: pointer;
+}
