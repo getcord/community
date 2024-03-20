@@ -7,6 +7,7 @@ import Sidebar from './components/Sidebar';
 import styles from './styles.module.css';
 import { Category } from '@/app/types';
 import { SERVER_HOST } from '@/consts';
+import { UserProvider } from '@auth0/nextjs-auth0/client';
 
 async function getData() {
   const { CORD_SECRET, CORD_APP_ID } = process.env;
@@ -53,13 +54,15 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <CordIntegration clientAuthToken={clientAuthToken}>
-          <Header />
-          <div className={styles.outlet}>
-            <Sidebar categories={categories} />
-            <div className={styles.content}>{children}</div>
-          </div>
-        </CordIntegration>
+        <UserProvider>
+          <CordIntegration clientAuthToken={clientAuthToken}>
+            <Header />
+            <div className={styles.outlet}>
+              <Sidebar categories={categories} />
+              <div className={styles.content}>{children}</div>
+            </div>
+          </CordIntegration>
+        </UserProvider>
       </body>
     </html>
   );

@@ -36,3 +36,4 @@ next-env.d.ts
 
 # cord environment
 .env
+certificates
