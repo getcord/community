@@ -4,6 +4,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -163,6 +164,12 @@ function ComposerImpl() {
   const { title, categories } = useContext(NewPostInputContext);
   const metadata: EntityMetadata = { pinned: false };
   categories.forEach((category) => (metadata[category] = true));
+  const [threadUrl, setThreadUrl] = useState('');
+
+  useEffect(() => {
+    // we can access window here as this useEffect will run client-side
+    setThreadUrl(window.location.href);
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -179,9 +186,7 @@ function ComposerImpl() {
             location: { page: 'posts' },
             name: title,
             metadata,
-            // FIX: error sating window is not defined (this is due to next js client side
-            // components being server-side rendered first, then hydrated )
-            url: window.location.href,
+            url: threadUrl,
           }}
         />
       </experimental.Replace>
