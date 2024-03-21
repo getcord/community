@@ -10,3 +10,6 @@ mkcert \
   -cert-file "$CERTPATH"/localhost.crt \
   -key-file "$CERTPATH"/localhost.key \
   local.cord.com localhost 127.0.0.1 ::1 0.0.0.0
+
+cat $SCRIPTPATH/../localhost/localhost.crt > $SCRIPTPATH/../localhost/localhost-fullchain.crt
+cat "$(mkcert -CAROOT)/rootCA.pem" >> $SCRIPTPATH/../localhost/localhost-fullchain.crt
