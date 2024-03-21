@@ -5,16 +5,8 @@
 }
 
 .content {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-areas: 'signin-header header';
-  grid-area: header;
+  display: flex;
+  justify-content: space-between;
   margin: 0 auto;
   max-width: calc(var(--max-sidebar-width) + var(--max-content-width));
-}
-
-.signinButton {
-  background-color: var(--cord-purple-light);
-  padding: 12px 24px;
-  grid-area: signin;
 }
