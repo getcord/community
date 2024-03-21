@@ -4,12 +4,12 @@ import { CORD_APP_ID, CORD_SECRET, CORD_API_URL } from '../consts';
 export async function fetchCordRESTApi<T>(
   endpoint: string,
   method: 'GET' | 'PUT' | 'POST' | 'DELETE' = 'GET',
-  body?: string,
+  data?: object,
 ): Promise<T> {
   const serverAuthToken = getServerAuthToken(CORD_APP_ID, CORD_SECRET);
   const response = await fetch(`${CORD_API_URL}${endpoint}`, {
     method,
-    body,
+    body: data ? JSON.stringify(data) : undefined,
     headers: {
       Authorization: `Bearer ${serverAuthToken}`,
       'Content-Type': 'application/json',
