@@ -4,12 +4,15 @@ import ThreadsHeader from '@/app/components/ThreadsHeader';
 import type { ServerUserData, ServerGetUser } from '@cord-sdk/types';
 import ThreadList from '@/app/components/ThreadList';
 import { Category } from '@/app/types';
+import { getSession } from '@auth0/nextjs-auth0';
 
-// TODO: move this into a permissions context
 async function getAllCategoriesPermissions() {
-  // TODO: update this to use logged in user id
-  // change this to use myhoa or tom if you'd like to test admin users experience
-  const user_id = 'khadija';
+  const session = await getSession();
+  const user_id = session?.user.sub;
+
+  if (!user_id) {
+    return;
+  }
 
   try {
     // Fetch all groups the current user is in
@@ -42,16 +45,11 @@ export default async function ChatDisplay({
 }: {
   channelName: Category;
 }) {
-  async function getPermissionForChannel() {
-    const categoryPermissions = await getAllCategoriesPermissions();
-    if (!categoryPermissions || !categoryPermissions[channelName]) {
-      return 'NOT_VISIBLE';
-    }
-    return categoryPermissions[channelName].permission;
-  }
-
-  const permissions = await getPermissionForChannel();
-
+  const allPermissions = await getAllCategoriesPermissions();
+  const permissions =
+    allPermissions && allPermissions[channelName]
+      ? allPermissions[channelName]?.permission
+      : 'NOT_VISIBLE';
   return (
     <div className={styles.container}>
       <ThreadsHeader permissions={permissions} category={channelName} />
