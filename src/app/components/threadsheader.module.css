@@ -2,21 +2,7 @@
   padding: 24px 0;
 }
 
-.actionButton {
-  text-decoration: none;
-  padding: 10px 20px;
-  border: none;
-  color: var(--cord-white);
-  background-color: var(--cord-purple);
-  width: fit-content;
-  cursor: pointer;
-}
-
-:not(.disabled).actionButton:hover {
-  background-color: var(--cord-purple-dark);
-}
-
-.actionButton.disabled {
+.disabled {
   opacity: 0.3;
   pointer-events: none;
 }

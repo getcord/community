@@ -1,7 +1,7 @@
-import Link from 'next/link';
 import styles from './threadsheader.module.css';
 import cx from 'classnames';
 import { Category } from '@/app/types';
+import Button from '../ui/Button';
 
 export default function ThreadsHeader({
   permissions,
@@ -13,15 +13,16 @@ export default function ThreadsHeader({
   return (
     <div className={styles.container}>
       {permissions !== 'NOT_VISIBLE' && (
-        <Link
+        <Button
+          type="link"
           href={`/newpost?category=${category}`}
-          aria-label="start a discussion"
-          className={cx(styles.actionButton, {
+          label="start a discussion"
+          className={cx({
             [styles.disabled]: permissions === 'READ',
           })}
         >
           + Start a discussion
-        </Link>
+        </Button>
       )}
     </div>
   );
