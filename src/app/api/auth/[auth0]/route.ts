@@ -22,7 +22,7 @@ export const GET = handleAuth({
   },
   onError(req: NextRequest, __: HandlerError) {
     const returnTo = req.cookies.get('return_to')?.value ?? '/';
-    cookies().set('retry_login', 'false');
+    cookies().set('attempting_login', 'true');
 
     redirect(returnTo);
   },
