@@ -7,9 +7,12 @@ import Sidebar from './components/Sidebar';
 import styles from './styles.module.css';
 import { Category } from '@/app/types';
 import { SERVER_HOST } from '@/consts';
+import { getSession } from '@auth0/nextjs-auth0';
 
 async function getData() {
   const { CORD_SECRET, CORD_APP_ID } = process.env;
+  const session = await getSession();
+
   if (!CORD_SECRET || !CORD_APP_ID) {
     console.error(
       'Missing CORD_SECRET or CORD_APP_ID env variable. Get it on console.cord.com and add it to .env',
@@ -35,6 +38,7 @@ async function getData() {
   return {
     clientAuthToken,
     categories,
+    user: session?.user,
   };
 }
 
@@ -48,13 +52,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { clientAuthToken, categories } = await getData();
+  const { clientAuthToken, categories, user } = await getData();
 
   return (
     <html lang="en">
       <body>
         <CordIntegration clientAuthToken={clientAuthToken}>
-          <Header />
+          <Header user={user} />
           <div className={styles.outlet}>
             <Sidebar categories={categories} />
             <div className={styles.content}>{children}</div>
