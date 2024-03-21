@@ -7,10 +7,6 @@ import { getSession } from '@auth0/nextjs-auth0';
 
 export default async function Header() {
   const session = await getSession();
-
-  // This runs on page refresh or first render, and will be a way
-  // to maintain a login state for a user, incase they've already
-  // logged through console.cord.com
   const user = session?.user;
 
   return (
