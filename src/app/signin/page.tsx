@@ -12,13 +12,12 @@ export default function SignIn() {
       return;
     }
 
-    await fetchCordRESTApi(`users/${name}`, 'PUT', { name });
+    await fetchCordRESTApi(`users/${name}`, 'PUT', {
+      name,
+      addGroups: ['community_all'],
+    });
     // Temporarily out logged in/logged out states using cookies, will be adding auth0
     // and removing most of this
-    // any logged in user, should belong to the community_all group
-    await fetchCordRESTApi('groups/community_all/members', 'POST', {
-      add: [name],
-    });
 
     cookies().set(CORD_USER_COOKIE, name);
     const urlCallback = cookies().get(NEXT_URL_COOKIE);
