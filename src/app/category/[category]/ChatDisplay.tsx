@@ -1,7 +1,6 @@
 import styles from './chatDisplay.module.css';
 import { fetchCordRESTApi } from '@/app/fetchCordRESTApi';
 import ThreadsHeader from '@/app/components/ThreadsHeader';
-import { CORD_USER_COOKIE } from '@/consts';
 import type { ServerUserData, ServerGetUser } from '@cord-sdk/types';
 import { cookies } from 'next/headers';
 import ThreadList from '@/app/components/ThreadList';
@@ -44,14 +43,9 @@ export default async function ChatDisplay({
 }: {
   channelName: Category;
 }) {
-  const userIdCookie = cookies().get(CORD_USER_COOKIE);
   async function getPermissionForChannel() {
     const categoryPermissions = await getAllCategoriesPermissions();
-    if (
-      !userIdCookie ||
-      !categoryPermissions ||
-      !categoryPermissions[channelName]
-    ) {
+    if (!categoryPermissions || !categoryPermissions[channelName]) {
       return 'NOT_VISIBLE';
     }
     return categoryPermissions[channelName].permission;
