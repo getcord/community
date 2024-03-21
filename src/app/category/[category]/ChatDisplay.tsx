@@ -14,9 +14,7 @@ async function getAllCategoriesPermissions() {
 
   try {
     // Fetch all groups the current user is in
-    const { groups } = await fetchCordRESTApi<ServerGetUser>(
-      `users/${user_id}`,
-    );
+    const { groups } = await fetchCordRESTApi<ServerGetUser>(`users/${userID}`);
 
     const mostCategories = (
       await fetchCordRESTApi<ServerUserData>('users/all_categories_holder')
