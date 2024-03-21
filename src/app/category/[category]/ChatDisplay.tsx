@@ -2,7 +2,6 @@ import styles from './chatDisplay.module.css';
 import { fetchCordRESTApi } from '@/app/fetchCordRESTApi';
 import ThreadsHeader from '@/app/components/ThreadsHeader';
 import type { ServerUserData, ServerGetUser } from '@cord-sdk/types';
-import { cookies } from 'next/headers';
 import ThreadList from '@/app/components/ThreadList';
 import { Category } from '@/app/types';
 
