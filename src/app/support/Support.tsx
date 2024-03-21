@@ -13,7 +13,7 @@ export default function Support() {
         // this will be updated to have the correct location
         location={{ page: 'discord' }}
         onThreadClick={(threadId) => {
-          router.push(`support/${threadId}`);
+          router.push(`/support/${threadId}`);
         }}
       />
       <Composer
