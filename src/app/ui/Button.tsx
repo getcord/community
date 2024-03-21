@@ -9,6 +9,7 @@ interface LinkProps extends React.ComponentProps<typeof Link> {
   type: 'link';
   href: React.ComponentProps<typeof Link>['href'];
   label: string;
+  disabled?: boolean;
   variant?: Variant;
 }
 
@@ -16,12 +17,14 @@ interface AProps extends React.HTMLProps<HTMLAnchorElement> {
   type: 'a';
   href: React.HTMLProps<HTMLAnchorElement>['href'];
   label: string;
+  disabled?: boolean;
   variant?: Variant;
 }
 
 interface ButtonProps extends React.HTMLProps<HTMLButtonElement> {
   type: 'button';
   variant?: Variant;
+  disabled?: boolean;
 }
 
 type Props = LinkProps | AProps | ButtonProps;
@@ -38,6 +41,7 @@ export default function Button(props: PropsWithChildren<Props>) {
         className={cx(styles.container, {
           [styles.fill]: variant === 'fill',
           [styles.outline]: variant === 'outline',
+          [styles.disabled]: props.disabled
         })}
         {...props}
       >
@@ -51,6 +55,7 @@ export default function Button(props: PropsWithChildren<Props>) {
         className={cx(styles.container, {
           [styles.fill]: variant === 'fill',
           [styles.outline]: variant === 'outline',
+          [styles.disabled]: props.disabled
         })}
         {...props}
       >
@@ -63,6 +68,7 @@ export default function Button(props: PropsWithChildren<Props>) {
       className={cx(styles.container, {
         [styles.fill]: variant === 'fill',
         [styles.outline]: variant === 'outline',
+        [styles.disabled]: props.disabled
       })}
       {...props}
     >
