@@ -4,13 +4,11 @@ import ThreadsHeader from '@/app/components/ThreadsHeader';
 import type { ServerUserData, ServerGetUser } from '@cord-sdk/types';
 import ThreadList from '@/app/components/ThreadList';
 import { Category } from '@/app/types';
-import { getSession } from '@auth0/nextjs-auth0';
+import { getUser } from '@/app/helpers/user';
 
 async function getAllCategoriesPermissions() {
-  const session = await getSession();
-  const user_id = session?.user.sub;
-
-  if (!user_id) {
+  const { userID } = await getUser();
+  if (!userID) {
     return;
   }
 

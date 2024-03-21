@@ -5,11 +5,12 @@ import styles from './header.module.css';
 import logo from '@/static/cord-logo.png';
 import Image from 'next/image';
 import Button from '../ui/Button';
-import { Claims } from '@auth0/nextjs-auth0';
 import { usePathname } from 'next/navigation';
+import { User } from '@/app/helpers/user';
 
-export default function Header({ user }: { user?: Claims }) {
+export default function Header({ user }: { user: User }) {
   const pathname = usePathname();
+  const { name } = user;
 
   return (
     <header className={styles.container}>
@@ -17,7 +18,7 @@ export default function Header({ user }: { user?: Claims }) {
         <Link href="/" aria-label="home">
           <Image alt="cord logo" src={logo} height={40} />
         </Link>
-        {!user ? (
+        {!name ? (
           <Button
             type="a"
             href={`/api/auth/login?returnTo=${pathname}`}
@@ -31,7 +32,7 @@ export default function Header({ user }: { user?: Claims }) {
             href={`/api/auth/logout?returnTo=${pathname}`}
             label="log out"
           >
-            Log out {user.name}
+            Log out {name}
           </Button>
         )}
       </div>

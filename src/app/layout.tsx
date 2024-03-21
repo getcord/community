@@ -9,6 +9,7 @@ import { CATEGORIES } from '@/app/types';
 import { fetchCordRESTApi } from '@/app/fetchCordRESTApi';
 import type { ServerGetUser } from '@cord-sdk/types';
 import { Claims, getSession } from '@auth0/nextjs-auth0';
+import { getUser } from '@/app/helpers/user';
 
 async function createUserIfNecessary(sessionUser: Claims) {
   const name = sessionUser.name;
@@ -52,7 +53,6 @@ async function getData() {
   return {
     clientAuthToken,
     categories,
-    user: session.user,
   };
 }
 
@@ -66,7 +66,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { clientAuthToken, categories, user } = await getData();
+  const { clientAuthToken, categories } = await getData();
+  const user = await getUser();
 
   return (
     <html lang="en">
