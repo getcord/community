@@ -1,5 +1,4 @@
 import styles from './threadsheader.module.css';
-import cx from 'classnames';
 import { Category } from '@/app/types';
 import Button from '../ui/Button';
 
@@ -17,9 +16,7 @@ export default function ThreadsHeader({
           type="link"
           href={`/newpost?category=${category}`}
           label="start a discussion"
-          className={cx({
-            [styles.disabled]: permissions === 'READ',
-          })}
+          disabled={permissions === 'READ'}
         >
           + Start a discussion
         </Button>
