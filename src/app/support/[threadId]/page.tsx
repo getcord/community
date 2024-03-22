@@ -10,7 +10,7 @@ export default function ThreadDetails({
 }: {
   params?: { threadId: string };
 }) {
-  const threadId = params?.threadId;
+  const threadId = params?.threadId && decodeURIComponent(params.threadId);
   const router = useRouter();
   if (!threadId) {
     return <h1>oops can&apos;t find this thread!</h1>
