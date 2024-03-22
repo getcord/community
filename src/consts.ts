@@ -1,4 +1,5 @@
-export const CORD_API_URL = 'https://api.cord.com/v1/';
+export const CORD_API_URL =
+  process.env.CORD_API_URL ?? 'https://api.cord.com/v1/';
 export const CORD_DOCS_URL = 'https://docs.cord.com';
 export const CORD_CONSOLE_URL = 'https://console.cord.com';
 
