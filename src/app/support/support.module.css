@@ -23,9 +23,9 @@
 .messages {
   grid-area: messages;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  flex-direction: column-reverse;
   height: 100%;
+  overflow: auto;
 }
 
 .messageReplies {

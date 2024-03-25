@@ -29,13 +29,15 @@ export default function Support() {
         <h3>CUSTOMER NAME</h3>
       </div>
       <div className={styles.messages}>
-        {!data.hasMore && <div>
-          <h4>This is the very beginning of the chat.</h4>
-          {threads.length > 0 && <hr />}
-          </div>}
         {threads.length > 0 &&
           !data.loading &&
           threads.map((thread) => <Message key={thread.id} thread={thread} />)}
+        {!data.hasMore && (
+          <div>
+            <h4>This is the very beginning of the chat.</h4>
+            {threads.length > 0 && <hr />}
+          </div>
+        )}
       </div>
       <Composer
         style={{ gridArea: 'composer' }}
