@@ -6,7 +6,7 @@ import styles from './button.module.css';
 type Variant = 'fill' | 'outline';
 
 interface LinkProps extends React.ComponentProps<typeof Link> {
-  as: 'link';
+  displayAs: 'link';
   href: React.ComponentProps<typeof Link>['href'];
   label: string;
   disabled?: boolean;
@@ -14,7 +14,7 @@ interface LinkProps extends React.ComponentProps<typeof Link> {
 }
 
 interface AProps extends React.HTMLProps<HTMLAnchorElement> {
-  as: 'a';
+  displayAs: 'a';
   href: React.HTMLProps<HTMLAnchorElement>['href'];
   label: string;
   disabled?: boolean;
@@ -22,7 +22,7 @@ interface AProps extends React.HTMLProps<HTMLAnchorElement> {
 }
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  as: 'button';
+  displayAs: 'button';
   variant?: Variant;
   disabled?: boolean;
 }
@@ -33,8 +33,11 @@ type Props = LinkProps | AProps | ButtonProps;
  * @param type - "link" for navigation to different pages, "a" for API routes, "button" for actions
  */
 export default function Button(props: PropsWithChildren<Props>) {
+  // otherProps will no longer be typed here, so infer the type every where we pass it below
+  const { displayAs, ...otherProps } = props;
+
   const variant = props.variant ?? 'fill';
-  if (props.as === 'link') {
+  if (displayAs === 'link') {
     return (
       <Link
         aria-label={props.label}
@@ -43,13 +46,13 @@ export default function Button(props: PropsWithChildren<Props>) {
           [styles.outline]: variant === 'outline',
           [styles.disabled]: props.disabled,
         })}
-        {...props}
+        {...(otherProps as LinkProps)}
       >
         {props.children}
       </Link>
     );
   }
-  if (props.as === 'a') {
+  if (displayAs === 'a') {
     return (
       <a
         className={cx(styles.container, {
@@ -57,7 +60,7 @@ export default function Button(props: PropsWithChildren<Props>) {
           [styles.outline]: variant === 'outline',
           [styles.disabled]: props.disabled,
         })}
-        {...props}
+        {...(otherProps as AProps)}
       >
         {props.children}
       </a>
@@ -70,7 +73,7 @@ export default function Button(props: PropsWithChildren<Props>) {
         [styles.outline]: variant === 'outline',
         [styles.disabled]: props.disabled,
       })}
-      {...props}
+      {...(otherProps as ButtonProps)}
     >
       {props.children}
     </button>

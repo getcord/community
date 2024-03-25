@@ -13,7 +13,7 @@ function SubmitButton() {
   const { pending } = useFormStatus();
   return (
     <Button
-      as={'button'}
+      displayAs={'button'}
       style={{ justifySelf: 'end' }}
       type="submit"
       disabled={pending}
