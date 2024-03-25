@@ -1,9 +1,10 @@
 'use client';
 
-import { Thread } from "@cord-sdk/react";
-import { XMarkIcon } from "@heroicons/react/24/solid";
-import styles from './threadDetails.module.css'
-import { useRouter } from "next/navigation";
+import { Composer, Message, thread as threadHooks } from '@cord-sdk/react';
+import { XMarkIcon } from '@heroicons/react/24/solid';
+import styles from './threadDetails.module.css';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function ThreadDetails({
   params,
@@ -13,11 +14,11 @@ export default function ThreadDetails({
   const threadId = params?.threadId && decodeURIComponent(params.threadId);
   const router = useRouter();
   if (!threadId) {
-    return <h1>oops can&apos;t find this thread!</h1>
+    return <h1>oops can&apos;t find this thread!</h1>;
   }
 
   return (
-    <div className={styles.drawer}>
+    <div className={styles.drawer} key={threadId}>
       <div className={styles.drawerHeader}>
         <h3>Thread</h3>
         <button
@@ -28,7 +29,45 @@ export default function ThreadDetails({
           <XMarkIcon width="14px" />
         </button>
       </div>
-      <Thread threadId={threadId} />
+      <div className={styles.threadWrapper}>
+        <Thread threadId={threadId} />
+      </div>
     </div>
+  );
+}
+
+function Thread({ threadId }: { threadId: string }) {
+  const data = threadHooks.useThread(threadId);
+
+  useEffect(() => {
+    if (data.hasMore) {
+      data.fetchMore(10);
+    }
+  }, [data]);
+
+  const replies = data.messages.slice(1);
+  const numOfReplies = replies.length;
+  const repliesText = `${numOfReplies} ${numOfReplies === 1 ? 'reply' : 'replies'}`;
+
+  return (
+    <>
+      <Message threadId={threadId} />
+      {replies.length > 0 && (
+        <div className={styles.divider}>
+          <span>{repliesText}</span>
+          <hr className={styles.line} />
+        </div>
+      )}
+      {replies.length > 0 &&
+        replies.map((reply) => (
+          <Message key={reply.id} threadId={threadId} messageId={reply.id} />
+        ))}
+      {/* THIS WILL NEED TO BE CONFIGURED PROPERLY TOO */}
+      <Composer
+        groupId="community_all"
+        location={{ page: 'discord' }}
+        threadId={threadId}
+      />
+    </>
   );
 }

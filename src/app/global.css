@@ -59,3 +59,11 @@ html .cord-component .cord-tooltip {
 html .cord-component.cord-timestamp {
   color: var(--cord-grey-dark);
 }
+
+html .cord-component .cord-thread-container .cord-collapsed-thread {
+  border: none;
+}
+
+html .cord-component.cord-component-thread {
+  border: none;
+}

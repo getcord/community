@@ -1,13 +1,19 @@
 .drawer {
   display: flex;
   flex-direction: column;
-  border-left: 1px solid var(--cord-grey);
   padding-left: 8px;
+  height: 100%;
+  width: 100%;
+  min-width: 400px;
+  border-left: 1px solid var(--cord-grey);
 }
 
 .drawerHeader {
   display: flex;
   justify-content: space-between;
+  border-bottom: 1px solid var(--cord-grey);
+  /* matches chat padding from outlet*/
+  margin-bottom: 8px;
 }
 
 .drawerClose {
@@ -17,4 +23,18 @@
   border: none;
   background-color: inherit;
   cursor: pointer;
+}
+
+.divider {
+  display: flex;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--cord-grey-dark);
+  margin-bottom: 16px;
+}
+
+.line {
+  flex: 1;
+  border: none;
+  border-top: 1px solid var(--cord-grey);
 }

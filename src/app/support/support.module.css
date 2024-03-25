@@ -1,8 +1,38 @@
 .container {
   display: flex;
+  height: 100%;
+}
+
+.header {
+  grid-area: header;
+  border-bottom: 1px solid var(--cord-grey);
 }
 
 .threads {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    'header'
+    'messages'
+    'composer';
+  width: 100%;
+  padding-right: 8px;
+  height: 100%;
+}
+
+.messages {
+  grid-area: messages;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+}
+
+.messageReplies {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--cord-grey-dark);
+  padding-left: 36px;
 }
