@@ -21,7 +21,7 @@ export default function Header({ user }: { user: User }) {
         </Link>
         {!name ? (
           <Button
-            type="a"
+            as="a"
             href={`/api/auth/login?returnTo=${pathname}`}
             label="sign in"
           >

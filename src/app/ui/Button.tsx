@@ -6,7 +6,7 @@ import styles from './button.module.css';
 type Variant = 'fill' | 'outline';
 
 interface LinkProps extends React.ComponentProps<typeof Link> {
-  type: 'link';
+  as: 'link';
   href: React.ComponentProps<typeof Link>['href'];
   label: string;
   disabled?: boolean;
@@ -14,15 +14,15 @@ interface LinkProps extends React.ComponentProps<typeof Link> {
 }
 
 interface AProps extends React.HTMLProps<HTMLAnchorElement> {
-  type: 'a';
+  as: 'a';
   href: React.HTMLProps<HTMLAnchorElement>['href'];
   label: string;
   disabled?: boolean;
   variant?: Variant;
 }
 
-interface ButtonProps extends React.HTMLProps<HTMLButtonElement> {
-  type: 'button';
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  as: 'button';
   variant?: Variant;
   disabled?: boolean;
 }
@@ -34,14 +34,14 @@ type Props = LinkProps | AProps | ButtonProps;
  */
 export default function Button(props: PropsWithChildren<Props>) {
   const variant = props.variant ?? 'fill';
-  if (props.type === 'link') {
+  if (props.as === 'link') {
     return (
       <Link
         aria-label={props.label}
         className={cx(styles.container, {
           [styles.fill]: variant === 'fill',
           [styles.outline]: variant === 'outline',
-          [styles.disabled]: props.disabled
+          [styles.disabled]: props.disabled,
         })}
         {...props}
       >
@@ -49,13 +49,13 @@ export default function Button(props: PropsWithChildren<Props>) {
       </Link>
     );
   }
-  if (props.type === 'a') {
+  if (props.as === 'a') {
     return (
       <a
         className={cx(styles.container, {
           [styles.fill]: variant === 'fill',
           [styles.outline]: variant === 'outline',
-          [styles.disabled]: props.disabled
+          [styles.disabled]: props.disabled,
         })}
         {...props}
       >
@@ -68,7 +68,7 @@ export default function Button(props: PropsWithChildren<Props>) {
       className={cx(styles.container, {
         [styles.fill]: variant === 'fill',
         [styles.outline]: variant === 'outline',
-        [styles.disabled]: props.disabled
+        [styles.disabled]: props.disabled,
       })}
       {...props}
     >
