@@ -10,6 +10,7 @@ import { fetchCordRESTApi } from '@/app/fetchCordRESTApi';
 import type { ServerGetUser } from '@cord-sdk/types';
 import { Claims, getSession } from '@auth0/nextjs-auth0';
 import { getUser } from '@/app/helpers/user';
+import { getCustomerInfo } from '@/app/helpers/customerInfo';
 
 async function createUserIfNecessary(sessionUser: Claims) {
   const name = sessionUser.name;
@@ -32,6 +33,30 @@ async function createUserIfNecessary(sessionUser: Claims) {
   return userID;
 }
 
+async function createCustomerGroupIfNecessary() {
+  const [customerInfo, user] = await Promise.all([
+    getCustomerInfo(),
+    getUser(),
+  ]);
+  if (!customerInfo.customerID || !user.userID) {
+    return;
+  }
+
+  try {
+    await fetchCordRESTApi(`groups/${customerInfo.customerID}`);
+  } catch (error) {
+    // Create group as it does not exist
+    await fetchCordRESTApi(`groups/${customerInfo.customerID}`, 'PUT', {
+      name: customerInfo.customerName,
+    });
+  }
+
+  // Now lets make sure the user is part of the group
+  await fetchCordRESTApi(`groups/${customerInfo.customerID}/members`, 'POST', {
+    add: [user.userID],
+  });
+}
+
 async function getData() {
   const { CORD_SECRET, CORD_APP_ID } = process.env;
   const categories = [...CATEGORIES];
@@ -46,6 +71,7 @@ async function getData() {
     return { clientAuthToken: null, categories };
   }
   const userID = await createUserIfNecessary(session.user);
+  await createCustomerGroupIfNecessary();
   const clientAuthToken = getClientAuthToken(CORD_APP_ID, CORD_SECRET, {
     user_id: userID,
   });
