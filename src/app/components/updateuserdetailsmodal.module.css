@@ -1,0 +1,51 @@
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.modalContent {
+  min-width: 300px;
+  color: var(--cord-grey-dark);
+  display: grid;
+  gap: 12px;
+}
+
+.modalContentTitle {
+  display: flex;
+  font-size: 14px;
+}
+
+.inputContainer {
+  display: grid;
+  gap: 4px;
+  min-width: 400px;
+}
+
+.label,
+.error {
+  font-size: 0.8rem;
+}
+
+.input {
+  outline: none;
+  border: 1px solid var(--cord-grey);
+  transition: border-color 0.3s;
+  padding: 12px;
+  border-radius: 4px;
+}
+
+.error {
+  color: var(--cord-orange);
+}
+
+.submitButton {
+  justify-self: end;
+  padding: 12px 24px;
+  background-color: var(--cord-purple);
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}

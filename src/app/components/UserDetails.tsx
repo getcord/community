@@ -10,6 +10,7 @@ import {
   PencilSquareIcon,
 } from '@heroicons/react/24/outline';
 import Divider from './Divider';
+import UpdateUserDetailsModal from '@/app/components/UpdateUserDetailsModal';
 import Button from '@/app/ui/Button';
 
 interface UserDetailsProps {
@@ -94,6 +95,11 @@ export function UserDetails({ user }: UserDetailsProps) {
           </li>
         </ul>
       </Modal>
+      <UpdateUserDetailsModal
+        onClose={closeModal}
+        isOpen={modalState === 'UPDATE_USER'}
+        id={'update-user-details-modal'}
+      />
     </>
   );
 }
