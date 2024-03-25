@@ -19,10 +19,10 @@ export async function middleware(request: NextRequest) {
   const response = new NextResponse();
   const session = await getSession(request, response);
 
-  const attemptingLogin = cookies().get('attempting_login')?.value;
-  const returnTo = request.nextUrl.pathname;
+  const attemptedLoginAlready = cookies().get('attempted_login')?.value;
+  response.cookies.delete('attempted_login');
 
-  if (!session?.user && attemptingLogin !== 'true') {
+  if (!session?.user && attemptedLoginAlready !== 'true') {
     const isCurrentPageNewPost = request.nextUrl.pathname === '/newpost';
 
     const loginUrl = new URL(
@@ -31,8 +31,8 @@ export async function middleware(request: NextRequest) {
     );
     // passing the returnTo value as a query param will magically be passed
     // to auth0, and works out of the box
+    const returnTo = request.nextUrl.pathname;
     loginUrl.searchParams.append('returnTo', returnTo);
-    response.cookies.delete('attempting_login');
 
     const newResponse = NextResponse.redirect(loginUrl);
     // We have to create this as a cookie, to access it in the handleAuth onError
@@ -42,7 +42,6 @@ export async function middleware(request: NextRequest) {
     return newResponse;
   }
 
-  response.cookies.delete('attempting_login');
   response.cookies.delete('return_to');
 
   return NextResponse.next(response);
