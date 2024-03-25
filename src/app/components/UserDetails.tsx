@@ -10,6 +10,7 @@ import {
   PencilSquareIcon,
 } from '@heroicons/react/24/outline';
 import Divider from './Divider';
+import Button from '@/app/ui/Button';
 
 interface UserDetailsProps {
   user: User;
@@ -40,7 +41,7 @@ export function UserDetails({ user }: UserDetailsProps) {
     setModalState('UPDATE_USER');
   };
 
-  const closeUserDetailsMenu = () => {
+  const closeModal = () => {
     setModalState(null);
   };
 
@@ -57,7 +58,7 @@ export function UserDetails({ user }: UserDetailsProps) {
 
       <Modal
         isOpen={modalState === 'DETAILS_MENU'}
-        onClose={closeUserDetailsMenu}
+        onClose={closeModal}
         id={'user-details-modal'}
         position={userDetailsMenuPosition}
         className={styles.menu}
@@ -73,18 +74,23 @@ export function UserDetails({ user }: UserDetailsProps) {
           <Divider />
 
           <li className={styles.menuActionItem}>
-            <button
-              type="button"
+            <Button
+              type={'button'}
               className={styles.button}
               onClick={openUpdateUserModal}
             >
               <PencilSquareIcon width={14} /> Update Profile
-            </button>
+            </Button>
           </li>
           <li className={styles.menuActionItem}>
-            <a href={`/api/auth/logout`} className={styles.link}>
+            <Button
+              type={'a'}
+              href={`/api/auth/logout`}
+              className={styles.link}
+              label={'Log Out'}
+            >
               <ArrowLeftEndOnRectangleIcon width={14} /> Log out {name}
-            </a>
+            </Button>
           </li>
         </ul>
       </Modal>
