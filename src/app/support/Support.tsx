@@ -18,7 +18,7 @@ export default function Support() {
         page: 'discord',
       },
     },
-    sortDirection: 'ascending',
+    sortDirection: 'descending',
   });
 
   const threads = data.threads;
@@ -60,7 +60,7 @@ function Message({ thread }: { thread: ThreadSummary }) {
   }`;
 
   return (
-    <>
+    <div>
       <CordMessage
         threadId={thread.id}
         onClick={() => router.push(`/support/${thread.id}`)}
@@ -75,6 +75,6 @@ function Message({ thread }: { thread: ThreadSummary }) {
           <span>{replyMessage}</span>
         </div>
       )}
-    </>
+    </div>
   );
 }
