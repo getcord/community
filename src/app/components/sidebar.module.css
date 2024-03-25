@@ -54,4 +54,13 @@
 .resourceContainer {
   display: flex;
   gap: 8px;
+  align-items: center;
+}
+
+.activityBadge {
+  border-radius: 50%;
+  width: 8px;
+  height: 8px;
+  background-color: var(--cord-purple);
+  margin-left: 6px;
 }

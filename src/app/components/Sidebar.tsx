@@ -8,12 +8,14 @@ import cx from 'classnames';
 import CategoryPill from './CategoryPill';
 import Link from 'next/link';
 import {
+  BellIcon,
   ChatBubbleLeftRightIcon,
   CodeBracketIcon,
   DocumentTextIcon,
   HomeIcon,
 } from '@heroicons/react/24/outline';
 import Button from '../ui/Button';
+import { notification } from '@cord-sdk/react';
 
 const resources = [
   {
@@ -42,6 +44,7 @@ export default function Sidebar({
   const pathname = usePathname();
   const showJoinCord = !supportChats?.[0].customerID;
   const showUpgrade = !!supportChats?.[0].customerID && !supportEnabled;
+  const summary = notification.useSummary();
 
   return (
     <nav className={styles.container}>
@@ -53,6 +56,22 @@ export default function Sidebar({
         >
           <Link href="/" aria-label="home" className={styles.link}>
             <ResourceItem resourceType="All Topics" />
+          </Link>
+        </li>
+        <li
+          className={cx(styles.listItem, {
+            [styles.listItemActive]: pathname === '/notifications',
+          })}
+        >
+          <Link
+            href="/notifications"
+            aria-label="notifications"
+            className={styles.link}
+          >
+            <ResourceItem
+              resourceType="Notifications"
+              hasActivityBadge={!!summary?.unread}
+            />
           </Link>
         </li>
         {categories && (
@@ -144,14 +163,17 @@ export default function Sidebar({
 export function ResourceItem({
   resourceType,
   resourceName,
+  hasActivityBadge,
 }: {
   resourceType: string;
   resourceName?: string;
+  hasActivityBadge?: boolean;
 }) {
   return (
     <span className={styles.resourceContainer}>
       <NavItemPrefix navFor={resourceType} />
       <span>{resourceName ?? resourceType}</span>
+      {hasActivityBadge && <span className={cx(styles.activityBadge)} />}
     </span>
   );
 }
@@ -168,5 +190,7 @@ function NavItemPrefix({ navFor }: { navFor: string }) {
       return <DocumentTextIcon width={'14px'} />;
     case 'Support':
       return <ChatBubbleLeftRightIcon width={'14px'} />;
+    case 'Notifications':
+      return <BellIcon width={'14px'} />;
   }
 }
