@@ -40,7 +40,8 @@ export default function Support() {
         )}
       </div>
       <Composer
-        style={{ gridArea: 'composer' }}
+        // margin matches that in the thread details
+        style={{ gridArea: 'composer', marginTop: '12px' }}
         // this will be updated to have only the customer's group
         groupId="community_all"
         location={{ page: 'discord' }}
@@ -62,11 +63,14 @@ function Message({ thread }: { thread: ThreadSummary }) {
     <>
       <CordMessage
         threadId={thread.id}
-        onClick={(msg) => router.push(`/support/${msg.threadId}`)}
+        onClick={() => router.push(`/support/${thread.id}`)}
         style={{ cursor: 'pointer', paddingBottom: 0 }}
       />
       {numOfReplies > 0 && (
-        <div className={styles.messageReplies}>
+        <div
+          className={styles.messageReplies}
+          onClick={() => router.push(`/support/${thread.id}`)}
+        >
           <Facepile users={thread.repliers} />
           <span>{replyMessage}</span>
         </div>

@@ -35,4 +35,5 @@
   font-size: 0.8rem;
   color: var(--cord-grey-dark);
   padding-left: 36px;
+  cursor: pointer;
 }

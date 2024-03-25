@@ -38,3 +38,7 @@
   border: none;
   border-top: 1px solid var(--cord-grey);
 }
+
+.threadWrapper {
+  margin-bottom: 12px;
+}

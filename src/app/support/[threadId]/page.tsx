@@ -32,6 +32,12 @@ export default function ThreadDetails({
       <div className={styles.threadWrapper}>
         <Thread threadId={threadId} />
       </div>
+      {/* THIS WILL NEED TO BE CONFIGURED PROPERLY TOO */}
+      <Composer
+        groupId="community_all"
+        location={{ page: 'discord' }}
+        threadId={threadId}
+      />
     </div>
   );
 }
@@ -62,12 +68,6 @@ function Thread({ threadId }: { threadId: string }) {
         replies.map((reply) => (
           <Message key={reply.id} threadId={threadId} messageId={reply.id} />
         ))}
-      {/* THIS WILL NEED TO BE CONFIGURED PROPERLY TOO */}
-      <Composer
-        groupId="community_all"
-        location={{ page: 'discord' }}
-        threadId={threadId}
-      />
     </>
   );
 }
