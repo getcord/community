@@ -1,5 +1,7 @@
-.profileAvatar {
+.avatarWrapper {
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 .modalContent {
