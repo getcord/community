@@ -67,3 +67,10 @@ html .cord-component .cord-thread-container .cord-collapsed-thread {
 html .cord-component.cord-component-thread {
   border: none;
 }
+
+html .cord-component.cord-avatar-container  {
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}

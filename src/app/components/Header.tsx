@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Button from '../ui/Button';
 import { usePathname } from 'next/navigation';
 import { User } from '@/app/helpers/user';
+import { UserDetails } from '@/app/components/UserDetails';
 
 export default function Header({ user }: { user: User }) {
   const pathname = usePathname();
@@ -27,13 +28,7 @@ export default function Header({ user }: { user: User }) {
             Sign in to comment
           </Button>
         ) : (
-          <Button
-            type="a"
-            href={`/api/auth/logout?returnTo=${pathname}`}
-            label="log out"
-          >
-            Log out {name}
-          </Button>
+          <UserDetails user={user} />
         )}
       </div>
     </header>
