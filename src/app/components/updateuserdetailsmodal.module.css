@@ -39,13 +39,3 @@
 .error {
   color: var(--cord-orange);
 }
-
-.submitButton {
-  justify-self: end;
-  padding: 12px 24px;
-  background-color: var(--cord-purple);
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 4px;
-}

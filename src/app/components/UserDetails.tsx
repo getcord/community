@@ -76,7 +76,7 @@ export function UserDetails({ user }: UserDetailsProps) {
 
           <li className={styles.menuActionItem}>
             <Button
-              type={'button'}
+              as={'button'}
               className={styles.button}
               onClick={openUpdateUserModal}
             >
@@ -85,7 +85,7 @@ export function UserDetails({ user }: UserDetailsProps) {
           </li>
           <li className={styles.menuActionItem}>
             <Button
-              type={'a'}
+              as={'a'}
               href={`/api/auth/logout`}
               className={styles.link}
               label={'Log Out'}

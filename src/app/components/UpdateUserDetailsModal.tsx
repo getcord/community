@@ -7,18 +7,20 @@ import Divider from '@/app/components/Divider';
 // in their latest package (18.2.0)
 import { useFormStatus } from 'react-dom';
 import { updateUserName } from '@/app/actions';
+import Button from '@/app/ui/Button';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <button
+    <Button
+      as={'button'}
+      style={{ justifySelf: 'end' }}
       type="submit"
       disabled={pending}
       aria-disabled={pending}
-      className={styles.submitButton}
     >
       {pending ? 'Saving...' : 'Save'}
-    </button>
+    </Button>
   );
 }
 
