@@ -1,33 +1,53 @@
 'use client';
 
 import Modal, { ModalProps } from './Modal';
-import styles from './updateuserdetailsmodal.module.css';
-import Divider from '@/app/components/Divider';
-// @ts-expect-error react-dom has no exported type for this hook
-// in their latest package (18.2.0)
-import { useFormStatus } from 'react-dom';
-import { updateUserName } from '@/app/actions';
+import { User } from '@/app/helpers/user';
 import Button from '@/app/ui/Button';
+import styles from './updateuserdetailsmodal.module.css';
+import { useCallback, useState } from 'react';
+import Divider from '@/app/ui/Divider';
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button
-      displayAs={'button'}
-      style={{ justifySelf: 'end' }}
-      type="submit"
-      disabled={pending}
-      aria-disabled={pending}
-    >
-      {pending ? 'Saving...' : 'Save'}
-    </Button>
-  );
+interface UserDetailsProps extends ModalProps {
+  user: User;
 }
 
 export default function UpdateUserDetailsModal({
   isOpen,
   onClose,
-}: ModalProps) {
+  user,
+}: UserDetailsProps) {
+  const { userID } = user;
+
+  const [userName, setUserName] = useState('');
+  const [error, setError] = useState('');
+  const handleUpdateUserName = useCallback(async () => {
+    if (!userID || !userName) {
+      return;
+    }
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_HOST}/api/user?userID=${userID}`,
+      {
+        method: 'PUT',
+
+        body: JSON.stringify({
+          name: userName,
+        }),
+      },
+    );
+
+    const response = await res.json();
+    if (!response.success) {
+      setError(`Unable to update name: ${response.error}`);
+    }
+    onClose();
+  }, [onClose, userID, userName]);
+
+  const handleCloseModal = useCallback(() => {
+    setUserName('');
+    setError('');
+    onClose();
+  }, [onClose]);
+
   const handleContentClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
@@ -38,7 +58,7 @@ export default function UpdateUserDetailsModal({
   return (
     <Modal
       id={'update-user-modal'}
-      onClose={onClose}
+      onClose={handleCloseModal}
       isOpen={isOpen}
       className={styles.modal}
       hasDarkBackground={true}
@@ -49,7 +69,7 @@ export default function UpdateUserDetailsModal({
           <Divider />
         </div>
 
-        <form className={styles.modalContent} action={updateUserName}>
+        <div className={styles.modalContent}>
           <div className={styles.inputContainer}>
             <label htmlFor="username" className={styles.label}>
               User Name:
@@ -58,13 +78,22 @@ export default function UpdateUserDetailsModal({
               type="text"
               id="username"
               name="username"
+              onChange={(e) => setUserName(e.target.value)}
               required
               className={styles.input}
             />
+            <span className={styles.error}>{error}</span>
           </div>
 
-          <SubmitButton />
-        </form>
+          <Button
+            displayAs="button"
+            onClick={handleUpdateUserName}
+            style={{ justifySelf: 'end' }}
+            disabled={userName === ''}
+          >
+            Save
+          </Button>
+        </div>
       </div>
     </Modal>
   );

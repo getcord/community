@@ -9,7 +9,7 @@ import {
   ArrowLeftEndOnRectangleIcon,
   PencilSquareIcon,
 } from '@heroicons/react/24/outline';
-import Divider from './Divider';
+import Divider from '@/app/ui/Divider';
 import UpdateUserDetailsModal from '@/app/components/UpdateUserDetailsModal';
 import Button from '@/app/ui/Button';
 
@@ -96,6 +96,7 @@ export function UserDetails({ user }: UserDetailsProps) {
         </ul>
       </Modal>
       <UpdateUserDetailsModal
+        user={user}
         onClose={closeModal}
         isOpen={modalState === 'UPDATE_USER'}
         id={'update-user-details-modal'}
