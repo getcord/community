@@ -42,22 +42,3 @@
   border: 1px solid var(--cord-grey-dark);
   transition: border-color 0.3s;
 }
-
-.submitButton {
-  justify-self: end;
-  padding: 12px 24px;
-  background-color: var(--cord-purple);
-  color: white;
-  border: none;
-  cursor: pointer;
-  margin-top: 24px;
-  border-radius: 4px;
-}
-
-.submitButton:hover {
-  background-color: var(--cord-purple-highlight); /* Button color on hover */
-}
-
-.submitButton:active {
-  background-color: var(--cord-purple-light);
-}

@@ -20,6 +20,7 @@ import {
 import { EVERYONE_GROUP_ID } from '@/consts';
 import { useRouter } from 'next/navigation';
 import { CATEGORIES, Category } from '@/app/types';
+import Button from '@/app/ui/Button';
 
 // We create a context as it is the easiest way to share data across replaced
 // Composer components
@@ -154,9 +155,13 @@ function CommunityComposerLayout(props: ComposerLayoutProps) {
 
 function CommunitySendButton(props: SendButtonProps) {
   return (
-    <button onClick={props.onClick} className={styles.submitButton}>
+    <Button
+      displayAs={'button'}
+      onClick={props.onClick}
+      style={{ justifySelf: 'end' }}
+    >
       Submit
-    </button>
+    </Button>
   );
 }
 
