@@ -5,8 +5,6 @@
 }
 
 .modalContent {
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px,
-    rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
   background-color: var(--cord-white);
   position: relative;
 }
@@ -35,13 +33,6 @@
   opacity: 0.8;
 }
 
-.divider {
-  border: 0;
-  border-top: 1px solid var(--cord-grey);
-  width: 100%;
-  margin: 16px 0;
-}
-
 .button {
   background-color: transparent;
   border: none;
@@ -60,10 +51,11 @@
   color: var(--cord-grey-dark);
   display: flex;
   gap: 6px;
+  width: 100%;
+  padding: 12px 16px;
 }
 
 .menuActionItem {
-  padding: 12px 16px;
   cursor: pointer;
   border-radius: 4px;
 }

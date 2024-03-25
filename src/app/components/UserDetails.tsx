@@ -9,6 +9,7 @@ import {
   ArrowLeftEndOnRectangleIcon,
   PencilSquareIcon,
 } from '@heroicons/react/24/outline';
+import Divider from './Divider';
 
 interface UserDetailsProps {
   user: User;
@@ -69,7 +70,7 @@ export function UserDetails({ user }: UserDetailsProps) {
             </div>
           </li>
 
-          <hr className={styles.divider} />
+          <Divider />
 
           <li className={styles.menuActionItem}>
             <button
