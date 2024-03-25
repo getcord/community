@@ -10,13 +10,16 @@ import { ThreadSummary } from '@cord-sdk/types';
 import { useRouter } from 'next/navigation';
 import styles from './support.module.css';
 
-export default function Support() {
-  // TODO: update these values to fetch the correct threads
+export default function Support({
+  customerID,
+  customerName,
+}: {
+  customerID: string;
+  customerName: string;
+}) {
   const data = threadHooks.useThreads({
     filter: {
-      location: {
-        page: 'discord',
-      },
+      groupID: customerID,
     },
     sortDirection: 'descending',
   });
@@ -26,7 +29,7 @@ export default function Support() {
   return (
     <div className={styles.threads}>
       <div className={styles.header}>
-        <h3>CUSTOMER NAME</h3>
+        <h3>{customerName}</h3>
       </div>
       <div className={styles.messages}>
         {threads.length > 0 &&
@@ -43,8 +46,7 @@ export default function Support() {
         // margin matches that in the thread details
         style={{ gridArea: 'composer', marginTop: '12px' }}
         // this will be updated to have only the customer's group
-        groupId="community_all"
-        location={{ page: 'discord' }}
+        groupId={customerID}
         showExpanded
       />
     </div>

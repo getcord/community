@@ -13,6 +13,7 @@ import {
   DocumentTextIcon,
   HomeIcon,
 } from '@heroicons/react/24/outline';
+import Button from '../ui/Button';
 
 const resources = [
   {
@@ -29,8 +30,18 @@ const resources = [
   },
 ] as const;
 
-export default function Sidebar({ categories }: { categories?: Category[] }) {
+export default function Sidebar({
+  categories,
+  supportChats,
+  supportEnabled,
+}: {
+  categories?: Category[];
+  supportEnabled?: boolean;
+  supportChats?: { customerID?: string; customerName?: string }[];
+}) {
   const pathname = usePathname();
+  const showJoinCord = !supportChats?.[0].customerID;
+  const showUpgrade = !!supportChats?.[0].customerID && !supportEnabled;
 
   return (
     <nav className={styles.container}>
@@ -41,7 +52,7 @@ export default function Sidebar({ categories }: { categories?: Category[] }) {
           })}
         >
           <Link href="/" aria-label="home" className={styles.link}>
-            <ResourceItem resourceName="All Topics" />
+            <ResourceItem resourceType="All Topics" />
           </Link>
         </li>
         {categories && (
@@ -78,7 +89,7 @@ export default function Sidebar({ categories }: { categories?: Category[] }) {
                   aria-label={resource.id}
                   className={styles.link}
                 >
-                  <ResourceItem resourceName={resource.id} />
+                  <ResourceItem resourceType={resource.id} />
                 </Link>
               </li>
             ))}
@@ -86,22 +97,61 @@ export default function Sidebar({ categories }: { categories?: Category[] }) {
         </li>
         <h4 className={styles.navlistTitle}>Support chat</h4>
         <ul className={styles.navItems}>
-          <li className={styles.listItem}>
-            <Link href="/support" aria-label="support" className={styles.link}>
-              <ResourceItem resourceName="Support" />
-            </Link>
-          </li>
+          {!showUpgrade && showJoinCord && (
+            <Button
+              displayAs="a"
+              href="https://console.cord.com"
+              label="sign up to Cord"
+              target="_blank"
+              style={{ marginLeft: '20px' }}
+            >
+              Sign up for Cord
+            </Button>
+          )}
+          {!showJoinCord && showUpgrade && (
+            <Button
+              displayAs="a"
+              href="https://console.cord.com/settings/billing"
+              label="upgrade Cord account"
+              target="_blank"
+              style={{ marginLeft: '20px' }}
+            >
+              Upgrade Cord
+            </Button>
+          )}
+          {!showJoinCord &&
+            !showUpgrade &&
+            supportChats?.map(({ customerID, customerName }) => (
+              <li className={styles.listItem} key={customerID}>
+                <Link
+                  href="/support"
+                  aria-label={`support for ${customerName}`}
+                  className={styles.link}
+                >
+                  <ResourceItem
+                    resourceType="Support"
+                    resourceName={customerName}
+                  />
+                </Link>
+              </li>
+            ))}
         </ul>
       </ul>
     </nav>
   );
 }
 
-export function ResourceItem({ resourceName }: { resourceName: string }) {
+export function ResourceItem({
+  resourceType,
+  resourceName,
+}: {
+  resourceType: string;
+  resourceName?: string;
+}) {
   return (
     <span className={styles.resourceContainer}>
-      <NavItemPrefix navFor={resourceName} />
-      <span>{resourceName}</span>
+      <NavItemPrefix navFor={resourceType} />
+      <span>{resourceName ?? resourceType}</span>
     </span>
   );
 }

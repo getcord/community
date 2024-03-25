@@ -4,7 +4,8 @@ import { Composer, Message, thread as threadHooks } from '@cord-sdk/react';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import styles from './threadDetails.module.css';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { getCustomerInfo } from '@/app/helpers/customerInfo';
 
 export default function ThreadDetails({
   params,
@@ -13,6 +14,12 @@ export default function ThreadDetails({
 }) {
   const threadId = params?.threadId && decodeURIComponent(params.threadId);
   const router = useRouter();
+  const [customerID, setCustomerID] = useState<string>()
+
+  useEffect(() => {
+    getCustomerInfo().then(({ customerID}) => setCustomerID(customerID));
+  }, [])
+
   if (!threadId) {
     return <h1>oops can&apos;t find this thread!</h1>;
   }
@@ -34,8 +41,7 @@ export default function ThreadDetails({
       </div>
       {/* THIS WILL NEED TO BE CONFIGURED PROPERLY TOO */}
       <Composer
-        groupId="community_all"
-        location={{ page: 'discord' }}
+        groupId={customerID}
         threadId={threadId}
       />
     </div>

@@ -58,7 +58,7 @@ async function createCordEntitiesAsNeeded(sessionUser: Claims) {
 }
 
 async function getData() {
-  const { CORD_SECRET, CORD_APP_ID } = process.env;
+  const { CORD_SECRET, CORD_APP_ID, CORD_CUSTOMER_ID } = process.env;
   const categories = [...CATEGORIES];
   if (!CORD_SECRET || !CORD_APP_ID) {
     console.error(
@@ -74,10 +74,17 @@ async function getData() {
   const clientAuthToken = getClientAuthToken(CORD_APP_ID, CORD_SECRET, {
     user_id: userID,
   });
+  const { customerID, customerName, supportEnabled } = await getCustomerInfo();
 
   return {
     clientAuthToken,
     categories,
+    supportEnabled,
+    supportChats:
+       customerID !== CORD_CUSTOMER_ID
+        ? [{ customerID, customerName: 'Cord' }]
+        : // if it's not the CORD_APP_ID then it needs to be the array of all support chats
+          [{ customerID, customerName }],
   };
 }
 
@@ -91,7 +98,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { clientAuthToken, categories } = await getData();
+  const { clientAuthToken, categories, supportChats, supportEnabled } =
+    await getData();
   const user = await getUser();
 
   return (
@@ -100,7 +108,11 @@ export default async function RootLayout({
         <CordIntegration clientAuthToken={clientAuthToken}>
           <Header user={user} />
           <div className={styles.outlet}>
-            <Sidebar categories={categories} />
+            <Sidebar
+              categories={categories}
+              supportChats={supportChats}
+              supportEnabled={supportEnabled}
+            />
             <div className={styles.content}>{children}</div>
           </div>
         </CordIntegration>
