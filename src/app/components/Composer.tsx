@@ -29,6 +29,8 @@ type NewPostInputContextProps = {
   title: string;
   setCategories: (categories: Category[]) => void;
   categories: Category[];
+  setError: (error: string) => void;
+  error: string;
 };
 
 const NewPostInputContext = createContext<NewPostInputContextProps>({
@@ -36,6 +38,8 @@ const NewPostInputContext = createContext<NewPostInputContextProps>({
   title: '',
   setCategories: (_categories) => {},
   categories: [],
+  setError: () => {},
+  error: '',
 });
 
 function NewPostInputProvider(
@@ -45,6 +49,7 @@ function NewPostInputProvider(
   const [categories, setCategories] = useState<Category[]>(
     props.defaultCategory ? [props.defaultCategory] : [],
   );
+  const [error, setError] = useState('');
 
   const value = useMemo(
     () => ({
@@ -52,8 +57,10 @@ function NewPostInputProvider(
       setTitle,
       categories,
       setCategories,
+      error,
+      setError,
     }),
-    [categories, title],
+    [categories, title, error],
   );
 
   return (
@@ -65,18 +72,19 @@ function NewPostInputProvider(
 
 function CommunityComposer(props: ComposerProps) {
   const router = useRouter();
-  const { title, setTitle, categories, setCategories } =
+  const { title, setTitle, categories, setCategories, setError } =
     useContext(NewPostInputContext);
 
   const onSubmit = useCallback(
     ({ message }: { message: Partial<ClientMessageData> }) => {
-      if (!title || !message) {
+      if (!title || !message || !categories.length) {
+        setError(`All fields are required and must be filled.`);
         return;
       }
       router.push('/');
       props.onSubmit({ message });
     },
-    [title, props, router],
+    [title, props, router, categories, setError],
   );
 
   return (
@@ -121,10 +129,11 @@ function CommunityComposer(props: ComposerProps) {
               props.onKeyDown({ event });
             }}
             onResetState={() => {
-              if (!title) {
+              if (!title || !categories.length) {
                 return;
               }
               setTitle('');
+              setCategories([]);
               props.onResetState();
             }}
           />
@@ -135,6 +144,7 @@ function CommunityComposer(props: ComposerProps) {
 }
 
 function CommunityComposerLayout(props: ComposerLayoutProps) {
+  const { error } = useContext(NewPostInputContext);
   const sendButton = props.toolbarItems?.find(
     (item) => item.name === 'sendButton',
   );
@@ -147,7 +157,7 @@ function CommunityComposerLayout(props: ComposerLayoutProps) {
         )}
         textEditor={props.textEditor}
       ></experimental.ComposerLayout>
-
+      <span className={styles.error}>{error}</span>
       {sendButton?.element}
     </>
   );

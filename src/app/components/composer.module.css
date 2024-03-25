@@ -42,3 +42,7 @@
   border: 1px solid var(--cord-grey-dark);
   transition: border-color 0.3s;
 }
+
+.error {
+  color: var(--cord-orange);
+}
