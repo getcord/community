@@ -52,6 +52,15 @@ export default function UpdateUserDetailsModal({
     e.stopPropagation();
   };
 
+  const handleKeyUp = useCallback(
+    async (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        await handleUpdateUserName();
+      }
+    },
+    [handleUpdateUserName],
+  );
+
   return (
     <Modal
       id={'update-user-modal'}
@@ -79,6 +88,7 @@ export default function UpdateUserDetailsModal({
               onChange={(e) => setUserName(e.target.value)}
               required
               className={styles.input}
+              onKeyUp={handleKeyUp}
             />
             <span className={styles.error}>{error}</span>
           </div>
