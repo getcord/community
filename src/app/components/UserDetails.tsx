@@ -90,7 +90,7 @@ export function UserDetails({ user }: UserDetailsProps) {
               className={styles.link}
               label={'Log Out'}
             >
-              <ArrowLeftEndOnRectangleIcon width={14} /> Log out {name}
+              <ArrowLeftEndOnRectangleIcon width={14} /> Log out
             </Button>
           </li>
         </ul>
