@@ -75,6 +75,7 @@ export default function UpdateUserDetailsModal({
               type="text"
               id="username"
               name="username"
+              placeholder={user.name}
               onChange={(e) => setUserName(e.target.value)}
               required
               className={styles.input}
