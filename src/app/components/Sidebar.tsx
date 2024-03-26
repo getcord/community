@@ -191,5 +191,7 @@ function NavItemPrefix({ navFor }: { navFor: string }) {
       return <BellIcon width={'14px'} />;
     case 'Profile':
       return <UserIcon width={'14px'} />;
+    case 'Preferences':
+      return <Cog6ToothIcon width={'14px'} />;
   }
 }
