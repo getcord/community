@@ -1,0 +1,37 @@
+.tabItems {
+  display: flex;
+  padding: 0;
+  margin-bottom: 24px;
+}
+
+.tab {
+  display: flex;
+  cursor: pointer;
+  min-width: 200px;
+  width: 100%;
+  border-bottom: 1px solid var(--cord-purple-light);
+}
+
+.link {
+  display: flex;
+  padding: 12px;
+  padding-top: 0;
+  transition: color 0.3s ease;
+  text-decoration: none;
+  color: var(--cord-grey-dark);
+  width: 100%;
+  justify-content: center;
+}
+
+.tab.active .link,
+.tab:hover .link {
+  color: var(--cord-purple);
+}
+
+.tab:hover {
+  border-bottom: 2px solid var(--cord-purple-light);
+}
+
+.tab.active {
+  border-bottom: 2px solid var(--cord-purple);
+}
