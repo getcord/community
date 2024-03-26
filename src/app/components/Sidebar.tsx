@@ -11,8 +11,10 @@ import {
   BellIcon,
   ChatBubbleLeftRightIcon,
   CodeBracketIcon,
+  Cog6ToothIcon,
   DocumentTextIcon,
   HomeIcon,
+  UserIcon,
 } from '@heroicons/react/24/outline';
 import Button from '../ui/Button';
 import { notification } from '@cord-sdk/react';
@@ -60,16 +62,12 @@ export default function Sidebar({
         </li>
         <li
           className={cx(styles.listItem, {
-            [styles.listItemActive]: pathname === '/notifications',
+            [styles.listItemActive]: pathname.includes('/profile'),
           })}
         >
-          <Link
-            href="/notifications"
-            aria-label="notifications"
-            className={styles.link}
-          >
+          <Link href="/profile" aria-label="profile" className={styles.link}>
             <ResourceItem
-              resourceType="Notifications"
+              resourceType="Profile"
               hasActivityBadge={!!summary?.unread}
             />
           </Link>
@@ -185,12 +183,13 @@ function NavItemPrefix({ navFor }: { navFor: string }) {
     case 'REST API Reference':
       return <CodeBracketIcon width={'14px'} />;
     case 'Docs':
-      return <DocumentTextIcon width={'14px'} />;
     case 'Cord Console':
       return <DocumentTextIcon width={'14px'} />;
     case 'Support':
       return <ChatBubbleLeftRightIcon width={'14px'} />;
     case 'Notifications':
       return <BellIcon width={'14px'} />;
+    case 'Profile':
+      return <UserIcon width={'14px'} />;
   }
 }
