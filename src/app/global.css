@@ -74,3 +74,7 @@ html .cord-component.cord-avatar-container  {
   height: 32px;
   cursor: pointer;
 }
+
+html .cord-component .cord-send-button.cord-primary.cord-with-icon.cord-button.cord-small {
+  color: white;
+}
