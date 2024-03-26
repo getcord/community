@@ -62,12 +62,12 @@ function NewPostInputProvider(
   );
 }
 
-function DatCordComposer(props: ComposerProps) {
+function CommunityComposer(props: ComposerProps) {
   const router = useRouter();
   const { title, setTitle, categories, setCategories } =
     useContext(NewPostInputContext);
 
-  const datCordOnSubmit = useCallback(
+  const onSubmit = useCallback(
     ({ message }: { message: Partial<ClientMessageData> }) => {
       if (!title || !message) {
         return;
@@ -111,7 +111,7 @@ function DatCordComposer(props: ComposerProps) {
           <experimental.CordComposer
             {...props}
             onSubmit={(message) => {
-              datCordOnSubmit(message);
+              onSubmit(message);
             }}
             onKeyDown={({ event }: { event: React.KeyboardEvent }) => {
               if (event.key === 'Enter') {
@@ -152,7 +152,7 @@ function CommunityComposerLayout(props: ComposerLayoutProps) {
   );
 }
 
-function DatCordSendButton(props: SendButtonProps) {
+function CommunitySendButton(props: SendButtonProps) {
   return (
     <button onClick={props.onClick} className={styles.submitButton}>
       Submit
@@ -176,8 +176,8 @@ function ComposerImpl() {
       <experimental.Replace
         replace={{
           ComposerLayout: CommunityComposerLayout,
-          Composer: DatCordComposer,
-          SendButton: DatCordSendButton,
+          Composer: CommunityComposer,
+          SendButton: CommunitySendButton,
         }}
       >
         <experimental.SendComposer
