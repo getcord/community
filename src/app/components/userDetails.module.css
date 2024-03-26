@@ -33,20 +33,9 @@
   opacity: 0.8;
 }
 
-.button {
-  background-color: transparent;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-}
-
 .link {
   text-decoration: none;
   all: unset;
-}
-
-.button,
-.link {
   font-size: 14px;
   color: var(--cord-grey-dark);
   display: flex;

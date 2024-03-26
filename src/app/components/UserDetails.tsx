@@ -10,18 +10,15 @@ import {
   PencilSquareIcon,
 } from '@heroicons/react/24/outline';
 import Divider from '@/app/ui/Divider';
-import UpdateUserDetailsModal from '@/app/components/UpdateUserDetailsModal';
 import Button from '@/app/ui/Button';
 
 interface UserDetailsProps {
   user: User;
 }
-type UserDetailsModalStateType = 'DETAILS_MENU' | 'UPDATE_USER';
 
 export function UserDetails({ user }: UserDetailsProps) {
   const { userID, name, email } = user;
-  const [modalState, setModalState] =
-    useState<UserDetailsModalStateType | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const [userDetailsMenuPosition, setUserDetailsMenuPosition] = useState<{
     top: number;
@@ -34,16 +31,11 @@ export function UserDetails({ user }: UserDetailsProps) {
       top: rect.top,
       left: rect.left - 240,
     });
-    setModalState('DETAILS_MENU');
-  };
-
-  const openUpdateUserModal = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    setModalState('UPDATE_USER');
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
-    setModalState(null);
+    setIsModalOpen(false);
   };
 
   return (
@@ -58,7 +50,7 @@ export function UserDetails({ user }: UserDetailsProps) {
       )}
 
       <Modal
-        isOpen={modalState === 'DETAILS_MENU'}
+        isOpen={isModalOpen}
         onClose={closeModal}
         id={'user-details-modal'}
         position={userDetailsMenuPosition}
@@ -76,9 +68,10 @@ export function UserDetails({ user }: UserDetailsProps) {
 
           <li className={styles.menuActionItem}>
             <Button
-              displayAs={'button'}
-              className={styles.button}
-              onClick={openUpdateUserModal}
+              displayAs={'link'}
+              className={styles.link}
+              href={'/profile/preferences'}
+              label={'Update profile'}
             >
               <PencilSquareIcon width={14} /> Update Profile
             </Button>
@@ -95,12 +88,6 @@ export function UserDetails({ user }: UserDetailsProps) {
           </li>
         </ul>
       </Modal>
-      <UpdateUserDetailsModal
-        user={user}
-        onClose={closeModal}
-        isOpen={modalState === 'UPDATE_USER'}
-        id={'update-user-details-modal'}
-      />
     </>
   );
 }
