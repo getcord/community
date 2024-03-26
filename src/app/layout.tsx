@@ -7,23 +7,22 @@ import Sidebar from './components/Sidebar';
 import styles from './styles.module.css';
 import { CATEGORIES } from '@/app/types';
 import { fetchCordRESTApi } from '@/app/fetchCordRESTApi';
-import type { ServerGetUser } from '@cord-sdk/types';
 import { Claims, getSession } from '@auth0/nextjs-auth0';
-import { getUser } from '@/app/helpers/user';
-import {
-  getCustomerInfo,
-  getCustomerInfoById,
-} from '@/app/helpers/customerInfo';
+import { User, getUserById } from '@/app/helpers/user';
+import { getCustomerInfoForUserId } from '@/app/helpers/customerInfo';
 
 async function createCordEntitiesAsNeeded(sessionUser: Claims) {
   // Not sure why but sub seems to be the spot that the put the user_id
-  const userID = sessionUser.sub;
+  const userID = sessionUser.sub as string;
 
-  // Verify that we have the user and create if not
-  try {
-    await fetchCordRESTApi<ServerGetUser>(`users/${userID}`);
-  } catch (error) {
-    // Let's create the user and add them to the default community group
+  const [user, customerInfo] = await Promise.all([
+    getUserById(userID),
+    getCustomerInfoForUserId(userID),
+  ]);
+
+  if (!user.userID) {
+    // If we don't have a user, let's create them while we have the
+    // session info and add them to the default community group
     await fetchCordRESTApi(`users/${userID}`, 'PUT', {
       name: sessionUser.name,
       email: sessionUser.email,
@@ -33,7 +32,6 @@ async function createCordEntitiesAsNeeded(sessionUser: Claims) {
   }
 
   // Now check customer info as well
-  const customerInfo = await getCustomerInfoById(userID);
   if (customerInfo.customerID) {
     // Verify that we have a customer and create if not
     try {
@@ -64,24 +62,29 @@ async function getData() {
     console.error(
       'Missing CORD_SECRET or CORD_APP_ID env variable. Get it on console.cord.com and add it to .env',
     );
-    return { clientAuthToken: null, categories };
+    return { clientAuthToken: null, categories, user: {} as User };
   }
   const session = await getSession();
   if (!session) {
-    return { clientAuthToken: null, categories };
+    return { clientAuthToken: null, categories, user: {} as User };
   }
   const userID = await createCordEntitiesAsNeeded(session.user);
   const clientAuthToken = getClientAuthToken(CORD_APP_ID, CORD_SECRET, {
     user_id: userID,
   });
-  const { customerID, customerName, supportEnabled } = await getCustomerInfo();
+  const [user, customerInfo] = await Promise.all([
+    getUserById(userID),
+    getCustomerInfoForUserId(userID),
+  ]);
+  const { customerID, customerName, supportEnabled } = customerInfo;
 
   return {
     clientAuthToken,
     categories,
+    user,
     supportEnabled,
     supportChats:
-       customerID !== CORD_CUSTOMER_ID
+      customerID !== CORD_CUSTOMER_ID
         ? [{ customerID, customerName: 'Cord' }]
         : // if it's not the CORD_APP_ID then it needs to be the array of all support chats
           [{ customerID, customerName }],
@@ -98,9 +101,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { clientAuthToken, categories, supportChats, supportEnabled } =
+  const { clientAuthToken, categories, user, supportChats, supportEnabled } =
     await getData();
-  const user = await getUser();
 
   return (
     <html lang="en">

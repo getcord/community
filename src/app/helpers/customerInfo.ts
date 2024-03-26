@@ -12,9 +12,11 @@ export async function getCustomerInfo(): Promise<CustomerInfo> {
   if (!userID) {
     return {};
   }
-  return getCustomerInfoById(userID);
+  return getCustomerInfoForUserId(userID);
 }
 
-export async function getCustomerInfoById(userID: string) {
+export async function getCustomerInfoForUserId(
+  userID: string,
+): Promise<CustomerInfo> {
   return fetchCordRESTApi<CustomerInfo>(`community/users/${userID}`);
 }
