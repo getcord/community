@@ -6,6 +6,7 @@ import Button from '@/app/ui/Button';
 import styles from './updateuserdetailsmodal.module.css';
 import { useCallback, useState } from 'react';
 import Divider from '@/app/ui/Divider';
+import { SERVER_HOST } from '@/consts';
 
 interface UserDetailsProps extends ModalProps {
   user: User;
@@ -24,16 +25,12 @@ export default function UpdateUserDetailsModal({
     if (!userID || !userName) {
       return;
     }
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_HOST}/api/user?userID=${userID}`,
-      {
-        method: 'PUT',
-
-        body: JSON.stringify({
-          name: userName,
-        }),
-      },
-    );
+    const res = await fetch(`${SERVER_HOST}/api/user?userID=${userID}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        name: userName,
+      }),
+    });
 
     const response = await res.json();
     if (!response.success) {
