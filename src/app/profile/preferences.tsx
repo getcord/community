@@ -1,12 +1,13 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { User } from '@/app/helpers/user';
 import Button from '@/app/ui/Button';
 import styles from './preferences.module.css';
 import { SERVER_HOST } from '@/consts';
 import Input, { Label } from '@/app/ui/Input';
 import { useRouter } from 'next/navigation';
+import { user as CordUser } from '@cord-sdk/react';
 
 interface UserDetailsProps {
   user: User;
@@ -15,13 +16,27 @@ interface UserDetailsProps {
 export default function Preferences({ user }: UserDetailsProps) {
   const { userID } = user;
   const router = useRouter();
+  // We need the viewer data to get the notifications preferences
+  // and the user prop to get the email address as we don't have that
+  // info on any user client-side api
+  const viewer = CordUser.useViewerData();
 
   const [userName, setUserName] = useState('');
   const [error, setError] = useState('');
-  const [sendEmailNotifications, setSendEmailNotifications] = useState(false);
+  const [sendEmailNotifications, setSendEmailNotifications] = useState(
+    viewer?.notificationPreferences.sendViaEmail,
+  );
+
+  useEffect(() => {
+    if (viewer?.notificationPreferences) {
+      setSendEmailNotifications(
+        viewer.notificationPreferences.sendViaEmail || false,
+      );
+    }
+  }, [viewer]);
 
   const handleSaveUserDetails = useCallback(async () => {
-    if (!userID || !userName) {
+    if (!userID) {
       return;
     }
 
@@ -39,7 +54,10 @@ export default function Preferences({ user }: UserDetailsProps) {
       }
     }
 
-    if (window.CordSDK !== undefined) {
+    if (
+      window.CordSDK !== undefined &&
+      sendEmailNotifications !== viewer?.notificationPreferences.sendViaEmail
+    ) {
       window.CordSDK.user
         .setNotificationPreferences({
           sendViaEmail: sendEmailNotifications,
@@ -89,9 +107,7 @@ export default function Preferences({ user }: UserDetailsProps) {
         <input
           type="checkbox"
           id="toggleEmailNotifications"
-          // TODO: this should be the value of their current
-          // preference
-          checked={sendEmailNotifications}
+          checked={sendEmailNotifications ?? false}
           onChange={() => setSendEmailNotifications(!sendEmailNotifications)}
           aria-label="Toggle email notifications"
         />
