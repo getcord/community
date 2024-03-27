@@ -10,6 +10,7 @@ import { fetchCordRESTApi } from '@/app/fetchCordRESTApi';
 import { Claims, getSession } from '@auth0/nextjs-auth0';
 import { User, getUserById } from '@/app/helpers/user';
 import { getCustomerInfoForUserId } from '@/app/helpers/customerInfo';
+import { ServerGroupData } from '@cord-sdk/types';
 
 async function createCordEntitiesAsNeeded(sessionUser: Claims) {
   // Not sure why but sub seems to be the spot that the put the user_id
@@ -39,19 +40,32 @@ async function createCordEntitiesAsNeeded(sessionUser: Claims) {
     );
     if (!cordUser) {
       // Create group as it does not exist
-      await fetchCordRESTApi(`groups/${customerInfo.customerID}`, 'PUT', {
-        name: customerInfo.customerName,
-      });
-    }
+      const customerGroup = await fetchCordRESTApi<ServerGroupData | undefined>(
+        `groups/${customerInfo.customerID}`,
+      );
 
-    // Now lets make sure the user is part of the group
-    await fetchCordRESTApi(
-      `groups/${customerInfo.customerID}/members`,
-      'POST',
-      {
-        add: [userID],
-      },
-    );
+      // Create group if it doesn't exist, but if it does then update the metadata to reflect
+      // the actual status in case it's not synced (eg customer downgraded or upgraded)
+      if (
+        !customerGroup ||
+        customerGroup.metadata?.['supportEnabled'] !==
+          customerInfo.supportEnabled
+      ) {
+        await fetchCordRESTApi(`groups/${customerInfo.customerID}`, 'PUT', {
+          name: customerInfo.customerName,
+          metadata: { supportEnabled: customerInfo.supportEnabled },
+        });
+      }
+
+      // Now lets make sure the user is part of the group
+      await fetchCordRESTApi(
+        `groups/${customerInfo.customerID}/members`,
+        'POST',
+        {
+          add: [userID],
+        },
+      );
+    }
   }
   return userID;
 }
