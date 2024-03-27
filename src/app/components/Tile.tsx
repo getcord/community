@@ -9,6 +9,10 @@ const getThreadData = async (threadID: string, thread: CoreThreadData) => {
     'GET',
   );
 
+  if (!messages) {
+    return;
+  }
+
   const serverThread: ComponentProps<typeof TileInner>['serverThread'] = {
     id: thread.id,
     firstMessage: messages[0],

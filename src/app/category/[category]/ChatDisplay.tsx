@@ -14,17 +14,18 @@ async function getAllCategoriesPermissions() {
 
   try {
     // Fetch all groups the current user is in
-    const { groups } = await fetchCordRESTApi<ServerGetUser>(`users/${userID}`);
+    const groups = (await fetchCordRESTApi<ServerGetUser>(`users/${userID}`))
+      ?.groups;
 
     const mostCategories = (
       await fetchCordRESTApi<ServerUserData>('users/all_categories_holder')
-    ).metadata as Record<string, string>;
+    )?.metadata as Record<string, string>;
 
     // returns all categories, with their permissions
     return Object.entries(mostCategories)
       .sort((a, b) => a[0].localeCompare(b[0]))
       .reduce((acc, [key, value]) => {
-        if (groups.includes(value)) {
+        if (groups?.includes(value)) {
           acc[key as Category] = { permission: 'READ_WRITE', group: value };
         } else {
           acc[key as Category] = { permission: 'READ', group: value };

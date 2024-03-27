@@ -20,18 +20,18 @@ export async function getUser(): Promise<User> {
 }
 
 export async function getUserById(userID: string): Promise<User> {
-  try {
-    const user = await fetchCordRESTApi<ServerGetUser>(`users/${userID}`);
-    const isAdmin = user.groups.includes(ADMINS_GROUP_ID);
-
-    return {
-      userID,
-      name: user.name ?? undefined,
-      email: user.email ?? undefined,
-      profilePictureURL: user.profilePictureURL ?? undefined,
-      isAdmin,
-    };
-  } catch (error) {
+  const user = await fetchCordRESTApi<ServerGetUser>(`users/${userID}`);
+  if (!user) {
     return {};
   }
+
+  const isAdmin = user.groups.includes(ADMINS_GROUP_ID);
+
+  return {
+    userID,
+    name: user.name ?? undefined,
+    email: user.email ?? undefined,
+    profilePictureURL: user.profilePictureURL ?? undefined,
+    isAdmin,
+  };
 }

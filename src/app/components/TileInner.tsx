@@ -36,10 +36,13 @@ export default function TileInner({
   serverThread,
 }: {
   threadID: string;
-  serverThread: ServerThread;
+  serverThread?: ServerThread;
 }) {
   const data = threadHooks.useThread(threadID);
   const thread = data.thread ?? serverThread;
+  if (!thread) {
+    return;
+  }
 
   const metadata = getTypedMetadata(thread.metadata);
   const showIcons = metadata.admin || metadata.pinned;

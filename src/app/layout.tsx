@@ -34,9 +34,10 @@ async function createCordEntitiesAsNeeded(sessionUser: Claims) {
   // Now check customer info as well
   if (customerInfo.customerID) {
     // Verify that we have a customer and create if not
-    try {
-      await fetchCordRESTApi(`groups/${customerInfo.customerID}`);
-    } catch (error) {
+    const cordUser = await fetchCordRESTApi(
+      `groups/${customerInfo.customerID}`,
+    );
+    if (!cordUser) {
       // Create group as it does not exist
       await fetchCordRESTApi(`groups/${customerInfo.customerID}`, 'PUT', {
         name: customerInfo.customerName,
