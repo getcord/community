@@ -55,6 +55,9 @@
   padding: 8px;
   align-self: center;
 }
+.column:global(.cord-component.cord-timestamp) {
+  color: var(--cord-grey-dark);
+}
 .participants {
   display: flex;
   justify-content: center;

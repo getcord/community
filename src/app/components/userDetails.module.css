@@ -52,3 +52,10 @@
 .menuActionItem:hover {
   background-color: var(--cord-grey-light);
 }
+
+.profileAvatar:global(.cord-component.cord-avatar-container) {
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}

@@ -56,10 +56,6 @@ html .cord-component .cord-tooltip {
   color: white;
 }
 
-html .cord-component.cord-timestamp {
-  color: var(--cord-grey-dark);
-}
-
 html .cord-component .cord-thread-container .cord-collapsed-thread {
   border: none;
 }
@@ -68,33 +64,6 @@ html .cord-component.cord-component-thread {
   border: none;
 }
 
-html .cord-component.cord-avatar-container  {
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-}
-
 html .cord-component .cord-send-button.cord-primary.cord-with-icon.cord-button.cord-small {
   color: white;
-}
-
-/* These are for the post details page - Beware!!! They will affect other <Thread/> components from cord :( :(  */
-html .cord-component .cord-thread-container .cord-inline-thread .cord-scroll-container .cord-message-block:first-child .cord-message {
-  border-radius: 0;
-  padding-bottom: 52px;
-  border-bottom: 1px solid var(--cord-grey);
-}
-html .cord-component .cord-thread-container .cord-inline-thread .cord-scroll-container .cord-message-block:first-child .cord-message-options-buttons {
-  flex-direction: row;
-}
-html .cord-component .cord-thread-container .cord-inline-thread .cord-scroll-container .cord-message-block:first-child .cord-message.cord-no-reactions .cord-message-options-buttons {
-  flex-direction: row;
-  visibility: visible;
-}
-html .cord-component .cord-thread-container .cord-inline-thread .cord-scroll-container .cord-message-block:first-child .cord-message .cord-message-options-buttons [data-cord-button="thread-options"] {
-  visibility: visible;
-}
-html .cord-component .cord-thread-container .cord-inline-thread .cord-scroll-container .cord-message-block:first-child .cord-message .cord-message-options-buttons [data-cord-button="select-emoji"] {
-  visibility: visible;
 }

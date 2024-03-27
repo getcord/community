@@ -2,6 +2,10 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
+
+  --thread-border-radius: 0px;
+  --thread-border-bottom: 1px solid var(--cord-grey);
+  --thread-padding-bottom: 52px;
 }
 
 .heading {
@@ -28,12 +32,19 @@
   height: 24px;
   width: 24px;
 }
-/* NOTE!! This is copied from global.css to match a logged in user */
-.serverMessage:first-child {
-  border-radius: 0;
-  padding-bottom: 52px;
-  border-bottom: 1px solid var(--cord-grey);
+
+/* These two need to match, so using the variables from above */
+.container :global(.cord-component .cord-thread-container .cord-inline-thread .cord-scroll-container .cord-message-block:first-child .cord-message) {
+  border-radius: var(--thread-border-radius);
+  padding-bottom: var(--thread-padding-bottom);
+  border-bottom: var(--thread-border-bottom);
 }
+.serverMessage:first-child {
+  border-radius: var(--thread-border-radius);
+  padding-bottom: var(--thread-padding-bottom);
+  border-bottom: var(--thread-border-bottom);
+}
+
 .serverMessage:not(:first-child) {
   padding-top: 16px;
 }
@@ -70,4 +81,13 @@
 }
 .serverMessageContent {
   grid-area: message;
+}
+
+/* Cord Component Styles */
+.container :global(.cord-thread-container .cord-inline-thread .cord-scroll-container .cord-message-block:first-child .cord-message-options-buttons) {
+  flex-direction: row;
+}
+.container :global(.cord-component .cord-thread-container .cord-inline-thread .cord-scroll-container .cord-message-block:first-child .cord-message.cord-no-reactions .cord-message-options-buttons) {
+  flex-direction: row;
+  visibility: visible;
 }
