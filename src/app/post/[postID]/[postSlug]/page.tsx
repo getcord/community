@@ -5,6 +5,7 @@ import { getTypedMetadata } from '@/utils';
 import { buildQueryParams, fetchCordRESTApi } from '@/app/fetchCordRESTApi';
 import Post, { ThreadHeading, ThreadNotFound } from './Post';
 import { getUser, getUserById } from '@/app/helpers/user';
+import { CordTimestamp } from '@/app/components/CordClient';
 import Image from 'next/image';
 
 async function getData(
@@ -87,7 +88,6 @@ async function ServerAuthorTimestamp({
   timestamp: Date;
 }) {
   const user = await getUserById(userID);
-  const date = new Date(timestamp);
 
   if (!user.profilePictureURL) {
     // TODO: don't think this should happen? But should probably have a catch here
@@ -104,9 +104,7 @@ async function ServerAuthorTimestamp({
       />
       <div className={styles.serverNameAndTimestamp}>
         <span className={styles.serverAuthorName}>{user.name}</span>
-        <span className={styles.serverTimestamp}>
-          {date.toLocaleDateString()}
-        </span>
+        <CordTimestamp type="message" value={timestamp} />
       </div>
     </>
   );

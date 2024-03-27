@@ -75,7 +75,7 @@
 .serverAuthorName {
   font-weight: bold;
 }
-.serverTimestamp {
+.serverNameAndTimestamp :global(.cord-component.cord-timestamp) {
   color: var(--cord-grey-dark);
   font-size: 0.8rem;
 }
