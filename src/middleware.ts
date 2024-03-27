@@ -23,9 +23,10 @@ export async function middleware(request: NextRequest) {
   response.cookies.delete('attempted_login');
 
   if (!session?.user && attemptedLoginAlready !== 'true') {
-    const shouldPageRedirectToLogin = /^\/(newpost|profile)(\/.*)?$/.test(
-      request.nextUrl.pathname,
-    );
+    const shouldPageRedirectToLogin =
+      /^\/(newpost|notifications|preferences)(\/.*)?$/.test(
+        request.nextUrl.pathname,
+      );
 
     const loginUrl = new URL(
       `/api/auth/${shouldPageRedirectToLogin ? 'login' : 'silent-login'}`,
