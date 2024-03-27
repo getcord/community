@@ -82,6 +82,7 @@ async function getData() {
     clientAuthToken,
     categories,
     user,
+    customerInfo,
     supportEnabled,
     supportChats:
       customerID !== CORD_CUSTOMER_ID
@@ -101,7 +102,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { clientAuthToken, categories, user, supportChats, supportEnabled } =
+  const { clientAuthToken, categories, user, supportChats, supportEnabled, customerInfo } =
     await getData();
 
   return (
@@ -129,6 +130,7 @@ export default async function RootLayout({
               supportChats={supportChats}
               supportEnabled={supportEnabled}
               isLoggedIn={!!user?.userID}
+              customerExists={!!customerInfo?.customerID}
             />
             <div className={styles.content}>{children}</div>
           </div>

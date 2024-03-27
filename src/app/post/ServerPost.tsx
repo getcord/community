@@ -6,6 +6,7 @@ import { ThreadNotFound, ThreadHeading } from './Post';
 import styles from './post.module.css';
 import { buildQueryParams, fetchCordRESTApi } from '../fetchCordRESTApi';
 import Image from 'next/image';
+import Button from '../ui/Button';
 
 async function getData(
   threadID: string,
@@ -37,6 +38,7 @@ export default async function ServerPost({ threadID }: { threadID: string }) {
     <>
       <ThreadHeading metadata={metadata} threadName={thread.name} />
       <ServerThread messages={messages} />
+      <LoggedOutComposer postID={threadID} />
     </>
   );
 }
@@ -89,5 +91,30 @@ async function ServerAuthorTimestamp({
         <CordTimestamp type="message" value={timestamp} />
       </div>
     </>
+  );
+}
+
+function LoggedOutComposer({ postID }: { postID: string }) {
+  return (
+    <div className={styles.serverComposerContainer}>
+      <p>
+        To interact with this post at all you&apos;ll have to log in to Cord.
+        Or, if you&apos;re already a Cord customer then sign as your{' '}
+        <a href="https://console.cord.com" aria-label="cord console">
+          console
+        </a>{' '}
+        user and you&apos;re ready to go!
+      </p>
+      <div className={styles.serverComposerButtons}>
+        <Button
+          behaveAs="a"
+          href={`/api/auth/login?returnTo=/post/${postID}`}
+          label="sign in"
+          variant="outline"
+        >
+          Sign in
+        </Button>
+      </div>
+    </div>
   );
 }

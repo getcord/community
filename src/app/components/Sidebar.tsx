@@ -39,15 +39,15 @@ export default function Sidebar({
   supportChats,
   supportEnabled,
   isLoggedIn,
+  customerExists,
 }: {
   categories?: Category[];
   supportEnabled?: boolean;
   supportChats?: { customerID?: string; customerName?: string }[];
   isLoggedIn: boolean;
+  customerExists: boolean;
 }) {
   const pathname = usePathname();
-  const showJoinCord = !supportChats?.[0].customerID;
-  const showUpgrade = !!supportChats?.[0].customerID && !supportEnabled;
   const summary = notification.useSummary();
 
   return (
@@ -120,47 +120,48 @@ export default function Sidebar({
             ))}
           </ul>
         </li>
-        <h4 className={styles.navlistTitle}>Support chat</h4>
-        <ul className={styles.navItems}>
-          {!showUpgrade && showJoinCord && (
-            <Button
-              behaveAs="a"
-              href="https://console.cord.com"
-              label="sign up to Cord"
-              target="_blank"
-              style={{ marginLeft: '20px' }}
-            >
-              Sign up for Cord
-            </Button>
-          )}
-          {!showJoinCord && showUpgrade && (
-            <Button
-              behaveAs="a"
-              href="https://console.cord.com/settings/billing"
-              label="upgrade Cord account"
-              target="_blank"
-              style={{ marginLeft: '20px' }}
-            >
-              Upgrade Cord
-            </Button>
-          )}
-          {!showJoinCord &&
-            !showUpgrade &&
-            supportChats?.map(({ customerID, customerName }) => (
-              <li className={styles.listItem} key={customerID}>
-                <Link
-                  href="/support"
-                  aria-label={`support for ${customerName}`}
-                  className={styles.link}
+        {!isLoggedIn ? null : (
+          <>
+            <h4 className={styles.navlistTitle}>Support chat</h4>
+            <ul className={styles.navItems}>
+              {!customerExists && (
+                <Button
+                  behaveAs="a"
+                  href="https://console.cord.com/settings/billing"
+                  label="upgrade Cord account"
+                  style={{ marginLeft: '20px' }}
                 >
-                  <ResourceItem
-                    resourceType="Support"
-                    resourceName={customerName}
-                  />
-                </Link>
-              </li>
-            ))}
-        </ul>
+                  Set up Cord
+                </Button>
+              )}
+              {customerExists && !supportEnabled && (
+                <Button
+                  behaveAs="a"
+                  href="https://console.cord.com/settings/billing"
+                  label="upgrade Cord account"
+                  style={{ marginLeft: '20px' }}
+                >
+                  Upgrade Cord
+                </Button>
+              )}
+              {supportEnabled &&
+                supportChats?.map(({ customerID, customerName }) => (
+                  <li className={styles.listItem} key={customerID}>
+                    <Link
+                      href="/support"
+                      aria-label={`support for ${customerName}`}
+                      className={styles.link}
+                    >
+                      <ResourceItem
+                        resourceType="Support"
+                        resourceName={customerName}
+                      />
+                    </Link>
+                  </li>
+                ))}
+            </ul>
+          </>
+        )}
       </ul>
     </nav>
   );

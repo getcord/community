@@ -79,6 +79,18 @@
   color: var(--cord-grey-dark);
   font-size: 0.8rem;
 }
+.serverComposerContainer {
+  display: flex;
+  background-color: var(--cord-purple-light);
+  padding: 20px;
+  align-items: center;
+}
+.serverComposerButtons {
+  display: flex;
+  gap: 8px;
+  padding-top: 8px;
+  justify-content: flex-end;
+}
 
 /* Cord Component Styles */
 .container :global(.cord-thread-container .cord-inline-thread .cord-scroll-container .cord-message-block:first-child .cord-message-options-buttons) {
