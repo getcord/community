@@ -106,6 +106,20 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+        {/* TODO: is this really how this should be done in NextJS? Report findings to Ludo */}
+        {/* This may break when Alberto lands versioned css 👀 talk to him if it does! */}
+        <link
+          rel="stylesheet"
+          id="cord_css"
+          href="https://app.staging.cord.com/sdk/v1/sdk.latest.css"
+        />
+        <link
+          rel="stylesheet"
+          id="cord_react_css"
+          href="https://app.staging.cord.com/sdk/css/cord-react.css"
+        />
+      </head>
       <body>
         <CordIntegration clientAuthToken={clientAuthToken}>
           <Header user={user} />
