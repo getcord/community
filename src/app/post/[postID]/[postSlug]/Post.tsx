@@ -7,6 +7,7 @@ import { LockClosedIcon } from '@heroicons/react/24/outline';
 import { PushPinSvg } from '@/app/components/PushPinSVG';
 import { CategoryPills } from '@/app/components/CategoryPills';
 import { Metadata } from '@/app/types';
+import { useEffect } from 'react';
 
 export type ThreadData = {
   id: string;
@@ -15,7 +16,13 @@ export type ThreadData = {
 };
 
 export default function Post({ threadID }: { threadID: string }) {
-  const { thread, loading } = threadHooks.useThread(threadID);
+  const { thread, loading, hasMore, fetchMore } = threadHooks.useThread(threadID);
+
+  useEffect(() => {
+    if (hasMore) {
+      void fetchMore(10);
+    }
+  }, [hasMore, fetchMore])
 
   // check for undefined, and not loading
   if (!thread && !loading) {
