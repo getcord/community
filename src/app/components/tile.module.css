@@ -58,11 +58,10 @@
 .column:global(.cord-component.cord-timestamp) {
   color: var(--cord-grey-dark);
 }
-.participants {
-  display: flex;
-  justify-content: center;
-}
 .replies {
   color: var(--cord-grey-dark);
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 2px;
 }

@@ -6,7 +6,11 @@ import {
   ThreadParticipant,
 } from '@cord-sdk/types';
 import cx from 'classnames';
-import { LockClosedIcon } from '@heroicons/react/24/outline';
+import {
+  ChatBubbleBottomCenterIcon,
+  ChatBubbleOvalLeftEllipsisIcon,
+  LockClosedIcon,
+} from '@heroicons/react/24/outline';
 import styles from './tile.module.css';
 import Link from 'next/link';
 import { getTypedMetadata, slugify } from '@/utils';
@@ -66,19 +70,9 @@ export default function TileInner({
         </p>
       </td>
       <td>
-        <div className={`${styles.participants} ${styles.column}`}>
-          {/* let's not have an ever growing list of avatars */}
-          {thread.participants.slice(0, 3).map((participant) => (
-            <Avatar
-              key={participant.userID}
-              userId={participant.userID ?? ''}
-            />
-          ))}
-        </div>
-      </td>
-      <td>
         <p className={`${styles.replies} ${styles.column}`}>
           {thread.total - 1}
+          <ChatBubbleOvalLeftEllipsisIcon width={14} strokeWidth={2} />
         </p>
       </td>
       <td>
