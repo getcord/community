@@ -1,10 +1,10 @@
 import { CoreThreadData, CoreMessageData } from '@cord-sdk/types';
-import { getTypedMetadata } from "@/utils";
-import { CordTimestamp } from "../components/CordClient";
-import { getUserById } from "../helpers/user";
-import { ThreadNotFound, ThreadHeading } from "./Post";
+import { getTypedMetadata } from '@/utils';
+import { CordMessageContent, CordTimestamp } from '../components/CordClient';
+import { getUserById } from '../helpers/user';
+import { ThreadNotFound, ThreadHeading } from './Post';
 import styles from './post.module.css';
-import { buildQueryParams, fetchCordRESTApi } from "../fetchCordRESTApi";
+import { buildQueryParams, fetchCordRESTApi } from '../fetchCordRESTApi';
 import Image from 'next/image';
 
 async function getData(
@@ -50,7 +50,11 @@ function ServerThread({ messages }: { messages: CoreMessageData[] }) {
             userID={message.authorID}
             timestamp={message.updatedTimestamp ?? message.createdTimestamp}
           />
-          <p className={styles.serverMessageContent}>{message.plaintext}</p>
+          <CordMessageContent
+            edited={false}
+            attachments={[]}
+            content={message.content as any}
+          />
           {/* TODO: reactions */}
         </div>
       ))}
