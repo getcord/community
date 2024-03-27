@@ -70,10 +70,10 @@ export function UserDetails({ user }: UserDetailsProps) {
             <Button
               displayAs={'link'}
               className={styles.link}
-              href={'/profile/preferences'}
-              label={'Update profile'}
+              href={'/preferences'}
+              label={'Preferences'}
             >
-              <PencilSquareIcon width={14} /> Update Profile
+              <PencilSquareIcon width={14} /> Preferences
             </Button>
           </li>
           <li className={styles.menuActionItem}>

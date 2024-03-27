@@ -7,8 +7,9 @@
   max-width: 600px;
 }
 
-.profileInformation {
-  display: grid;
+.title {
+  border-bottom: 1px solid var(--cord-grey);
+  padding-bottom: 12px;
 }
 
 .toggleContainer {

@@ -3,17 +3,17 @@
 import { useCallback, useEffect, useState } from 'react';
 import { User } from '@/app/helpers/user';
 import Button from '@/app/ui/Button';
-import styles from './preferences.module.css';
+import styles from './updateuserdetails.module.css';
 import { SERVER_HOST } from '@/consts';
 import Input, { Label } from '@/app/ui/Input';
 import { useRouter } from 'next/navigation';
 import { user as CordUser } from '@cord-sdk/react';
 
-interface UserDetailsProps {
+interface UpdateUserDetailsProps {
   user: User;
 }
 
-export default function Preferences({ user }: UserDetailsProps) {
+export default function UpdateUserDetails({ user }: UpdateUserDetailsProps) {
   const { userID } = user;
   const router = useRouter();
   // We need the viewer data to get the notifications preferences
@@ -69,8 +69,8 @@ export default function Preferences({ user }: UserDetailsProps) {
         });
     }
 
-    router.push('/profile/preferences');
-  }, [sendEmailNotifications, userID, userName, router]);
+    router.push('/preferences');
+  }, [userID, userName, viewer, sendEmailNotifications, router]);
 
   const handleKeyUp = useCallback(
     async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -83,6 +83,7 @@ export default function Preferences({ user }: UserDetailsProps) {
 
   return (
     <div className={styles.container}>
+      <h4 className={styles.title}>Your User Details</h4>
       <Input
         id="username"
         name="username"

@@ -65,12 +65,16 @@ export default function Sidebar({
         {isLoggedIn && (
           <li
             className={cx(styles.listItem, {
-              [styles.listItemActive]: pathname.includes('/profile'),
+              [styles.listItemActive]: pathname === '/notifications',
             })}
           >
-            <Link href="/profile" aria-label="profile" className={styles.link}>
+            <Link
+              href="/notifications"
+              aria-label="Notifications"
+              className={styles.link}
+            >
               <ResourceItem
-                resourceType="Profile"
+                resourceType="Notifications"
                 hasActivityBadge={!!summary?.unread}
               />
             </Link>

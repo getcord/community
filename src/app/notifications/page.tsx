@@ -6,9 +6,9 @@ export default function Notifications() {
   return (
     <NotificationList
       style={{
+        border: 'none',
         width: '100%',
         boxShadow: 'none',
-        border: 'none',
       }}
     />
   );
