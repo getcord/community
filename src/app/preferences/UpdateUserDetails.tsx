@@ -111,7 +111,7 @@ export default function UpdateUserDetails({ user }: UpdateUserDetailsProps) {
       </div>
       <span className={styles.error}>{error}</span>
       <Button
-        displayAs={'button'}
+        behaveAs={'button'}
         style={{ justifySelf: 'right' }}
         onClick={handleSaveUserDetails}
       >

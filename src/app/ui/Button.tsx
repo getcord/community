@@ -6,7 +6,7 @@ import styles from './button.module.css';
 type Variant = 'fill' | 'outline';
 
 interface LinkProps extends React.ComponentProps<typeof Link> {
-  displayAs: 'link';
+  behaveAs: 'link';
   href: React.ComponentProps<typeof Link>['href'];
   label: string;
   disabled?: boolean;
@@ -14,7 +14,7 @@ interface LinkProps extends React.ComponentProps<typeof Link> {
 }
 
 interface AProps extends React.HTMLProps<HTMLAnchorElement> {
-  displayAs: 'a';
+  behaveAs: 'a';
   href: React.HTMLProps<HTMLAnchorElement>['href'];
   label: string;
   disabled?: boolean;
@@ -22,7 +22,7 @@ interface AProps extends React.HTMLProps<HTMLAnchorElement> {
 }
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  displayAs: 'button';
+  behaveAs: 'button';
   variant?: Variant;
   disabled?: boolean;
 }
@@ -34,10 +34,10 @@ type Props = LinkProps | AProps | ButtonProps;
  */
 export default function Button(props: PropsWithChildren<Props>) {
   // otherProps will no longer be typed here, so infer the type every where we pass it below
-  const { displayAs, ...otherProps } = props;
+  const { behaveAs, ...otherProps } = props;
 
   const variant = props.variant ?? 'fill';
-  if (displayAs === 'link') {
+  if (behaveAs === 'link') {
     return (
       <Link
         aria-label={props.label}
@@ -52,7 +52,7 @@ export default function Button(props: PropsWithChildren<Props>) {
       </Link>
     );
   }
-  if (displayAs === 'a') {
+  if (behaveAs === 'a') {
     return (
       <a
         className={cx(styles.container, {

@@ -166,7 +166,7 @@ function CommunityComposerLayout(props: ComposerLayoutProps) {
 function CommunitySendButton(props: SendButtonProps) {
   return (
     <Button
-      displayAs={'button'}
+      behaveAs={'button'}
       onClick={props.onClick}
       style={{ justifySelf: 'end' }}
     >

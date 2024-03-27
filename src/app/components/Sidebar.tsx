@@ -124,7 +124,7 @@ export default function Sidebar({
         <ul className={styles.navItems}>
           {!showUpgrade && showJoinCord && (
             <Button
-              displayAs="a"
+              behaveAs="a"
               href="https://console.cord.com"
               label="sign up to Cord"
               target="_blank"
@@ -135,7 +135,7 @@ export default function Sidebar({
           )}
           {!showJoinCord && showUpgrade && (
             <Button
-              displayAs="a"
+              behaveAs="a"
               href="https://console.cord.com/settings/billing"
               label="upgrade Cord account"
               target="_blank"

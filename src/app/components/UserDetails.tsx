@@ -68,7 +68,7 @@ export function UserDetails({ user }: UserDetailsProps) {
 
           <li className={styles.menuActionItem}>
             <Button
-              displayAs={'link'}
+              behaveAs={'link'}
               className={styles.link}
               href={'/preferences'}
               label={'Preferences'}
@@ -78,7 +78,7 @@ export function UserDetails({ user }: UserDetailsProps) {
           </li>
           <li className={styles.menuActionItem}>
             <Button
-              displayAs={'a'}
+              behaveAs={'a'}
               href={`/api/auth/logout`}
               className={styles.link}
               label={'Log Out'}
