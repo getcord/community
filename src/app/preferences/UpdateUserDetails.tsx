@@ -6,7 +6,6 @@ import Button from '@/app/ui/Button';
 import styles from './updateuserdetails.module.css';
 import { SERVER_HOST } from '@/consts';
 import Input, { Label } from '@/app/ui/Input';
-import { useRouter } from 'next/navigation';
 import { user as CordUser } from '@cord-sdk/react';
 
 interface UpdateUserDetailsProps {
@@ -15,7 +14,6 @@ interface UpdateUserDetailsProps {
 
 export default function UpdateUserDetails({ user }: UpdateUserDetailsProps) {
   const { userID } = user;
-  const router = useRouter();
   // We need the viewer data to get the notifications preferences
   // and the user prop to get the email address as we don't have that
   // info on any user client-side api
@@ -68,9 +66,7 @@ export default function UpdateUserDetails({ user }: UpdateUserDetailsProps) {
           );
         });
     }
-
-    router.push('/preferences');
-  }, [userID, userName, viewer, sendEmailNotifications, router]);
+  }, [userID, userName, viewer, sendEmailNotifications]);
 
   const handleKeyUp = useCallback(
     async (e: React.KeyboardEvent<HTMLInputElement>) => {
