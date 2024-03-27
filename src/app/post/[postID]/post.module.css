@@ -6,7 +6,10 @@
 
 .heading {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  /* padding left to match the cord's Thread */
+  padding-left: 12px;
   gap: 8px;
   margin-top: 20px;
 }
@@ -25,8 +28,17 @@
   height: 24px;
   width: 24px;
 }
-
+/* NOTE!! This is copied from global.css to match a logged in user */
+.serverMessage:first-child {
+  border-radius: 0;
+  padding-bottom: 52px;
+  border-bottom: 1px solid var(--cord-grey);
+}
+.serverMessage:not(:first-child) {
+  padding-top: 16px;
+}
 .serverMessage {
+  padding-left: 12px;
   display: grid;
   grid-gap: 8px;
   grid-template-columns: minmax(0, auto) 1fr;

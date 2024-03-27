@@ -16,15 +16,15 @@ export type ThreadData = {
 };
 
 export default function Post({ threadID }: { threadID: string }) {
-  const { thread, loading, hasMore, fetchMore } = threadHooks.useThread(threadID);
+  const { thread, loading, hasMore, fetchMore } =
+    threadHooks.useThread(threadID);
 
   useEffect(() => {
     if (hasMore) {
       void fetchMore(10);
     }
-  }, [hasMore, fetchMore])
+  }, [hasMore, fetchMore]);
 
-  // check for undefined, and not loading
   if (!thread && !loading) {
     return <ThreadNotFound />;
   }
@@ -33,18 +33,8 @@ export default function Post({ threadID }: { threadID: string }) {
 
   return (
     <>
-      <div className={styles.heading}>
-        <span className={styles.icons}>
-          {thread?.metadata.admin && (
-            <LockClosedIcon width="24px" strokeWidth={3} />
-          )}
-          {thread?.metadata.pinned && (
-            <PushPinSvg className={`${styles.pinIcon}`} />
-          )}
-        </span>
-        <h1 className={styles.threadName}>{thread?.name}</h1>
-      </div>
-      <CategoryPills categories={metadata.categories} />
+      <ThreadHeading metadata={metadata} threadName={thread?.name || ''} />
+
       <Thread threadId={threadID} />
     </>
   );
@@ -52,4 +42,23 @@ export default function Post({ threadID }: { threadID: string }) {
 
 export function ThreadNotFound() {
   return <p>oops we couldn&apos;t find that post - sorry!</p>;
+}
+
+export function ThreadHeading({
+  metadata,
+  threadName,
+}: {
+  metadata: Metadata;
+  threadName: string;
+}) {
+  return (
+    <div className={styles.heading}>
+      <span className={styles.icons}>
+        {metadata.admin && <LockClosedIcon width="24px" strokeWidth={3} />}
+        {metadata.pinned && <PushPinSvg className={`${styles.pinIcon}`} />}
+      </span>
+      <h1 className={styles.threadName}>{threadName}</h1>
+      <CategoryPills categories={metadata.categories} />
+    </div>
+  );
 }

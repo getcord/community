@@ -2,21 +2,23 @@ import { CoreThreadData, CoreMessageData } from '@cord-sdk/types';
 import styles from '../post.module.css';
 import { getTypedMetadata } from '@/utils';
 
-import { fetchCordRESTApi } from '@/app/fetchCordRESTApi';
-import Post, { ThreadNotFound } from './Post';
+import { buildQueryParams, fetchCordRESTApi } from '@/app/fetchCordRESTApi';
+import Post, { ThreadHeading, ThreadNotFound } from './Post';
 import { getUser, getUserById } from '@/app/helpers/user';
-import { LockClosedIcon } from '@heroicons/react/24/outline';
-import { PushPinSvg } from '@/app/components/PushPinSVG';
-import { CategoryPills } from '@/app/components/CategoryPills';
 import Image from 'next/image';
 
 async function getData(
   threadID: string,
 ): Promise<[CoreThreadData, CoreMessageData[]] | undefined> {
   try {
+    const categoryQueryParams = buildQueryParams([
+      { field: 'sortDirection', value: 'ascending' },
+    ]);
     return await Promise.all([
       fetchCordRESTApi<CoreThreadData>(`threads/${threadID}`),
-      fetchCordRESTApi<CoreMessageData[]>(`threads/${threadID}/messages`),
+      fetchCordRESTApi<CoreMessageData[]>(
+        `threads/${threadID}/messages${categoryQueryParams}`,
+      ),
     ]);
   } catch (error) {
     console.error(error);
@@ -54,18 +56,7 @@ async function ServerPost({ threadID }: { threadID: string }) {
 
   return (
     <>
-      <div className={styles.heading}>
-        <span className={styles.icons}>
-          {thread.metadata.admin && (
-            <LockClosedIcon width="24px" strokeWidth={3} />
-          )}
-          {thread.metadata.pinned && (
-            <PushPinSvg className={`${styles.pinIcon}`} />
-          )}
-        </span>
-        <h1 className={styles.threadName}>{thread.name}</h1>
-      </div>
-      <CategoryPills categories={metadata.categories} />
+      <ThreadHeading metadata={metadata} threadName={thread.name} />
       <ServerThread messages={messages} />
     </>
   );
