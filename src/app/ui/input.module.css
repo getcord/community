@@ -1,0 +1,17 @@
+.container {
+  display: grid;
+  gap: 4px;
+  min-width: 400px;
+}
+
+.label {
+  font-size: 0.8rem;
+}
+
+.input {
+  outline: none;
+  border: 1px solid var(--cord-grey);
+  transition: border-color 0.3s;
+  padding: 12px;
+  border-radius: 4px;
+}

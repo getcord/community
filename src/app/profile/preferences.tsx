@@ -1,11 +1,12 @@
 'use client';
 
+import { useCallback, useState } from 'react';
 import { User } from '@/app/helpers/user';
 import Button from '@/app/ui/Button';
 import styles from './preferences.module.css';
-import { useCallback, useState } from 'react';
-import Divider from '@/app/ui/Divider';
 import { SERVER_HOST } from '@/consts';
+import Input, { Label } from '@/app/ui/Input';
+import { useRouter } from 'next/navigation';
 
 interface UserDetailsProps {
   user: User;
@@ -13,69 +14,96 @@ interface UserDetailsProps {
 
 export default function Preferences({ user }: UserDetailsProps) {
   const { userID } = user;
+  const router = useRouter();
 
   const [userName, setUserName] = useState('');
   const [error, setError] = useState('');
-  const handleUpdateUserName = useCallback(async () => {
+  const [sendEmailNotifications, setSendEmailNotifications] = useState(false);
+
+  const handleSaveUserDetails = useCallback(async () => {
     if (!userID || !userName) {
       return;
     }
-    const res = await fetch(`${SERVER_HOST}/api/user?userID=${userID}`, {
-      method: 'PUT',
-      body: JSON.stringify({
-        name: userName,
-      }),
-    });
 
-    const response = await res.json();
-    if (!response.success) {
-      setError(`Unable to update name: ${response.error}`);
+    if (userName) {
+      const res = await fetch(`${SERVER_HOST}/api/user?userID=${userID}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          name: userName,
+        }),
+      });
+
+      const response = await res.json();
+      if (!response.success) {
+        setError(`Unable to update name: ${response.error}`);
+      }
     }
-  }, [userID, userName]);
+
+    if (window.CordSDK !== undefined) {
+      window.CordSDK.user
+        .setNotificationPreferences({
+          sendViaEmail: sendEmailNotifications,
+        })
+        .catch((error) => {
+          setError(
+            `Unable to update email notifications preferences: ${error?.message}`,
+          );
+        });
+    }
+
+    router.push('/profile/preferences');
+  }, [sendEmailNotifications, userID, userName, router]);
 
   const handleKeyUp = useCallback(
     async (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
-        await handleUpdateUserName();
+        await handleSaveUserDetails();
       }
     },
-    [handleUpdateUserName],
+    [handleSaveUserDetails],
   );
 
   return (
     <div className={styles.container}>
-      <div>
-        <h2 className={styles.modalContentTitle}>Update User Details</h2>
-        <Divider />
+      <Input
+        id="username"
+        name="username"
+        placeholder={user.name}
+        onChange={(e) => setUserName(e.target.value)}
+        onKeyUp={handleKeyUp}
+        label={'User Name:'}
+      />
+      <Input
+        id="email"
+        name="email"
+        placeholder={user.email}
+        onChange={(e) => setUserName(e.target.value)}
+        onKeyUp={handleKeyUp}
+        label={'Email Address:'}
+        disabled
+      />
+      <div className={styles.toggleContainer}>
+        <Label htmlFor="toggleEmailNotifications">
+          Send Email Notifications
+        </Label>
+        <input
+          type="checkbox"
+          id="toggleEmailNotifications"
+          // TODO: this should be the value of their current
+          // preference
+          checked={sendEmailNotifications}
+          onChange={() => setSendEmailNotifications(!sendEmailNotifications)}
+          aria-label="Toggle email notifications"
+        />
       </div>
-
-      <div className={styles.modalContent}>
-        <div className={styles.inputContainer}>
-          <label htmlFor="username" className={styles.label}>
-            User Name:
-          </label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            placeholder={user.name}
-            onChange={(e) => setUserName(e.target.value)}
-            required
-            className={styles.input}
-            onKeyUp={handleKeyUp}
-          />
-          <span className={styles.error}>{error}</span>
-        </div>
-
-        <Button
-          displayAs="button"
-          onClick={handleUpdateUserName}
-          style={{ justifySelf: 'end' }}
-          disabled={userName === ''}
-        >
-          Save
-        </Button>
-      </div>
+      <span className={styles.error}>{error}</span>
+      <Button
+        displayAs={'button'}
+        style={{ justifySelf: 'right' }}
+        onClick={handleSaveUserDetails}
+      >
+        Save
+      </Button>
     </div>
   );
 }

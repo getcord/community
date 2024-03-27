@@ -1,32 +1,24 @@
 .container {
-  min-width: 300px;
-  color: var(--cord-grey-dark);
   display: grid;
   gap: 12px;
+  border: 1px solid var(--cord-grey);
+  border-radius: 6px;
+  padding: 24px;
+  max-width: 600px;
 }
 
-.modalContentTitle {
-  display: flex;
-  font-size: 14px;
-}
-
-.inputContainer {
+.profileInformation {
   display: grid;
+}
+
+.toggleContainer {
+  display: flex;
   gap: 4px;
   min-width: 400px;
 }
 
-.label,
 .error {
   font-size: 0.8rem;
-}
-
-.input {
-  outline: none;
-  border: 1px solid var(--cord-grey);
-  transition: border-color 0.3s;
-  padding: 12px;
-  border-radius: 4px;
 }
 
 .error {
