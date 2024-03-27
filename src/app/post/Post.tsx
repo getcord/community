@@ -1,7 +1,7 @@
 'use client';
 
 import { Thread, thread as threadHooks } from '@cord-sdk/react';
-import styles from '../post.module.css';
+import styles from './post.module.css';
 import { getTypedMetadata } from '@/utils';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
 import { PushPinSvg } from '@/app/components/PushPinSVG';

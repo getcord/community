@@ -1,6 +1,6 @@
-import Post from '../../Post';
-import ServerPost from '../../ServerPost';
-import styles from '../../post.module.css';
+import Post from '../Post';
+import ServerPost from '../ServerPost';
+import styles from '../post.module.css';
 
 import { getUser } from '@/app/helpers/user';
 
