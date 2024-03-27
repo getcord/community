@@ -4,7 +4,6 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -17,10 +16,11 @@ import {
   ComposerProps,
   SendButtonProps,
 } from '@cord-sdk/react/dist/mjs/types/experimental';
-import { EVERYONE_GROUP_ID } from '@/consts';
+import { EVERYONE_GROUP_ID, SERVER_HOST } from '@/consts';
 import { useRouter } from 'next/navigation';
 import { CATEGORIES, Category } from '@/app/types';
 import Button from '@/app/ui/Button';
+import { slugify } from '@/utils';
 
 // We create a context as it is the easiest way to share data across replaced
 // Composer components
@@ -31,6 +31,7 @@ type NewPostInputContextProps = {
   categories: Category[];
   setError: (error: string) => void;
   error: string;
+  threadID: string;
 };
 
 const NewPostInputContext = createContext<NewPostInputContextProps>({
@@ -40,16 +41,21 @@ const NewPostInputContext = createContext<NewPostInputContextProps>({
   categories: [],
   setError: () => {},
   error: '',
+  threadID: '',
 });
 
 function NewPostInputProvider(
-  props: React.PropsWithChildren<{ defaultCategory?: Category }>,
+  props: React.PropsWithChildren<{
+    defaultCategory?: Category;
+    threadID: string;
+  }>,
 ) {
   const [title, setTitle] = useState('');
   const [categories, setCategories] = useState<Category[]>(
     props.defaultCategory ? [props.defaultCategory] : [],
   );
   const [error, setError] = useState('');
+  const threadID = props.threadID;
 
   const value = useMemo(
     () => ({
@@ -59,8 +65,9 @@ function NewPostInputProvider(
       setCategories,
       error,
       setError,
+      threadID,
     }),
-    [categories, title, error],
+    [categories, title, error, threadID],
   );
 
   return (
@@ -72,7 +79,7 @@ function NewPostInputProvider(
 
 function CommunityComposer(props: ComposerProps) {
   const router = useRouter();
-  const { title, setTitle, categories, setCategories, setError } =
+  const { title, setTitle, categories, setCategories, setError, threadID } =
     useContext(NewPostInputContext);
 
   const onSubmit = useCallback(
@@ -81,10 +88,10 @@ function CommunityComposer(props: ComposerProps) {
         setError(`All fields are required and must be filled.`);
         return;
       }
-      router.push('/');
+      router.push(`/post/${threadID}/${slugify(title)}`);
       props.onSubmit({ message });
     },
-    [title, props, router, categories, setError],
+    [title, props, router, categories, setError, threadID],
   );
 
   return (
@@ -176,15 +183,9 @@ function CommunitySendButton(props: SendButtonProps) {
 }
 
 function ComposerImpl() {
-  const { title, categories } = useContext(NewPostInputContext);
+  const { title, categories, threadID } = useContext(NewPostInputContext);
   const metadata: EntityMetadata = { pinned: false };
   categories.forEach((category) => (metadata[category] = true));
-  const [threadUrl, setThreadUrl] = useState('');
-
-  useEffect(() => {
-    // we can access window here as this useEffect will run client-side
-    setThreadUrl(window.location.href);
-  }, []);
 
   return (
     <div className={styles.container}>
@@ -201,8 +202,9 @@ function ComposerImpl() {
             location: { page: 'posts' },
             name: title,
             metadata,
-            url: threadUrl,
+            url: `/post/${threadID}/${slugify(title)}`,
           }}
+          threadId={threadID}
         />
       </experimental.Replace>
     </div>
@@ -211,11 +213,13 @@ function ComposerImpl() {
 
 export default function Composer({
   defaultCategory,
+  threadID,
 }: {
   defaultCategory?: Category;
+  threadID: string;
 }) {
   return (
-    <NewPostInputProvider defaultCategory={defaultCategory}>
+    <NewPostInputProvider defaultCategory={defaultCategory} threadID={threadID}>
       <ComposerImpl />
     </NewPostInputProvider>
   );
