@@ -38,10 +38,12 @@ export default function Sidebar({
   categories,
   supportChats,
   supportEnabled,
+  isLoggedIn,
 }: {
   categories?: Category[];
   supportEnabled?: boolean;
   supportChats?: { customerID?: string; customerName?: string }[];
+  isLoggedIn: boolean;
 }) {
   const pathname = usePathname();
   const showJoinCord = !supportChats?.[0].customerID;
@@ -60,18 +62,20 @@ export default function Sidebar({
             <ResourceItem resourceType="All Topics" />
           </Link>
         </li>
-        <li
-          className={cx(styles.listItem, {
-            [styles.listItemActive]: pathname.includes('/profile'),
-          })}
-        >
-          <Link href="/profile" aria-label="profile" className={styles.link}>
-            <ResourceItem
-              resourceType="Profile"
-              hasActivityBadge={!!summary?.unread}
-            />
-          </Link>
-        </li>
+        {isLoggedIn && (
+          <li
+            className={cx(styles.listItem, {
+              [styles.listItemActive]: pathname.includes('/profile'),
+            })}
+          >
+            <Link href="/profile" aria-label="profile" className={styles.link}>
+              <ResourceItem
+                resourceType="Profile"
+                hasActivityBadge={!!summary?.unread}
+              />
+            </Link>
+          </li>
+        )}
         {categories && (
           <li>
             <h4 className={styles.navlistTitle}>Categories</h4>

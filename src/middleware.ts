@@ -23,10 +23,12 @@ export async function middleware(request: NextRequest) {
   response.cookies.delete('attempted_login');
 
   if (!session?.user && attemptedLoginAlready !== 'true') {
-    const isCurrentPageNewPost = request.nextUrl.pathname === '/newpost';
+    const shouldPageRedirectToLogin = /^\/(newpost|profile)(\/.*)?$/.test(
+      request.nextUrl.pathname,
+    );
 
     const loginUrl = new URL(
-      `/api/auth/${isCurrentPageNewPost ? 'login' : 'silent-login'}`,
+      `/api/auth/${shouldPageRedirectToLogin ? 'login' : 'silent-login'}`,
       request.url,
     );
     // passing the returnTo value as a query param will magically be passed

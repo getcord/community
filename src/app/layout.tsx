@@ -114,6 +114,7 @@ export default async function RootLayout({
               categories={categories}
               supportChats={supportChats}
               supportEnabled={supportEnabled}
+              isLoggedIn={!!user?.userID}
             />
             <div className={styles.content}>{children}</div>
           </div>
