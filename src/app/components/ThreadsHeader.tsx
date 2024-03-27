@@ -13,7 +13,7 @@ export default function ThreadsHeader({
     <div className={styles.container}>
       {permissions !== 'NOT_VISIBLE' && (
         <Button
-          displayAs="link"
+          displayAs="a"
           href={`/newpost?category=${category}`}
           label="start a discussion"
           disabled={permissions === 'READ'}
