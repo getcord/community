@@ -3,7 +3,7 @@
 import styles from './sidebar.module.css';
 import { CORD_CONSOLE_URL, CORD_DOCS_URL } from '@/consts';
 import { usePathname } from 'next/navigation';
-import { Category } from '@/app/types';
+import { Category, SupportChat } from '@/app/types';
 import cx from 'classnames';
 import CategoryPill from './CategoryPill';
 import Link from 'next/link';
@@ -43,7 +43,7 @@ export default function Sidebar({
 }: {
   categories?: Category[];
   supportEnabled?: boolean;
-  supportChats?: { customerID?: string; customerName?: string }[];
+  supportChats?: SupportChat[];
   isLoggedIn: boolean;
   customerExists: boolean;
 }) {

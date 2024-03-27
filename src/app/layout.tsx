@@ -70,8 +70,32 @@ async function createCordEntitiesAsNeeded(sessionUser: Claims) {
   return userID;
 }
 
+async function getSupportChats({ userID, isAdmin, groups: usersGroups }: User) {
+  if (!userID) {
+    return [];
+  }
+  const allGroups = await fetchCordRESTApi<ServerGroupData[]>(`groups`);
+
+  if (!allGroups) {
+    return [];
+  }
+
+  return allGroups
+    .filter((group) => {
+      // if you're an admin, you should see all groups where support is enabled
+      // otherwise only view groups you're a part of
+      if (isAdmin) {
+        return !!group.metadata?.['supportEnabled'];
+      }
+      return (
+        !!group.metadata?.['supportEnabled'] && usersGroups?.includes(group.id)
+      );
+    })
+    .map((group) => ({ customerID: group.id, customerName: group.name }));
+}
+
 async function getData() {
-  const { CORD_SECRET, CORD_APP_ID, CORD_CUSTOMER_ID } = process.env;
+  const { CORD_SECRET, CORD_APP_ID } = process.env;
   const categories = [...CATEGORIES];
   if (!CORD_SECRET || !CORD_APP_ID) {
     console.error(
@@ -91,7 +115,8 @@ async function getData() {
     getUserById(userID),
     getCustomerInfoForUserId(userID),
   ]);
-  const { customerID, customerName, supportEnabled } = customerInfo;
+  const supportChats = await getSupportChats(user);
+  const { supportEnabled } = customerInfo;
 
   return {
     clientAuthToken,
@@ -99,11 +124,7 @@ async function getData() {
     user,
     customerInfo,
     supportEnabled,
-    supportChats:
-      customerID !== CORD_CUSTOMER_ID
-        ? [{ customerID, customerName: 'Cord' }]
-        : // if it's not the CORD_APP_ID then it needs to be the array of all support chats
-          [{ customerID, customerName }],
+    supportChats,
   };
 }
 
@@ -149,7 +170,7 @@ export default async function RootLayout({
             <Sidebar
               categories={categories}
               supportChats={supportChats}
-              supportEnabled={supportEnabled}
+              supportEnabled={supportEnabled || user.isAdmin}
               isLoggedIn={!!user?.userID}
               customerExists={!!customerInfo?.customerID}
             />
