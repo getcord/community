@@ -102,8 +102,14 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { clientAuthToken, categories, user, supportChats, supportEnabled, customerInfo } =
-    await getData();
+  const {
+    clientAuthToken,
+    categories,
+    user,
+    supportChats,
+    supportEnabled,
+    customerInfo,
+  } = await getData();
 
   return (
     <html lang="en">
