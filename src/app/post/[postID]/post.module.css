@@ -25,3 +25,37 @@
   height: 24px;
   width: 24px;
 }
+
+.serverMessage {
+  display: grid;
+  grid-gap: 8px;
+  grid-template-columns: minmax(0, auto) 1fr;
+  grid-template-rows: minmax(0, auto) auto auto;
+  grid-template-areas:
+    'avatar name'
+    '. message'
+    '. reactions';
+}
+.serverAvatar {
+  grid-area: avatar;
+  border-radius: 4px;
+}
+.serverNameAndTimestamp {
+  grid-area: name;
+  display: flex;
+  gap: 4px;
+  align-items: flex-end;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.serverAuthorName {
+  font-weight: bold;
+}
+.serverTimestamp {
+  color: var(--cord-grey-dark);
+  font-size: 0.8rem;
+}
+.serverMessageContent {
+  grid-area: message;
+}
