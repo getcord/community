@@ -10,6 +10,7 @@ import Link from 'next/link';
 import {
   BellIcon,
   ChatBubbleLeftRightIcon,
+  ClipboardDocumentListIcon,
   CodeBracketIcon,
   Cog6ToothIcon,
   DocumentTextIcon,
@@ -31,6 +32,10 @@ const resources = [
   {
     id: 'Cord Console',
     linkTo: `${CORD_CONSOLE_URL}`,
+  },
+  {
+    id: 'Changelog',
+    linkTo: `${CORD_DOCS_URL}/reference/changelog`,
   },
 ] as const;
 
@@ -202,5 +207,7 @@ function NavItemPrefix({ navFor }: { navFor: string }) {
       return <UserIcon width={'14px'} />;
     case 'Preferences':
       return <Cog6ToothIcon width={'14px'} />;
+    case 'Changelog':
+      return <ClipboardDocumentListIcon width={'14px'} />;
   }
 }
