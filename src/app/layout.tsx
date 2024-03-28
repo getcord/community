@@ -9,8 +9,13 @@ import { CATEGORIES } from '@/app/types';
 import { fetchCordRESTApi } from '@/app/fetchCordRESTApi';
 import { Claims, getSession } from '@auth0/nextjs-auth0';
 import { User, getUserById } from '@/app/helpers/user';
-import { getCustomerInfoForUserId } from '@/app/helpers/customerInfo';
+import {
+  CustomerInfo,
+  getCustomerInfoForUserId,
+} from '@/app/helpers/customerInfo';
 import { ServerGroupData } from '@cord-sdk/types';
+import { ServerListGroup } from '@cord-sdk/types';
+import { EVERYONE_GROUP_ID } from '@/consts';
 
 async function createCordEntitiesAsNeeded(sessionUser: Claims) {
   // Not sure why but sub seems to be the spot that the put the user_id
@@ -28,69 +33,58 @@ async function createCordEntitiesAsNeeded(sessionUser: Claims) {
       name: sessionUser.name,
       email: sessionUser.email,
       profilePictureURL: sessionUser.picture,
-      addGroups: ['community_all'],
+      addGroups: [EVERYONE_GROUP_ID],
     });
+
+    // Fill out the user object that was empty so that we can use it
+    user['userID'] = userID;
+    user['name'] = sessionUser.name;
+    user['email'] = sessionUser.email;
+    user['profilePictureURL'] = sessionUser.picture;
+    user['isAdmin'] = false;
   }
 
   // Now check customer info as well
   if (customerInfo.customerID) {
-    // Verify that we have a customer and create if not
-    const cordUser = await fetchCordRESTApi(
+    // Verify that we have a customer and create if not or if the customer
+    // supportEnabled setting does not match
+    const customerGroup = await fetchCordRESTApi<ServerGroupData>(
       `groups/${customerInfo.customerID}`,
     );
-    if (!cordUser) {
-      // Create group as it does not exist
-      const customerGroup = await fetchCordRESTApi<ServerGroupData | undefined>(
-        `groups/${customerInfo.customerID}`,
-      );
 
-      // Create group if it doesn't exist, but if it does then update the metadata to reflect
-      // the actual status in case it's not synced (eg customer downgraded or upgraded)
-      if (
-        !customerGroup ||
-        customerGroup.metadata?.['supportEnabled'] !==
-          customerInfo.supportEnabled
-      ) {
-        await fetchCordRESTApi(`groups/${customerInfo.customerID}`, 'PUT', {
-          name: customerInfo.customerName,
-          metadata: { supportEnabled: customerInfo.supportEnabled },
-        });
-      }
-
-      // Now lets make sure the user is part of the group
-      await fetchCordRESTApi(
-        `groups/${customerInfo.customerID}/members`,
-        'POST',
-        {
-          add: [userID],
-        },
-      );
+    if (
+      !customerGroup ||
+      customerGroup.metadata?.supportEnabled !== customerInfo.supportEnabled
+    ) {
+      await fetchCordRESTApi(`groups/${customerInfo.customerID}`, 'PUT', {
+        name: customerInfo.customerName,
+        metadata: { supportEnabled: customerInfo.supportEnabled },
+      });
     }
   }
-  return userID;
+  // Now lets make sure the user is part of the group
+  await fetchCordRESTApi(`groups/${customerInfo.customerID}/members`, 'POST', {
+    add: [userID],
+  });
+
+  return { user, customerInfo };
 }
 
-async function getSupportChats({ userID, isAdmin, groups: usersGroups }: User) {
-  if (!userID) {
+async function getSupportChats(user: User, customerInfo: CustomerInfo) {
+  if (!user.isAdmin) {
+    if (customerInfo.customerID) {
+      return [{ customerID: customerInfo.customerID, customerName: 'Cord' }];
+    }
     return [];
   }
-  const allGroups = await fetchCordRESTApi<ServerGroupData[]>(`groups`);
 
+  const allGroups = await fetchCordRESTApi<ServerListGroup[]>(`groups`);
   if (!allGroups) {
     return [];
   }
 
   return allGroups
-    .filter((group) => {
-      // if you're an admin, you should see all groups where support is enabled
-      // otherwise only view groups you're a part of
-      if (isAdmin) {
-        return !!group.metadata?.['supportEnabled'];
-      }
-      return (
-        !!group.metadata?.['supportEnabled'] && usersGroups?.includes(group.id)
-      );
-    })
+    .filter((group) => group.metadata?.supportEnabled === true)
     .map((group) => ({ customerID: group.id, customerName: group.name }));
 }
 
@@ -107,23 +101,17 @@ async function getData() {
   if (!session) {
     return { clientAuthToken: null, categories, user: {} as User };
   }
-  const userID = await createCordEntitiesAsNeeded(session.user);
+  const { user, customerInfo } = await createCordEntitiesAsNeeded(session.user);
   const clientAuthToken = getClientAuthToken(CORD_APP_ID, CORD_SECRET, {
-    user_id: userID,
+    user_id: user.userID!,
   });
-  const [user, customerInfo] = await Promise.all([
-    getUserById(userID),
-    getCustomerInfoForUserId(userID),
-  ]);
-  const supportChats = await getSupportChats(user);
-  const { supportEnabled } = customerInfo;
-
+  const supportChats = await getSupportChats(user, customerInfo);
   return {
     clientAuthToken,
     categories,
     user,
     customerInfo,
-    supportEnabled,
+    supportEnabled: customerInfo.supportEnabled || user.isAdmin,
     supportChats,
   };
 }
@@ -170,7 +158,7 @@ export default async function RootLayout({
             <Sidebar
               categories={categories}
               supportChats={supportChats}
-              supportEnabled={supportEnabled || user.isAdmin}
+              supportEnabled={supportEnabled}
               isLoggedIn={!!user?.userID}
               customerExists={!!customerInfo?.customerID}
             />
