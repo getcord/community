@@ -64,7 +64,7 @@ export default function Sidebar({
           })}
         >
           <Link href="/" aria-label="home" className={styles.link}>
-            <ResourceItem resourceType="All Topics" />
+            <ResourceItem resourceType="All Posts" />
           </Link>
         </li>
         {isLoggedIn && (
