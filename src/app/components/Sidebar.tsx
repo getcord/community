@@ -153,7 +153,7 @@ export default function Sidebar({
                 supportChats?.map(({ customerID, customerName }) => (
                   <li className={styles.listItem} key={customerID}>
                     <Link
-                      href="/support"
+                      href={`/support/${customerID}`}
                       aria-label={`support for ${customerName}`}
                       className={styles.link}
                     >

@@ -4,21 +4,17 @@ import { Composer, Message, thread as threadHooks } from '@cord-sdk/react';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import styles from './threadDetails.module.css';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { getCustomerInfo } from '@/app/helpers/customerInfo';
+import { useEffect } from 'react';
 
 export default function ThreadDetails({
   params,
 }: {
-  params?: { threadId: string };
+  params: { customerID: string; threadID: string };
 }) {
-  const threadId = params?.threadId && decodeURIComponent(params.threadId);
+  console.log(params);
+  const threadId = decodeURIComponent(params.threadID);
+  const customerID = decodeURIComponent(params.customerID);
   const router = useRouter();
-  const [customerID, setCustomerID] = useState<string>()
-
-  useEffect(() => {
-    getCustomerInfo().then(({ customerID}) => setCustomerID(customerID));
-  }, [])
 
   if (!threadId) {
     return <h1>oops can&apos;t find this thread!</h1>;
@@ -30,7 +26,7 @@ export default function ThreadDetails({
         <h3>Thread</h3>
         <button
           aria-label="close thread details"
-          onClick={() => router.push('/support')}
+          onClick={() => router.push(`/support/${customerID}`)}
           className={styles.drawerClose}
         >
           <XMarkIcon width="14px" />
@@ -40,10 +36,7 @@ export default function ThreadDetails({
         <Thread threadId={threadId} />
       </div>
       {/* THIS WILL NEED TO BE CONFIGURED PROPERLY TOO */}
-      <Composer
-        groupId={customerID}
-        threadId={threadId}
-      />
+      <Composer groupId={customerID} threadId={threadId} />
     </div>
   );
 }
@@ -59,7 +52,9 @@ function Thread({ threadId }: { threadId: string }) {
 
   const replies = data.messages.slice(1);
   const numOfReplies = replies.length;
-  const repliesText = `${numOfReplies} ${numOfReplies === 1 ? 'reply' : 'replies'}`;
+  const repliesText = `${numOfReplies} ${
+    numOfReplies === 1 ? 'reply' : 'replies'
+  }`;
 
   return (
     <>

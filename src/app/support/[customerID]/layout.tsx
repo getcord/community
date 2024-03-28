@@ -1,12 +1,14 @@
 import { getUser } from '@/app/helpers/user';
-import { getCustomerInfo } from '../helpers/customerInfo';
+import { getCustomerInfo } from '@/app/helpers/customerInfo';
 import Support from './Support';
 import styles from './support.module.css';
 
 export default async function Layout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: { customerID: string };
 }) {
   const { customerID, customerName, supportEnabled } = await getCustomerInfo();
   const { isAdmin } = await getUser();
@@ -19,7 +21,7 @@ export default async function Layout({
 
   return (
     <div className={styles.container}>
-      <Support customerID={customerID} customerName={customerName} />
+      <Support customerID={params.customerID} customerName={customerName} />
       <div>{children}</div>
     </div>
   );

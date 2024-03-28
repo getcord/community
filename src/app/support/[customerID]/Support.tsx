@@ -34,7 +34,9 @@ export default function Support({
       <div className={styles.messages}>
         {threads.length > 0 &&
           !data.loading &&
-          threads.map((thread) => <Message key={thread.id} thread={thread} />)}
+          threads.map((thread) => (
+            <Message key={thread.id} thread={thread} customerID={customerID} />
+          ))}
         {!data.hasMore && (
           <div>
             <h4>This is the very beginning of the chat.</h4>
@@ -53,7 +55,13 @@ export default function Support({
   );
 }
 
-function Message({ thread }: { thread: ThreadSummary }) {
+function Message({
+  thread,
+  customerID,
+}: {
+  thread: ThreadSummary;
+  customerID: string;
+}) {
   const router = useRouter();
 
   const numOfReplies = thread.total - 1;
@@ -65,13 +73,13 @@ function Message({ thread }: { thread: ThreadSummary }) {
     <div>
       <CordMessage
         threadId={thread.id}
-        onClick={() => router.push(`/support/${thread.id}`)}
+        onClick={() => router.push(`/support/${customerID}/${thread.id}`)}
         style={{ cursor: 'pointer', paddingBottom: 0 }}
       />
       {numOfReplies > 0 && (
         <div
           className={styles.messageReplies}
-          onClick={() => router.push(`/support/${thread.id}`)}
+          onClick={() => router.push(`/support/${customerID}/${thread.id}`)}
         >
           <Facepile users={thread.repliers} />
           <span>{replyMessage}</span>
