@@ -26,11 +26,25 @@ async function createCordEntitiesAsNeeded(sessionUser: Claims) {
     getCustomerInfoForUserId(userID),
   ]);
 
+  // If we don't have a user, let's create them while we have the
+  // session info and add them to the default community group
   if (!user.userID) {
-    // If we don't have a user, let's create them while we have the
-    // session info and add them to the default community group
+    let name = sessionUser.name;
+    // if their default name is their email address, then generate a different username
+    // to make sure the user's email isn't used as the displayed name
+    if (name === sessionUser.email) {
+      const regex = /^(.*?)@/;
+      // append random 5 - 10 digit number to everything before the @ symbol in their email address
+      const nameFromEmail = regex.exec(sessionUser.name)?.[1] ?? '';
+      const randomNumber = Math.floor(
+        Math.random() * (999999999 - 10000) + 10000,
+      );
+
+      name = nameFromEmail + randomNumber;
+    }
+
     await fetchCordRESTApi(`users/${userID}`, 'PUT', {
-      name: sessionUser.name,
+      name: name,
       email: sessionUser.email,
       profilePictureURL: sessionUser.picture,
       addGroups: [EVERYONE_GROUP_ID],
