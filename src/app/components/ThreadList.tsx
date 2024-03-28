@@ -24,9 +24,15 @@ const getThreadsData = async (category: string) => {
     fetchCordRESTApi<ServerListThreads>(`threads${pinnedQueryParams}`, 'GET'),
     fetchCordRESTApi<ServerListThreads>(`threads${categoryQueryParams}`, 'GET'),
   ]);
+
   return {
-    threads: [...pinnedResults.threads, ...categoryResults.threads],
-    total: pinnedResults.pagination.total + categoryResults.pagination.total,
+    threads: [
+      ...(pinnedResults?.threads ?? []),
+      ...(categoryResults?.threads ?? []),
+    ],
+    total:
+      (pinnedResults?.pagination.total ?? 0) +
+      (categoryResults?.pagination.total ?? 0),
   };
 };
 

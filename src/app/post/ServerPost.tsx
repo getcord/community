@@ -10,28 +10,23 @@ import Button from '../ui/Button';
 
 async function getData(
   threadID: string,
-): Promise<[CoreThreadData, CoreMessageData[]] | undefined> {
-  try {
-    const categoryQueryParams = buildQueryParams([
-      { field: 'sortDirection', value: 'ascending' },
-    ]);
-    return await Promise.all([
-      fetchCordRESTApi<CoreThreadData>(`threads/${threadID}`),
-      fetchCordRESTApi<CoreMessageData[]>(
-        `threads/${threadID}/messages${categoryQueryParams}`,
-      ),
-    ]);
-  } catch (error) {
-    console.error(error);
-  }
+): Promise<[CoreThreadData | undefined, CoreMessageData[] | undefined]> {
+  const categoryQueryParams = buildQueryParams([
+    { field: 'sortDirection', value: 'ascending' },
+  ]);
+  return await Promise.all([
+    fetchCordRESTApi<CoreThreadData>(`threads/${threadID}`),
+    fetchCordRESTApi<CoreMessageData[]>(
+      `threads/${threadID}/messages${categoryQueryParams}`,
+    ),
+  ]);
 }
 
 export default async function ServerPost({ threadID }: { threadID: string }) {
-  const result = await getData(threadID);
-  if (!result) {
+  const [thread, messages] = await getData(threadID);
+  if (!thread || !messages) {
     return <ThreadNotFound />;
   }
-  const [thread, messages] = result;
   const metadata = getTypedMetadata(thread.metadata);
 
   return (
