@@ -192,7 +192,7 @@ export function ResourceItem({
 
 function NavItemPrefix({ navFor }: { navFor: string }) {
   switch (navFor) {
-    case 'All Topics':
+    case 'All Posts':
       return <HomeIcon width={'14px'} />;
     case 'REST API Reference':
       return <CodeBracketIcon width={'14px'} />;
