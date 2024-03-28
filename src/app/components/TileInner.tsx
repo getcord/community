@@ -50,11 +50,7 @@ export default function TileInner({
   return (
     <tr className={styles.container}>
       <td>
-        <Link
-          className={cx(styles.heading, styles.link)}
-          href={`/post/${threadID}/${slugify(thread.name)}`}
-          aria-label={thread.name}
-        >
+        <div className={styles.heading}>
           {showIcons && (
             <span className={styles.icons}>
               {metadata.admin && (
@@ -65,8 +61,16 @@ export default function TileInner({
               )}
             </span>
           )}
-          <h3 className={styles.threadName}>{thread.name}</h3>
-        </Link>
+          <h3 className={styles.threadName}>
+            <Link
+              className={styles.link}
+              href={`/post/${threadID}/${slugify(thread.name)}`}
+              aria-label={thread.name}
+            >
+              {thread.name}
+            </Link>
+          </h3>
+        </div>
         <CategoryPills categories={metadata.categories} />
         <p className={`${styles.messageSnippet}`}>
           {thread.firstMessage?.plaintext}
