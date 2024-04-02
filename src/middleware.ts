@@ -16,28 +16,13 @@ export const config = {
 };
 
 export async function middleware(request: NextRequest) {
-  const response = new NextResponse();
-  const session = await getSession(request, response);
-
-  const attemptedLoginAlready = cookies().get('attempted_login')?.value;
-  response.cookies.delete('attempted_login');
-
-  if (!session?.user && attemptedLoginAlready !== 'true') {
-    const shouldPageRedirectToLogin =
-      /^\/(newpost|notifications|preferences)(\/.*)?$/.test(
-        request.nextUrl.pathname,
-      );
-
-    const loginUrl = new URL(
-      `/api/auth/${shouldPageRedirectToLogin ? 'login' : 'silent-login'}`,
-      request.url,
-    );
+  const silentLogin = request.nextUrl.searchParams.get('silent_login');
+  if (silentLogin === 'true') {
+    const loginUrl = new URL('/api/auth/silent-login', request.url);
     // passing the returnTo value as a query param will magically be passed
     // to auth0, and works out of the box
     const returnTo = request.nextUrl.pathname;
     loginUrl.searchParams.append('returnTo', returnTo);
     return NextResponse.redirect(loginUrl);
   }
-
-  return NextResponse.next(response);
 }

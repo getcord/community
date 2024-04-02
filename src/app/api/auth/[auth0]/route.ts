@@ -30,8 +30,6 @@ export const GET = handleAuth({
   onError(_: NextRequest, error: HandlerError) {
     const returnTo =
       (error?.cause as OpenIdError)?.openIdState?.returnTo ?? '/';
-    cookies().set('attempted_login', 'true');
-
     redirect(returnTo);
   },
 });
