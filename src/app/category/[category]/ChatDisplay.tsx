@@ -6,35 +6,17 @@ import ThreadList from '@/app/components/ThreadList';
 import { Category } from '@/app/types';
 import { getUser } from '@/app/helpers/user';
 
-async function getAllCategoriesPermissions() {
-  const { userID } = await getUser();
+// All channels allow discussion for logged in users except
+// `announcements` which requires the user to be an admin
+async function getAllowDiscussion(channelName: Category) {
+  const { userID, isAdmin } = await getUser();
   if (!userID) {
-    return;
+    return false;
   }
-
-  try {
-    // Fetch all groups the current user is in
-    const groups = (await fetchCordRESTApi<ServerGetUser>(`users/${userID}`))
-      ?.groups;
-
-    const mostCategories = (
-      await fetchCordRESTApi<ServerUserData>('users/all_categories_holder')
-    )?.metadata as Record<string, string>;
-
-    // returns all categories, with their permissions
-    return Object.entries(mostCategories)
-      .sort((a, b) => a[0].localeCompare(b[0]))
-      .reduce((acc, [key, value]) => {
-        if (groups?.includes(value)) {
-          acc[key as Category] = { permission: 'READ_WRITE', group: value };
-        } else {
-          acc[key as Category] = { permission: 'READ', group: value };
-        }
-        return acc;
-      }, {} as Record<Category, { permission: string; group: string }>);
-  } catch (error) {
-    console.error(error);
+  if (channelName === 'announcements') {
+    return !!isAdmin;
   }
+  return true;
 }
 
 export default async function ChatDisplay({
@@ -42,14 +24,10 @@ export default async function ChatDisplay({
 }: {
   channelName: Category;
 }) {
-  const allPermissions = await getAllCategoriesPermissions();
-  const permissions =
-    allPermissions && allPermissions[channelName]
-      ? allPermissions[channelName]?.permission
-      : 'NOT_VISIBLE';
+  const allowDiscussion = await getAllowDiscussion(channelName);
   return (
     <div className={styles.container}>
-      <ThreadsHeader permissions={permissions} category={channelName} />
+      <ThreadsHeader allowDiscussion={allowDiscussion} category={channelName} />
       <ThreadList category={channelName} />
     </div>
   );

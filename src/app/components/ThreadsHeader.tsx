@@ -3,24 +3,24 @@ import { Category } from '@/app/types';
 import Button from '../ui/Button';
 
 export default function ThreadsHeader({
-  permissions,
+  allowDiscussion,
   category,
 }: {
-  permissions: string;
+  allowDiscussion: boolean;
   category: Category;
 }) {
+  if (!allowDiscussion) {
+    return <></>;
+  }
   return (
     <div className={styles.container}>
-      {permissions !== 'NOT_VISIBLE' && (
-        <Button
-          behaveAs="a"
-          href={`/newpost?category=${category}`}
-          label="start a discussion"
-          disabled={permissions === 'READ'}
-        >
-          + Start a discussion
-        </Button>
-      )}
+      <Button
+        behaveAs="a"
+        href={`/newpost?category=${category}`}
+        label="start a discussion"
+      >
+        + Start a discussion
+      </Button>
     </div>
   );
 }
