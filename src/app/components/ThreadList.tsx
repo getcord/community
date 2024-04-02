@@ -50,7 +50,6 @@ export default async function ThreadList({ category }: { category: string }) {
       <thead className={styles.tableHeader}>
         <tr>
           <th>Post</th>
-          <th>Participants</th>
           <th>Replies</th>
           <th>Activity</th>
         </tr>
