@@ -14,7 +14,7 @@ async function getAllowDiscussion(channelName: Category) {
     return false;
   }
   if (channelName === 'announcements') {
-    return !!isAdmin;
+    return isAdmin ?? false;
   }
   return true;
 }

@@ -32,6 +32,7 @@ type NewPostInputContextProps = {
   setError: (error: string) => void;
   error: string;
   threadID: string;
+  userIsAdmin: boolean;
 };
 
 const NewPostInputContext = createContext<NewPostInputContextProps>({
@@ -42,12 +43,14 @@ const NewPostInputContext = createContext<NewPostInputContextProps>({
   setError: () => {},
   error: '',
   threadID: '',
+  userIsAdmin: false,
 });
 
 function NewPostInputProvider(
   props: React.PropsWithChildren<{
     defaultCategory?: Category;
     threadID: string;
+    userIsAdmin: boolean;
   }>,
 ) {
   const [title, setTitle] = useState('');
@@ -56,6 +59,7 @@ function NewPostInputProvider(
   );
   const [error, setError] = useState('');
   const threadID = props.threadID;
+  const userIsAdmin = props.userIsAdmin;
 
   const value = useMemo(
     () => ({
@@ -66,8 +70,9 @@ function NewPostInputProvider(
       error,
       setError,
       threadID,
+      userIsAdmin,
     }),
-    [categories, title, error, threadID],
+    [categories, title, error, threadID, userIsAdmin],
   );
 
   return (
@@ -79,8 +84,15 @@ function NewPostInputProvider(
 
 function CommunityComposer(props: ComposerProps) {
   const router = useRouter();
-  const { title, setTitle, categories, setCategories, setError, threadID } =
-    useContext(NewPostInputContext);
+  const {
+    title,
+    setTitle,
+    categories,
+    setCategories,
+    setError,
+    threadID,
+    userIsAdmin,
+  } = useContext(NewPostInputContext);
 
   const onSubmit = useCallback(
     ({ message }: { message: Partial<ClientMessageData> }) => {
@@ -104,7 +116,9 @@ function CommunityComposer(props: ComposerProps) {
           </label>
           <CategorySelector
             id="categorySelector"
-            categories={CATEGORIES.map((c) => c)}
+            categories={CATEGORIES.filter(
+              (c) => c !== 'announcements' || userIsAdmin,
+            ).map((c) => c)}
             selectedValues={categories}
             onSelectedValuesChange={setCategories}
           />
@@ -214,12 +228,22 @@ function ComposerImpl() {
 export default function Composer({
   defaultCategory,
   threadID,
+  userIsAdmin,
 }: {
   defaultCategory?: Category;
   threadID: string;
+  userIsAdmin: boolean;
 }) {
   return (
-    <NewPostInputProvider defaultCategory={defaultCategory} threadID={threadID}>
+    <NewPostInputProvider
+      defaultCategory={
+        defaultCategory !== 'announcements' || userIsAdmin
+          ? defaultCategory
+          : undefined
+      }
+      threadID={threadID}
+      userIsAdmin={userIsAdmin}
+    >
       <ComposerImpl />
     </NewPostInputProvider>
   );

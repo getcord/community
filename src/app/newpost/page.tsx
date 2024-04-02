@@ -7,11 +7,17 @@ import { kv } from '@vercel/kv';
 
 import Composer from '@/app/components/Composer';
 import { Category } from '@/app/types';
-import { randomUUID } from 'crypto';
+import { getUser } from '@/app/helpers/user';
 
 async function getData() {
-  const nextThreadID = await kv.incr('nextThreadID');
-  return `${nextThreadID}`;
+  const [nextThreadID, user] = await Promise.all([
+    kv.incr('nextThreadID'),
+    getUser(),
+  ]);
+  return {
+    nextThreadID: `${nextThreadID}`,
+    userIsAdmin: user.isAdmin ?? false,
+  };
 }
 
 export default async function NewPost({
@@ -19,11 +25,15 @@ export default async function NewPost({
 }: {
   searchParams?: { category: Category };
 }) {
-  const threadID = await getData();
+  const { nextThreadID, userIsAdmin } = await getData();
 
   return (
     <>
-      <Composer defaultCategory={searchParams?.category} threadID={threadID} />
+      <Composer
+        defaultCategory={searchParams?.category}
+        threadID={nextThreadID}
+        userIsAdmin={userIsAdmin}
+      />
     </>
   );
 }
