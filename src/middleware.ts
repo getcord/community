@@ -36,16 +36,8 @@ export async function middleware(request: NextRequest) {
     // to auth0, and works out of the box
     const returnTo = request.nextUrl.pathname;
     loginUrl.searchParams.append('returnTo', returnTo);
-
-    const newResponse = NextResponse.redirect(loginUrl);
-    // We have to create this as a cookie, to access it in the handleAuth onError
-    // callback, as that won't have access to the query param set above
-    newResponse.cookies.set('return_to', returnTo);
-
-    return newResponse;
+    return NextResponse.redirect(loginUrl);
   }
-
-  response.cookies.delete('return_to');
 
   return NextResponse.next(response);
 }

@@ -9,6 +9,13 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { NextRequest } from 'next/server';
 
+// When we fail a silent login the returnTo url is part of the error
+// We can pull it directly off the error.  This type is basically to
+// make typescript happy when we access it
+type OpenIdError = Error & {
+  openIdState: { returnTo: string };
+};
+
 export const GET = handleAuth({
   'silent-login': async (req: NextApiRequest, res: NextApiResponse) => {
     const session = await getSession(req, res);
@@ -20,8 +27,9 @@ export const GET = handleAuth({
       });
     }
   },
-  onError(req: NextRequest, __: HandlerError) {
-    const returnTo = req.cookies.get('return_to')?.value ?? '/';
+  onError(_: NextRequest, error: HandlerError) {
+    const returnTo =
+      (error?.cause as OpenIdError)?.openIdState?.returnTo ?? '/';
     cookies().set('attempted_login', 'true');
 
     redirect(returnTo);
