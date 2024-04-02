@@ -11,7 +11,11 @@ const CordIntegration = ({
 }: React.PropsWithChildren<Props>) => {
   return (
     <div>
-      <CordProvider clientAuthToken={clientAuthToken} enableSlack={false}>
+      <CordProvider
+        clientAuthToken={clientAuthToken}
+        enableSlack={false}
+        enableTasks={false}
+      >
         {children}
       </CordProvider>
     </div>
