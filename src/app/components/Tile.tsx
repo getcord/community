@@ -5,7 +5,7 @@ import { ComponentProps } from 'react';
 
 const getThreadData = async (threadID: string, thread: CoreThreadData) => {
   const messages = await fetchCordRESTApi<CoreMessageData[]>(
-    `threads/${threadID}/messages`,
+    `threads/${threadID}/messages?sortDirection=ASCENDING`,
     'GET',
   );
 
