@@ -21,6 +21,7 @@ import { useRouter } from 'next/navigation';
 import { CATEGORIES, Category } from '@/app/types';
 import Button from '@/app/ui/Button';
 import { slugify } from '@/utils';
+import { Label } from '@/app/ui/Input';
 
 // We create a context as it is the easiest way to share data across replaced
 // Composer components
@@ -33,6 +34,8 @@ type NewPostInputContextProps = {
   error: string;
   threadID: string;
   userIsAdmin: boolean;
+  pinned: boolean;
+  setPinned: (pinned: boolean) => void;
 };
 
 const NewPostInputContext = createContext<NewPostInputContextProps>({
@@ -44,6 +47,8 @@ const NewPostInputContext = createContext<NewPostInputContextProps>({
   error: '',
   threadID: '',
   userIsAdmin: false,
+  pinned: false,
+  setPinned: () => {},
 });
 
 function NewPostInputProvider(
@@ -60,6 +65,7 @@ function NewPostInputProvider(
   const [error, setError] = useState('');
   const threadID = props.threadID;
   const userIsAdmin = props.userIsAdmin;
+  const [pinned, setPinned] = useState(false);
 
   const value = useMemo(
     () => ({
@@ -71,8 +77,10 @@ function NewPostInputProvider(
       setError,
       threadID,
       userIsAdmin,
+      pinned,
+      setPinned,
     }),
-    [categories, title, error, threadID, userIsAdmin],
+    [categories, title, error, threadID, userIsAdmin, pinned, setPinned],
   );
 
   return (
@@ -165,7 +173,8 @@ function CommunityComposer(props: ComposerProps) {
 }
 
 function CommunityComposerLayout(props: ComposerLayoutProps) {
-  const { error } = useContext(NewPostInputContext);
+  const { error, userIsAdmin, pinned, setPinned } =
+    useContext(NewPostInputContext);
   const sendButton = props.toolbarItems?.find(
     (item) => item.name === 'sendButton',
   );
@@ -179,6 +188,18 @@ function CommunityComposerLayout(props: ComposerLayoutProps) {
         textEditor={props.textEditor}
       ></experimental.ComposerLayout>
       <span className={styles.error}>{error}</span>
+      {userIsAdmin && (
+        <div className={styles.toggleContainer}>
+          <Label htmlFor="pinned">Pinned</Label>
+          <input
+            type="checkbox"
+            id="pinned"
+            checked={pinned}
+            onChange={() => setPinned(!pinned)}
+            aria-label="Toggle pinned messages"
+          />
+        </div>
+      )}
       {sendButton?.element}
     </>
   );
@@ -197,8 +218,9 @@ function CommunitySendButton(props: SendButtonProps) {
 }
 
 function ComposerImpl() {
-  const { title, categories, threadID } = useContext(NewPostInputContext);
-  const metadata: EntityMetadata = { pinned: false };
+  const { title, categories, threadID, pinned } =
+    useContext(NewPostInputContext);
+  const metadata: EntityMetadata = { pinned };
   categories.forEach((category) => (metadata[category] = true));
 
   return (

@@ -46,3 +46,9 @@
 .error {
   color: var(--cord-orange);
 }
+
+.toggleContainer {
+  display: flex;
+  gap: 4px;
+  min-width: 400px;
+}
