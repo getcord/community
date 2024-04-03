@@ -16,7 +16,6 @@ interface LinkProps extends React.ComponentProps<typeof Link> {
 interface AProps extends React.HTMLProps<HTMLAnchorElement> {
   behaveAs: 'a';
   href: React.HTMLProps<HTMLAnchorElement>['href'];
-  label: string;
   disabled?: boolean;
   variant?: Variant;
 }

@@ -104,7 +104,6 @@ function LoggedOutComposer({ postID }: { postID: string }) {
         <Button
           behaveAs="a"
           href={`/api/auth/login?returnTo=/post/${postID}`}
-          label="sign in"
           variant="outline"
         >
           Sign in

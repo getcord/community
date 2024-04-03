@@ -81,7 +81,6 @@ export function UserDetails({ user }: UserDetailsProps) {
               behaveAs={'a'}
               href={`/api/auth/logout`}
               className={styles.link}
-              label={'Log Out'}
             >
               <ArrowLeftEndOnRectangleIcon width={14} /> Log out
             </Button>

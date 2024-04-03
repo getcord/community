@@ -133,7 +133,6 @@ export default function Sidebar({
                 <Button
                   behaveAs="a"
                   href="https://console.cord.com/settings/billing"
-                  label="upgrade Cord account"
                   style={{ marginLeft: '20px' }}
                 >
                   Set up Cord
@@ -143,7 +142,6 @@ export default function Sidebar({
                 <Button
                   behaveAs="a"
                   href="https://console.cord.com/settings/billing"
-                  label="upgrade Cord account"
                   style={{ marginLeft: '20px' }}
                 >
                   Upgrade Cord

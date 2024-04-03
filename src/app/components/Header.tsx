@@ -20,11 +20,7 @@ export default function Header({ user }: { user: User }) {
           <Image alt="cord logo" src={logo} height={40} />
         </Link>
         {!name ? (
-          <Button
-            behaveAs="a"
-            href={`/api/auth/login?returnTo=${pathname}`}
-            label="sign in"
-          >
+          <Button behaveAs="a" href={`/api/auth/login?returnTo=${pathname}`}>
             Sign in to comment
           </Button>
         ) : (

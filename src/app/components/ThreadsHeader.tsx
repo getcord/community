@@ -14,11 +14,7 @@ export default function ThreadsHeader({
   }
   return (
     <div className={styles.container}>
-      <Button
-        behaveAs="a"
-        href={`/newpost?category=${category}`}
-        label="start a discussion"
-      >
+      <Button behaveAs="a" href={`/newpost?category=${category}`}>
         + Start a discussion
       </Button>
     </div>
