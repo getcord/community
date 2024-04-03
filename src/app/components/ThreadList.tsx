@@ -2,9 +2,10 @@ import styles from './threadList.module.css';
 import { ServerListThreads } from '@cord-sdk/types';
 import Tile from '@/app/components/Tile';
 import { buildQueryParams, fetchCordRESTApi } from '@/app/fetchCordRESTApi';
+import { Category } from '@/app/types';
 
-const getThreadsData = async (category: string) => {
-  const getFilter = (category: string | null, pinned: boolean) => [
+const getThreadsData = async (category: Category | undefined) => {
+  const getFilter = (category: Category | undefined, pinned: boolean) => [
     {
       field: 'filter',
       value: JSON.stringify({
@@ -15,11 +16,8 @@ const getThreadsData = async (category: string) => {
       }),
     },
   ];
-  const actualCategory = category !== 'all' ? category : null;
-  const categoryQueryParams = buildQueryParams(
-    getFilter(actualCategory, false),
-  );
-  const pinnedQueryParams = buildQueryParams(getFilter(actualCategory, true));
+  const categoryQueryParams = buildQueryParams(getFilter(category, false));
+  const pinnedQueryParams = buildQueryParams(getFilter(category, true));
   const [pinnedResults, categoryResults] = await Promise.all([
     fetchCordRESTApi<ServerListThreads>(`threads${pinnedQueryParams}`, 'GET'),
     fetchCordRESTApi<ServerListThreads>(`threads${categoryQueryParams}`, 'GET'),
@@ -36,7 +34,11 @@ const getThreadsData = async (category: string) => {
   };
 };
 
-export default async function ThreadList({ category }: { category: string }) {
+export default async function ThreadList({
+  category,
+}: {
+  category?: Category;
+}) {
   // do we want this to update? Probably? In that case we need to useThreads as well
   const { threads, total } = await getThreadsData(category);
 
