@@ -1,5 +1,3 @@
-import { getSession } from '@auth0/nextjs-auth0/edge';
-import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const config = {
