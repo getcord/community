@@ -33,9 +33,9 @@ type Props = LinkProps | AProps | ButtonProps;
  */
 export default function Button(props: PropsWithChildren<Props>) {
   // otherProps will no longer be typed here, so infer the type every where we pass it below
-  const { behaveAs, ...otherProps } = props;
+  const { behaveAs, variant: propVariant, ...otherProps } = props;
 
-  const variant = props.variant ?? 'fill';
+  const variant = propVariant ?? 'fill';
   if (behaveAs === 'link') {
     return (
       <Link
