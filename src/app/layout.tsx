@@ -75,11 +75,22 @@ async function createCordEntitiesAsNeeded(sessionUser: Claims) {
         metadata: { supportEnabled: customerInfo.supportEnabled },
       });
     }
+
+    // Now lets make sure the user is part of the group
+    if (
+      customerGroup &&
+      customerGroup.members &&
+      !customerGroup.members.includes(userID)
+    ) {
+      await fetchCordRESTApi(
+        `groups/${customerInfo.customerID}/members`,
+        'POST',
+        {
+          add: [userID],
+        },
+      );
+    }
   }
-  // Now lets make sure the user is part of the group
-  await fetchCordRESTApi(`groups/${customerInfo.customerID}/members`, 'POST', {
-    add: [userID],
-  });
 
   return { user, customerInfo };
 }
