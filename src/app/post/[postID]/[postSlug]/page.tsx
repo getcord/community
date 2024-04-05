@@ -16,7 +16,7 @@ export default async function Page({
     <div className={styles.container}>
       {user.userID ? (
         // logged in, client side rendered
-        <Post threadID={threadID} />
+        <Post threadID={threadID} isAdmin={user.isAdmin ?? false} />
       ) : (
         // not logged in, SSR
         <ServerPost threadID={threadID} />
