@@ -168,12 +168,12 @@ export default async function RootLayout({
         <link
           rel="stylesheet"
           id="cord_css"
-          href="https://app.staging.cord.com/sdk/v1/sdk.latest.css"
+          href="https://app.cord.com/sdk/v1/sdk.latest.css"
         />
         <link
           rel="stylesheet"
           id="cord_react_css"
-          href="https://app.staging.cord.com/sdk/css/cord-react.css"
+          href="https://app.cord.com/sdk/css/cord-react.css"
         />
       </head>
       <body>
