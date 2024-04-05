@@ -5,32 +5,35 @@ import { buildQueryParams, fetchCordRESTApi } from '@/app/fetchCordRESTApi';
 import { Category } from '@/app/types';
 
 const getThreadsData = async (category: Category | undefined) => {
-  const getFilter = (category: Category | undefined, pinned: boolean) => [
+  // Fetch all threads for the 'community_all' group and then any in the
+  // particular category if specified
+  const filter = buildQueryParams([
     {
       field: 'filter',
       value: JSON.stringify({
-        metadata: {
-          pinned,
-          ...(category && { [category]: true }),
-        },
+        ...(category && { metadata: { [category]: true } }),
+        groupID: 'community_all',
       }),
     },
-  ];
-  const categoryQueryParams = buildQueryParams(getFilter(category, false));
-  const pinnedQueryParams = buildQueryParams(getFilter(category, true));
-  const [pinnedResults, categoryResults] = await Promise.all([
-    fetchCordRESTApi<ServerListThreads>(`threads${pinnedQueryParams}`, 'GET'),
-    fetchCordRESTApi<ServerListThreads>(`threads${categoryQueryParams}`, 'GET'),
   ]);
 
+  const threadsData = await fetchCordRESTApi<ServerListThreads>(
+    `threads${filter}`,
+    'GET',
+  );
+  const pinnedResults = threadsData?.threads
+    ? threadsData.threads.filter((thread) => {
+        return thread.metadata.pinned ?? false;
+      })
+    : [];
+  const categoryResults = threadsData?.threads
+    ? threadsData.threads.filter((thread) => {
+        return !thread.metadata.pinned;
+      })
+    : [];
+
   return {
-    threads: [
-      ...(pinnedResults?.threads ?? []),
-      ...(categoryResults?.threads ?? []),
-    ],
-    total:
-      (pinnedResults?.pagination.total ?? 0) +
-      (categoryResults?.pagination.total ?? 0),
+    threads: [...pinnedResults, ...categoryResults],
   };
 };
 
@@ -40,9 +43,9 @@ export default async function ThreadList({
   category?: Category;
 }) {
   // do we want this to update? Probably? In that case we need to useThreads as well
-  const { threads, total } = await getThreadsData(category);
+  const { threads } = await getThreadsData(category);
 
-  if (threads.length < 1 && total === 0) {
+  if (threads.length < 1) {
     // flickering -> to be fixed
     return <p>No posts yet!</p>;
   }
