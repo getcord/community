@@ -2,8 +2,9 @@
 
 import Sidebar from '@/app/components/Sidebar';
 import { Category, SupportChat } from '@/app/types';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import styles from '@/app/components/mainNav.module.css';
+import { usePathname } from 'next/navigation';
 
 export default function MainNav({
   children,
@@ -28,6 +29,44 @@ export default function MainNav({
     }
   }, [setNavOpen]);
 
+  const pathname = usePathname();
+  const lastPathnameRef = useRef(pathname);
+  useEffect(() => {
+    if (lastPathnameRef.current !== pathname) {
+      setNavOpen(false);
+    }
+    lastPathnameRef.current = pathname;
+  }, [pathname, setNavOpen]);
+
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const onPointerDown = (e: PointerEvent) => {
+      if (sidebarRef.current && e.target) {
+        let p = e.target as Node;
+        let isWithinNav = false;
+        while (p) {
+          if (p === sidebarRef.current) {
+            isWithinNav = true;
+            break;
+          } else if (p.parentNode) {
+            p = p.parentNode;
+          } else {
+            break;
+          }
+        }
+
+        if (!isWithinNav) {
+          setNavOpen(false);
+        }
+      }
+    };
+
+    window.addEventListener('pointerdown', onPointerDown);
+    return () => {
+      window.removeEventListener('pointerdown', onPointerDown);
+    };
+  }, [navOpen, setNavOpen]);
+
   const onToggle = useCallback(() => {
     setNavOpen(!navOpen);
   }, [navOpen, setNavOpen]);
@@ -35,6 +74,7 @@ export default function MainNav({
   return (
     <div className={styles.mainNav}>
       <Sidebar
+        forwardRef={sidebarRef}
         categories={categories}
         supportEnabled={supportEnabled}
         supportChats={supportChats}

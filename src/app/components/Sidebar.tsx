@@ -21,6 +21,7 @@ import Button from '../ui/Button';
 import { notification } from '@cord-sdk/react';
 import Image from 'next/image';
 import classNames from 'classnames';
+import { RefObject } from 'react';
 
 const resources = [
   {
@@ -42,6 +43,7 @@ const resources = [
 ] as const;
 
 export default function Sidebar({
+  forwardRef,
   categories,
   supportChats,
   supportEnabled,
@@ -50,6 +52,7 @@ export default function Sidebar({
   navOpen,
   onToggle,
 }: {
+  forwardRef: RefObject<HTMLElement>;
   categories?: Category[];
   supportEnabled?: boolean;
   supportChats?: SupportChat[];
@@ -63,6 +66,7 @@ export default function Sidebar({
 
   return (
     <nav
+      ref={forwardRef}
       className={classNames({
         [styles.container]: true,
         [styles.collapsed]: !navOpen,
