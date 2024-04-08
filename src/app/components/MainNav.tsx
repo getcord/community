@@ -40,6 +40,10 @@ export default function MainNav({
 
   const sidebarRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    if (window.innerWidth > 1024) {
+      return;
+    }
+
     const onPointerDown = (e: PointerEvent) => {
       if (sidebarRef.current && e.target) {
         let p = e.target as Node;
