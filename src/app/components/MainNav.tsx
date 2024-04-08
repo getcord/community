@@ -32,6 +32,10 @@ export default function MainNav({
   const pathname = usePathname();
   const lastPathnameRef = useRef(pathname);
   useEffect(() => {
+    if (window.innerWidth > 1024) {
+      return;
+    }
+
     if (lastPathnameRef.current !== pathname) {
       setNavOpen(false);
     }
