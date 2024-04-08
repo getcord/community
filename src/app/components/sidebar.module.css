@@ -32,13 +32,26 @@
 
 .listItem {
   display: flex;
+  flex: 1;
 }
 
-.listItem .link {
-  all: unset;
+.listItem .link,
+.listItem .link:link {
+  color: var(--cord-dark-grey);
   cursor: pointer;
-  padding: 6px 20px;
-  width: 100%;
+  display: block;
+  flex: 1;
+  padding: 12px 18px;
+  margin: 2px; /* for the outline on tab navigation */
+  text-decoration: none;
+}
+
+@media (max-width: 1024px) {
+  .listItem .link,
+  .listItem .link:link {
+    cursor: pointer;
+    padding: 18px 20px;
+  }
 }
 
 .listItemActive {
@@ -46,9 +59,10 @@
   color: var(--cord-purple-dark);
 }
 
-.listItem:hover {
+.listItem .link:hover {
   background-color: var(--cord-grey-light);
   color: var(--cord-purple-dark);
+  text-decoration: underline;
 }
 
 .resourceContainer {
