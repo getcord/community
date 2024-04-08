@@ -51,6 +51,13 @@
   overflow: hidden;
 }
 
+@media (max-width: 1024px) {
+  .messageSnippet {
+    max-width: calc(
+      60vw
+    ); /* TODO(jg): Revisit this -- a better solution is to nuke the table layout */
+  }
+}
 .column {
   padding: 8px;
   align-self: center;

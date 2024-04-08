@@ -4,8 +4,14 @@
   padding: 8px;
 }
 
+@media (max-width: 1024px) {
+  .container {
+    max-width: calc(100vw - 76px);
+  }
+}
+
 .table {
-  overflow-y: auto;
+  overflow-y: auto; /* TODO(jg): figure out why this is here... super sus. */
   padding: 16px;
   vertical-align: middle;
 }
