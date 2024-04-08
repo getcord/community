@@ -180,7 +180,6 @@ export default async function RootLayout({
         <CordIntegration clientAuthToken={clientAuthToken}>
           <Header user={user} />
           <MainNav
-            user={user}
             categories={categories}
             supportChats={supportChats}
             supportEnabled={supportEnabled}
