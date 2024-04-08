@@ -4,7 +4,7 @@ import Header from '@/app/components/Header';
 import Sidebar from '@/app/components/Sidebar';
 import { User } from '@/app/helpers/user';
 import { Category, SupportChat } from '@/app/types';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styles from '@/app/components/mainNav.module.css';
 
 export default function MainNav({
@@ -24,7 +24,13 @@ export default function MainNav({
   isLoggedIn: boolean;
   customerExists: boolean;
 }) {
-  const [navOpen, setNavOpen] = useState(false);
+  const [navOpen, setNavOpen] = useState(true);
+
+  useEffect(() => {
+    if (window.innerWidth < 1024) {
+      setNavOpen(false);
+    }
+  }, [setNavOpen]);
 
   const onToggle = useCallback(() => {
     setNavOpen(!navOpen);
