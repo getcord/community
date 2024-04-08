@@ -1,6 +1,6 @@
 'use client';
 
-import { Thread, thread as threadHooks, experimental } from '@cord-sdk/react';
+import { thread as threadHooks, experimental } from '@cord-sdk/react';
 import styles from './post.module.css';
 import { getTypedMetadata } from '@/utils';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
@@ -16,9 +16,9 @@ import {
 } from 'react';
 
 import {
+  MenuItemProps,
   MenuProps,
   MessageProps,
-  OptionsMenuProps,
 } from '@cord-sdk/react/dist/mjs/types/experimental';
 import { EntityMetadata } from '@cord-sdk/types';
 
@@ -28,10 +28,12 @@ export type ThreadData = {
   name: string;
 };
 
-const ThreadContext = createContext<{
+const PostContext = createContext<{
+  userIsAdmin: boolean;
   threadID: string | null;
   metadata: EntityMetadata | null;
 }>({
+  userIsAdmin: false,
   threadID: null,
   metadata: null,
 });
@@ -39,6 +41,12 @@ const ThreadContext = createContext<{
 const MessageContext = createContext<{ messageID: string | null }>({
   messageID: null,
 });
+
+const REPLACEMENTS = {
+  Message: CommunityMessageWithContext,
+  Menu: CommunityMenu,
+  MenuItem: CommunityMenuItem,
+};
 
 export default function Post({
   threadID,
@@ -49,6 +57,7 @@ export default function Post({
 }) {
   const threadData = threadHooks.useThread(threadID);
   const { thread, loading, hasMore, fetchMore } = threadData;
+
   useEffect(() => {
     if (hasMore) {
       void fetchMore(10);
@@ -56,8 +65,12 @@ export default function Post({
   }, [hasMore, fetchMore]);
 
   const contextValue = useMemo(() => {
-    return { threadID, metadata: thread?.metadata ?? null };
-  }, [thread?.metadata, threadID]);
+    return {
+      threadID,
+      metadata: thread?.metadata ?? null,
+      userIsAdmin: isAdmin,
+    };
+  }, [isAdmin, thread?.metadata, threadID]);
 
   if (!thread && !loading) {
     return <ThreadNotFound />;
@@ -65,17 +78,10 @@ export default function Post({
   const metadata = getTypedMetadata(thread?.metadata);
 
   return (
-    <ThreadContext.Provider value={contextValue}>
+    <PostContext.Provider value={contextValue}>
       <ThreadHeading metadata={metadata} threadName={thread?.name || ''} />
-      {!isAdmin ? (
-        <Thread threadId={threadID} />
-      ) : (
-        <experimental.Thread
-          thread={threadData}
-          replace={{ Message: CommunityMessage }}
-        />
-      )}
-    </ThreadContext.Provider>
+      <experimental.Thread thread={threadData} replace={REPLACEMENTS} />
+    </PostContext.Provider>
   );
 }
 
@@ -102,38 +108,26 @@ export function ThreadHeading({
   );
 }
 
-export function OptionsMenuWithMarkAnswer(props: OptionsMenuProps) {
-  return (
-    <experimental.OptionsMenu
-      {...props}
-      replace={{ Menu: MenuWithMarkAnswer }}
-    />
-  );
-}
-
-export function CommunityMessage(props: MessageProps) {
+function CommunityMessageWithContext(props: MessageProps) {
   const contextValue = useMemo(() => {
     return { messageID: props.message.id };
   }, [props.message.id]);
   return (
     <MessageContext.Provider value={contextValue}>
-      <experimental.Message
-        {...props}
-        replace={{ OptionsMenu: OptionsMenuWithMarkAnswer }}
-      />
+      <experimental.Message {...props} />
     </MessageContext.Provider>
   );
 }
 
-export function MenuWithMarkAnswer(props: MenuProps) {
-  const threadContext = useContext(ThreadContext);
+function CommunityMenu(props: MenuProps) {
+  const postContext = useContext(PostContext);
   const messageContext = useContext(MessageContext);
   const markAsAnswer = useCallback(() => {
     if (!window.CordSDK) {
       console.error('Cord SDK not found');
       return;
     }
-    if (!threadContext.threadID) {
+    if (!postContext.threadID) {
       console.error('Thread ID not found');
       return;
     }
@@ -142,9 +136,9 @@ export function MenuWithMarkAnswer(props: MenuProps) {
       return;
     }
     window.CordSDK.thread
-      .updateThread(threadContext.threadID, {
+      .updateThread(postContext.threadID, {
         metadata: {
-          ...threadContext.metadata,
+          ...postContext.metadata,
           answerMessageID: messageContext.messageID,
         },
       })
@@ -155,8 +149,8 @@ export function MenuWithMarkAnswer(props: MenuProps) {
   }, [
     messageContext.messageID,
     props,
-    threadContext.metadata,
-    threadContext.threadID,
+    postContext.metadata,
+    postContext.threadID,
   ]);
 
   const markWithAnswer = useMemo(() => {
@@ -172,11 +166,28 @@ export function MenuWithMarkAnswer(props: MenuProps) {
     };
   }, [markAsAnswer]);
 
-  const propsWithMarkAnswer = useMemo(() => {
+  const communityMenuProps = useMemo(() => {
+    if (!postContext.userIsAdmin) {
+      return props;
+    }
+
     return {
       ...props,
       items: [markWithAnswer, ...props.items],
     };
-  }, [markWithAnswer, props]);
-  return <experimental.Menu {...propsWithMarkAnswer} />;
+  }, [markWithAnswer, postContext.userIsAdmin, props]);
+
+  return <experimental.Menu {...communityMenuProps} />;
+}
+
+function CommunityMenuItem(props: MenuItemProps) {
+  const postContext = useContext(PostContext);
+  if (postContext.userIsAdmin) {
+    return <experimental.MenuItem {...props} />;
+  }
+
+  if (props.menuItemAction !== 'thread-resolve') {
+    return <experimental.MenuItem {...props} />;
+  }
+  return null;
 }
