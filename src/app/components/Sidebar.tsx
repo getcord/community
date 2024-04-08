@@ -19,6 +19,8 @@ import {
 } from '@heroicons/react/24/outline';
 import Button from '../ui/Button';
 import { notification } from '@cord-sdk/react';
+import Image from 'next/image';
+import classNames from 'classnames';
 
 const resources = [
   {
@@ -45,26 +47,57 @@ export default function Sidebar({
   supportEnabled,
   isLoggedIn,
   customerExists,
+  navOpen,
+  onToggle,
 }: {
   categories?: Category[];
   supportEnabled?: boolean;
   supportChats?: SupportChat[];
   isLoggedIn: boolean;
   customerExists: boolean;
+  navOpen: boolean;
+  onToggle: () => void;
 }) {
   const pathname = usePathname();
   const summary = notification.useSummary();
 
   return (
-    <nav className={styles.container}>
-      <ul className={styles.navItems}>
+    <nav
+      className={classNames({
+        [styles.container]: true,
+        [styles.collapsed]: !navOpen,
+      })}
+    >
+      <div className={styles.menuToggle}>
+        <button onClick={onToggle} className={styles.menuToggleButton}>
+          {navOpen ? (
+            <>
+              <Image
+                src="/arrow-left.svg"
+                width={14}
+                height={14}
+                alt="Arrow pointed left"
+              />
+              <span>Hide menu</span>
+            </>
+          ) : (
+            <Image
+              src="/hamburger.svg"
+              width={14}
+              height={14}
+              alt="Menu icon"
+            />
+          )}
+        </button>
+      </div>
+      <ul className={classNames(styles.navItems)}>
         <li
           className={cx(styles.listItem, {
             [styles.listItemActive]: pathname === '/',
           })}
         >
           <Link href="/" aria-label="home" className={styles.link}>
-            <ResourceItem resourceType="All Posts" />
+            <ResourceItem resourceType="All Posts" navOpen={navOpen} />
           </Link>
         </li>
         {isLoggedIn && (
@@ -81,10 +114,19 @@ export default function Sidebar({
               <ResourceItem
                 resourceType="Notifications"
                 hasActivityBadge={!!summary?.unread}
+                navOpen={navOpen}
               />
             </Link>
           </li>
         )}
+      </ul>
+      <ul
+        className={classNames({
+          [styles.navItems]: true,
+          [styles.categories]: true,
+          [styles.collapsed]: !navOpen,
+        })}
+      >
         {categories && (
           <li>
             <h4 className={styles.navlistTitle}>Categories</h4>
@@ -109,6 +151,8 @@ export default function Sidebar({
             </ul>
           </li>
         )}
+      </ul>
+      <ul className={classNames(styles.navItems)}>
         <li>
           <h4 className={styles.navlistTitle}>Resources</h4>
           <ul className={styles.navItems}>
@@ -119,7 +163,7 @@ export default function Sidebar({
                   aria-label={resource.id}
                   className={styles.link}
                 >
-                  <ResourceItem resourceType={resource.id} />
+                  <ResourceItem resourceType={resource.id} navOpen={navOpen} />
                 </Link>
               </li>
             ))}
@@ -158,6 +202,7 @@ export default function Sidebar({
                       <ResourceItem
                         resourceType="Support"
                         resourceName={customerName}
+                        navOpen={navOpen}
                       />
                     </Link>
                   </li>
@@ -174,15 +219,24 @@ export function ResourceItem({
   resourceType,
   resourceName,
   hasActivityBadge,
+  navOpen,
 }: {
   resourceType: string;
   resourceName?: string;
   hasActivityBadge?: boolean;
+  navOpen: boolean;
 }) {
   return (
     <span className={styles.resourceContainer}>
       <NavItemPrefix navFor={resourceType} />
-      <span>{resourceName ?? resourceType}</span>
+      <span
+        className={classNames({
+          [styles.label]: true,
+          [styles.collapsed]: !navOpen,
+        })}
+      >
+        {resourceName ?? resourceType}
+      </span>
       {hasActivityBadge && <span className={cx(styles.activityBadge)} />}
     </span>
   );

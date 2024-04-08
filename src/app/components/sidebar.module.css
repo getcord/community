@@ -1,8 +1,52 @@
 .container {
+  background: #fff;
   grid-area: sidebar;
   overflow: auto;
   border-right: 2px solid var(--cord-grey);
-  min-width: 200px;
+  position: relative;
+  z-index: 1;
+  transition: width 0.5s;
+  width: 200px;
+}
+
+.container.collapsed {
+  overflow: hidden;
+  width: 56px;
+}
+
+.menuToggle {
+  display: none;
+}
+
+.menuToggleButton {
+  align-items: center;
+  background: #fff;
+  border: 0;
+  color: var(--cord-grey-dark);
+  fill: var(--cord-grey-dark);
+  cursor: pointer;
+  display: flex;
+  flex: 1;
+  gap: 8px;
+  margin: 2px; /* for the outline on tab navigation */
+  padding: 18px 20px;
+  white-space: nowrap;
+}
+
+@media (max-width: 1024px) {
+  .container {
+    position: fixed;
+    top: 0px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding-top: 60px;
+  }
+
+  .menuToggle {
+    display: flex;
+    flex: 1;
+  }
 }
 
 .navlistContainer {
@@ -21,6 +65,10 @@
   padding-left: 20px;
 }
 
+.collapsed .navlistTitle {
+  display: none;
+}
+
 .navItems {
   list-style: none;
   margin-inline-start: 0;
@@ -30,14 +78,24 @@
   color: var(--cord-grey-dark);
 }
 
+.categories {
+  height: 280px;
+  overflow: hidden;
+  transition: height 0.5s;
+}
+
+.categories.collapsed {
+  height: 0;
+}
 .listItem {
   display: flex;
   flex: 1;
+  white-space: nowrap;
 }
 
 .listItem .link,
 .listItem .link:link {
-  color: var(--cord-dark-grey);
+  color: var(--cord-grey-dark);
   cursor: pointer;
   display: block;
   flex: 1;
@@ -69,6 +127,16 @@
   display: flex;
   gap: 8px;
   align-items: center;
+}
+
+.label {
+  display: block;
+  transition: width 0.5s;
+}
+
+.label.collapsed {
+  width: 0;
+  overflow: hidden;
 }
 
 .activityBadge {

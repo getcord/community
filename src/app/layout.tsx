@@ -16,6 +16,7 @@ import {
 import { ServerGroupData } from '@cord-sdk/types';
 import { ServerListGroup } from '@cord-sdk/types';
 import { EVERYONE_GROUP_ID } from '@/consts';
+import MainNav from '@/app/components/MainNav';
 
 async function createCordEntitiesAsNeeded(sessionUser: Claims) {
   // Not sure why but sub seems to be the spot that the put the user_id
@@ -178,17 +179,16 @@ export default async function RootLayout({
       </head>
       <body>
         <CordIntegration clientAuthToken={clientAuthToken}>
-          <Header user={user} />
-          <div className={styles.outlet}>
-            <Sidebar
-              categories={categories}
-              supportChats={supportChats}
-              supportEnabled={supportEnabled}
-              isLoggedIn={!!user?.userID}
-              customerExists={!!customerInfo?.customerID}
-            />
+          <MainNav
+            user={user}
+            categories={categories}
+            supportChats={supportChats}
+            supportEnabled={supportEnabled}
+            isLoggedIn={!!user?.userID}
+            customerExists={!!customerInfo?.customerID}
+          >
             <div className={styles.content}>{children}</div>
-          </div>
+          </MainNav>
         </CordIntegration>
       </body>
     </html>
