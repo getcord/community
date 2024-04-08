@@ -1,6 +1,12 @@
-.link {
-  all: unset;
+.link,
+.link:link {
   cursor: pointer;
+  text-decoration: none;
+  color: #000;
+}
+
+.link:hover {
+  text-decoration: underline;
 }
 
 .container {
