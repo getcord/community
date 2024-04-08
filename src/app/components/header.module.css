@@ -22,3 +22,23 @@
   margin: 0 auto;
   max-width: calc(var(--max-sidebar-width) + var(--max-content-width));
 }
+
+.mainLink,
+.mainLink:link,
+.mainLink:hover,
+.mainLink:active,
+.mainLink:visited {
+  align-items: center;
+  color: #000;
+  display: flex;
+  gap: 8px;
+  margin-left: -4px;
+  padding: 4px;
+  text-decoration: none;
+}
+
+.separator {
+  background: #000;
+  margin: 0 12px;
+  width: 1px;
+}

@@ -16,8 +16,8 @@ export default function Header({ user }: { user: User }) {
   return (
     <header className={styles.container}>
       <div className={styles.content}>
-        <Link href="/" aria-label="home">
-          <Image alt="cord logo" src={logo} height={40} />
+        <Link href="/" aria-label="home" className={styles.mainLink}>
+          <Image alt="cord logo" src={logo} height={24} /> Community
         </Link>
         {!name ? (
           <Button behaveAs="a" href={`/api/auth/login?returnTo=${pathname}`}>
