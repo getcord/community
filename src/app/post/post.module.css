@@ -117,7 +117,7 @@
   border: none;
 }
 
-/* These two need to match, so using the variables from above */
+/* The SSR and client side rednered thread need to match, so using the variables from above */
 .container :global(.cord-component .cord-message:first-child) {
   border-radius: var(--thread-border-radius);
   padding-bottom: var(--thread-padding-bottom);

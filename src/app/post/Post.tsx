@@ -181,11 +181,6 @@ function CommunityMenu(props: MenuProps) {
 }
 
 function CommunityMenuItem(props: MenuItemProps) {
-  const postContext = useContext(PostContext);
-  if (postContext.userIsAdmin) {
-    return <experimental.MenuItem {...props} />;
-  }
-
   if (props.menuItemAction !== 'thread-resolve') {
     return <experimental.MenuItem {...props} />;
   }
