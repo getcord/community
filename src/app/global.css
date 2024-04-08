@@ -52,7 +52,6 @@ body {
   --cord-color-content-primary: var(--cord-black);
   --cord-line-height-body: 1.46668;
   --cord-composer-height-max: 67vh;
-  --cord-color-base: ${(props) => props.theme.cord.colorbase};
 }
 
 html .cord-component {
