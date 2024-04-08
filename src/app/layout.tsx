@@ -3,7 +3,6 @@ import './global.css';
 import { getClientAuthToken } from '@cord-sdk/server';
 import CordIntegration from './CordIntegration';
 import Header from './components/Header';
-import Sidebar from './components/Sidebar';
 import styles from './styles.module.css';
 import { CATEGORIES } from '@/app/types';
 import { fetchCordRESTApi } from '@/app/fetchCordRESTApi';
@@ -179,6 +178,7 @@ export default async function RootLayout({
       </head>
       <body>
         <CordIntegration clientAuthToken={clientAuthToken}>
+          <Header user={user} />
           <MainNav
             user={user}
             categories={categories}
