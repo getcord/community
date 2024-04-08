@@ -10,6 +10,7 @@
   text-decoration: none;
   cursor: pointer;
   color: var(--cord-grey-dark);
+  padding: 4px 0;
 }
 
 @media (max-width: 1024px) {
