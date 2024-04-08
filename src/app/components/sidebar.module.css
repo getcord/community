@@ -27,6 +27,7 @@
   cursor: pointer;
   display: flex;
   flex: 1;
+  font-size: 15px;
   gap: 8px;
   margin: 2px; /* for the outline on tab navigation */
   padding: 18px 20px;
