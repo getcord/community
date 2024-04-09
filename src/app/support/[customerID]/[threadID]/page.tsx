@@ -11,7 +11,6 @@ export default function ThreadDetails({
 }: {
   params: { customerID: string; threadID: string };
 }) {
-  console.log(params);
   const threadId = decodeURIComponent(params.threadID);
   const customerID = decodeURIComponent(params.customerID);
   const router = useRouter();
