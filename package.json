@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.5.0",
-    "@cord-sdk/react": "^1.37.1-canary.1",
+    "@cord-sdk/react": "^1.38.0",
     "@cord-sdk/server": "^1.36.0",
     "@heroicons/react": "^2.1.1",
     "@types/node": "20.4.5",
