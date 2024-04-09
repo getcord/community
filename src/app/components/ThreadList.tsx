@@ -51,22 +51,11 @@ export default async function ThreadList({
   }
 
   return (
-    <table className={styles.container}>
-      <thead className={styles.tableHeader}>
-        <tr>
-          <th>Post</th>
-          <th>Replies</th>
-          <th>Activity</th>
-        </tr>
-      </thead>
-      <tbody className={styles.table}>
-        {threads?.length > 0 &&
-          threads.map((thread) => {
-            return (
-              <Tile key={thread.id} threadID={thread.id} thread={thread} />
-            );
-          })}
-      </tbody>
-    </table>
+    <section className={styles.container}>
+      {threads?.length > 0 &&
+        threads.map((thread) => {
+          return <Tile key={thread.id} threadID={thread.id} thread={thread} />;
+        })}
+    </section>
   );
 }

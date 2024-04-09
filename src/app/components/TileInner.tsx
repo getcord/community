@@ -5,9 +5,7 @@ import {
   EntityMetadata,
   ThreadParticipant,
 } from '@cord-sdk/types';
-import cx from 'classnames';
 import {
-  ChatBubbleBottomCenterIcon,
   ChatBubbleOvalLeftEllipsisIcon,
   LockClosedIcon,
 } from '@heroicons/react/24/outline';
@@ -48,9 +46,9 @@ export default function TileInner({
   const showIcons = metadata.admin || metadata.pinned;
 
   return (
-    <tr className={styles.container}>
-      <td>
-        <div className={styles.heading}>
+    <article className={styles.container}>
+      <div className={styles.heading}>
+        <div className={styles.headingTextWithIcons}>
           {showIcons && (
             <span className={styles.icons}>
               {metadata.admin && (
@@ -71,27 +69,27 @@ export default function TileInner({
             </Link>
           </h3>
         </div>
-        <CategoryPills categories={metadata.categories} />
-        <p className={`${styles.messageSnippet}`}>
-          {thread.firstMessage?.plaintext}
-        </p>
-      </td>
-      <td>
-        <p className={`${styles.replies} ${styles.column}`}>
-          {thread.total - 1}
-          <ChatBubbleOvalLeftEllipsisIcon width={14} strokeWidth={2} />
-        </p>
-      </td>
-      <td>
-        <experimental.Timestamp
-          type="message"
-          className={styles.column}
-          value={
-            thread.lastMessage?.updatedTimestamp ??
-            thread.lastMessage?.createdTimestamp
-          }
-        />
-      </td>
-    </tr>
+        <div className={styles.timestamp}>
+          <div className={`${styles.replies} ${styles.column}`}>
+            {thread.total - 1}
+            <ChatBubbleOvalLeftEllipsisIcon width={14} strokeWidth={2} />
+          </div>
+          <time>
+            <experimental.Timestamp
+              type="message"
+              className={styles.column}
+              value={
+                thread.lastMessage?.updatedTimestamp ??
+                thread.lastMessage?.createdTimestamp
+              }
+            />
+          </time>
+        </div>
+      </div>
+      <CategoryPills categories={metadata.categories} />
+      <blockquote className={styles.messageSnippet}>
+        {thread.firstMessage?.plaintext}
+      </blockquote>
+    </article>
   );
 }

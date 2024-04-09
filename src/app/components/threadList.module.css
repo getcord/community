@@ -1,21 +1,9 @@
 .container {
-  height: 100%;
-  border-collapse: collapse;
-  padding: 8px;
+  box-sizing: border-box;
 }
 
 @media (max-width: 1024px) {
   .container {
     max-width: calc(100vw - 76px);
   }
-}
-
-.table {
-  overflow-y: auto; /* TODO(jg): figure out why this is here... super sus. */
-  padding: 16px;
-  vertical-align: middle;
-}
-
-.tableHeader {
-  display: none;
 }
