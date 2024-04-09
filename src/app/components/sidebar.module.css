@@ -3,6 +3,7 @@
   grid-area: sidebar;
   overflow: auto;
   border-right: 2px solid var(--cord-grey);
+  padding-bottom: 60px;
   position: relative;
   z-index: 1;
   transition: width 0.5s;

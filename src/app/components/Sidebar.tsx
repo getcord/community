@@ -173,7 +173,7 @@ export default function Sidebar({
             ))}
           </ul>
         </li>
-        {!isLoggedIn ? null : (
+        {navOpen && isLoggedIn && (
           <>
             <h4 className={styles.navlistTitle}>Support chat</h4>
             <ul className={styles.navItems}>
