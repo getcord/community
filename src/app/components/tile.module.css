@@ -23,6 +23,19 @@
   gap: 8px;
 }
 
+@media (max-width: 1024px) {
+  .heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+.headingTextWithCategoryPills {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .headingTextWithIcons {
   align-items: center;
   display: flex;
@@ -35,8 +48,14 @@
   align-items: center;
   display: flex;
   flex-direction: row;
-  gap: 8px;
+  gap: 16px;
   justify-content: flex-end;
+}
+
+@media (max-width: 1024px) {
+  .timestamp {
+    flex-direction: row-reverse;
+  }
 }
 
 .link:hover {
@@ -80,10 +99,6 @@
   max-width: 600px;
 }
 
-.column {
-  padding: 8px;
-  align-self: center;
-}
 .column:global(.cord-component.cord-timestamp) {
   color: var(--cord-grey-dark);
 }

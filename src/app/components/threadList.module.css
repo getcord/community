@@ -4,6 +4,6 @@
 
 @media (max-width: 1024px) {
   .container {
-    max-width: calc(100vw - 76px);
+    max-width: calc(100vw - 76px - 16px); /* left and right padding */
   }
 }

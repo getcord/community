@@ -48,29 +48,32 @@ export default function TileInner({
   return (
     <article className={styles.container}>
       <div className={styles.heading}>
-        <div className={styles.headingTextWithIcons}>
-          {showIcons && (
-            <span className={styles.icons}>
-              {metadata.admin && (
-                <LockClosedIcon width="14px" strokeWidth={3} />
-              )}
-              {metadata.pinned && (
-                <PushPinSvg className={`${styles.pinIcon}`} />
-              )}
-            </span>
-          )}
-          <h3 className={styles.threadName}>
-            <Link
-              className={styles.link}
-              href={`/post/${threadID}/${slugify(thread.name)}`}
-              aria-label={thread.name}
-            >
-              {thread.name}
-            </Link>
-          </h3>
+        <div className={styles.headingTextWithCategoryPills}>
+          <div className={styles.headingTextWithIcons}>
+            {showIcons && (
+              <span className={styles.icons}>
+                {metadata.admin && (
+                  <LockClosedIcon width="14px" strokeWidth={3} />
+                )}
+                {metadata.pinned && (
+                  <PushPinSvg className={`${styles.pinIcon}`} />
+                )}
+              </span>
+            )}
+            <h3 className={styles.threadName}>
+              <Link
+                className={styles.link}
+                href={`/post/${threadID}/${slugify(thread.name)}`}
+                aria-label={thread.name}
+              >
+                {thread.name}
+              </Link>
+            </h3>
+          </div>
+          <CategoryPills categories={metadata.categories} />
         </div>
         <div className={styles.timestamp}>
-          <div className={`${styles.replies} ${styles.column}`}>
+          <div className={styles.replies}>
             {thread.total - 1}
             <ChatBubbleOvalLeftEllipsisIcon width={14} strokeWidth={2} />
           </div>
@@ -84,7 +87,6 @@ export default function TileInner({
           />
         </div>
       </div>
-      <CategoryPills categories={metadata.categories} />
       <blockquote className={styles.messageSnippet}>
         {thread.firstMessage?.plaintext}
       </blockquote>
