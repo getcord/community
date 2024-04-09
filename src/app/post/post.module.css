@@ -34,11 +34,6 @@
 }
 
 /* These two need to match, so using the variables from above */
-.container :global(.cord-component .cord-thread-container .cord-inline-thread .cord-scroll-container .cord-message-block:first-child .cord-message) {
-  border-radius: var(--thread-border-radius);
-  padding-bottom: var(--thread-padding-bottom);
-  border-bottom: var(--thread-border-bottom);
-}
 .serverMessage:first-child {
   border-radius: var(--thread-border-radius);
   padding-bottom: var(--thread-padding-bottom);
@@ -100,10 +95,42 @@
 }
 
 /* Cord Component Styles */
-.container :global(.cord-thread-container .cord-inline-thread .cord-scroll-container .cord-message-block:first-child .cord-message-options-buttons) {
+.container
+  :global(
+    .cord-thread-container
+      .cord-inline-thread
+      .cord-scroll-container
+      .cord-message-block:first-child
+      .cord-message-options-buttons
+  ) {
   flex-direction: row;
 }
-.container :global(.cord-component .cord-thread-container .cord-inline-thread .cord-scroll-container .cord-message-block:first-child .cord-message.cord-no-reactions .cord-message-options-buttons) {
+.container
+  :global(
+    .cord-component
+      .cord-thread-container
+      .cord-inline-thread
+      .cord-scroll-container
+      .cord-message-block:first-child
+      .cord-message.cord-no-reactions
+      .cord-message-options-buttons
+  ) {
   flex-direction: row;
   visibility: visible;
+}
+
+/* for experiemental thread */
+.container :global(.cord-component.cord-v2.cord-thread) {
+  border: none;
+}
+
+/* The SSR and client side rendered thread need to match, so using the variables from above */
+.container :global(.cord-component .cord-message:first-child) {
+  border-radius: var(--thread-border-radius);
+  padding-bottom: var(--thread-padding-bottom);
+  border-bottom: var(--thread-border-bottom);
+}
+
+.container :global(.cord-component.cord-v2 .cord-message) {
+  margin-top: 8px;
 }
