@@ -74,16 +74,14 @@ export default function TileInner({
             {thread.total - 1}
             <ChatBubbleOvalLeftEllipsisIcon width={14} strokeWidth={2} />
           </div>
-          <time>
-            <experimental.Timestamp
-              type="message"
-              className={styles.column}
-              value={
-                thread.lastMessage?.updatedTimestamp ??
-                thread.lastMessage?.createdTimestamp
-              }
-            />
-          </time>
+          <experimental.Timestamp
+            type="message"
+            className={styles.column}
+            value={
+              thread.lastMessage?.updatedTimestamp ??
+              thread.lastMessage?.createdTimestamp
+            }
+          />
         </div>
       </div>
       <CategoryPills categories={metadata.categories} />
