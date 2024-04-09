@@ -197,7 +197,13 @@ export default function Sidebar({
               )}
               {supportEnabled &&
                 supportChats?.map(({ customerID, customerName }) => (
-                  <li className={styles.listItem} key={customerID}>
+                  <li
+                    className={cx(styles.listItem, {
+                      [styles.listItemActive]:
+                        pathname === `/support/${customerID}`,
+                    })}
+                    key={customerID}
+                  >
                     <Link
                       href={`/support/${customerID}`}
                       aria-label={`support for ${customerName}`}
