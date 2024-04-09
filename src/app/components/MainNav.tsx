@@ -22,17 +22,19 @@ export default function MainNav({
   customerExists: boolean;
 }) {
   const [navOpen, setNavOpen] = useState(true);
+  const [width, setWidth] = useState(0);
 
   useEffect(() => {
+    setWidth(window.innerWidth);
     if (window.innerWidth < 1024) {
       setNavOpen(false);
     }
-  }, [setNavOpen]);
+  }, [setNavOpen, setWidth]);
 
   const pathname = usePathname();
   const lastPathnameRef = useRef(pathname);
   useEffect(() => {
-    if (window.innerWidth > 1024) {
+    if (width > 1024) {
       return;
     }
 
@@ -40,11 +42,11 @@ export default function MainNav({
       setNavOpen(false);
     }
     lastPathnameRef.current = pathname;
-  }, [pathname, setNavOpen]);
+  }, [width, pathname, setNavOpen]);
 
   const sidebarRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (window.innerWidth > 1024) {
+    if (width > 1024) {
       return;
     }
 
@@ -73,7 +75,34 @@ export default function MainNav({
     return () => {
       window.removeEventListener('pointerdown', onPointerDown);
     };
-  }, [navOpen, setNavOpen]);
+  }, [width, navOpen, setNavOpen]);
+
+  const onResizeTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  useEffect(() => {
+    const onResize = () => {
+      if (onResizeTimeoutRef.current) {
+        clearTimeout(onResizeTimeoutRef.current);
+      }
+
+      onResizeTimeoutRef.current = setTimeout(() => {
+        setWidth(window.innerWidth);
+        if (window.innerWidth > 1024 && !navOpen) {
+          setNavOpen(true);
+        }
+        onResizeTimeoutRef.current = undefined;
+      }, 500);
+    };
+
+    window.addEventListener('resize', onResize);
+    window.addEventListener('orientationchange', onResize);
+    window.addEventListener('pageshow', onResize);
+
+    return () => {
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('orientationchange', onResize);
+      window.removeEventListener('pageshow', onResize);
+    };
+  }, [setWidth, setNavOpen, navOpen]);
 
   const onToggle = useCallback(() => {
     setNavOpen(!navOpen);
