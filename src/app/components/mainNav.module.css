@@ -10,4 +10,6 @@
 
 .mainNav nav {
   max-width: var(--max-sidebar-width);
+  overflow-x: hidden;
+  overflow-y: auto;
 }
