@@ -7,6 +7,8 @@ import styles from './post.module.css';
 import { buildQueryParams, fetchCordRESTApi } from '../fetchCordRESTApi';
 import Image from 'next/image';
 import Button from '../ui/Button';
+import { getStructuredQAData } from '@/lib/structuredData';
+import { JSONLD } from '@/lib/JSONLD';
 
 async function getData(
   threadID: string,
@@ -24,13 +26,17 @@ async function getData(
 
 export default async function ServerPost({ threadID }: { threadID: string }) {
   const [thread, messages] = await getData(threadID);
+
   if (!thread || !messages) {
     return <ThreadNotFound />;
   }
   const metadata = getTypedMetadata(thread.metadata);
 
+  const structuredData = getStructuredQAData(thread, messages);
+
   return (
     <>
+      {structuredData && <JSONLD json={structuredData} />}
       <ThreadHeading metadata={metadata} threadName={thread.name} />
       <ServerThread messages={messages} />
       <LoggedOutComposer postID={threadID} />
