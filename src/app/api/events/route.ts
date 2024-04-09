@@ -1,6 +1,73 @@
 import { NextResponse, NextRequest } from 'next/server';
+import {
+  MessageContent,
+  MessageNodeType,
+  ServerGroupData,
+  ThreadMessageAddedWebhookPayload,
+  WebhookWrapperProperties,
+} from '@cord-sdk/types';
+
 import { validateWebhookSignature } from '@cord-sdk/server';
-import { CORD_SECRET } from '@/consts';
+import { CORD_SECRET, EVERYONE_GROUP_ID, SERVER_HOST } from '@/consts';
+import { addContentToClack } from '@/lib/clack';
+import { isCategory } from '@/utils';
+import { fetchCordRESTApi } from '@/app/fetchCordRESTApi';
+
+async function sendNotificationToClack(
+  event: ThreadMessageAddedWebhookPayload,
+) {
+  const isFirstMessage = event.thread.total === 1;
+  const isCommunityMessage = event.groupID === EVERYONE_GROUP_ID;
+  const author = event.author.name;
+  const thread = event.thread;
+  const message = event.message;
+  let action = '';
+  if (isFirstMessage) {
+    if (isCommunityMessage) {
+      const metadata = thread.metadata;
+      const categories = [];
+      for (const key in metadata) {
+        if (metadata[key] && isCategory(key)) {
+          categories.push(key);
+        }
+      }
+      action = `created a new post in ${categories.join(', ')} : ${
+        thread.name
+      }.`;
+    } else {
+      const customerGroup = await fetchCordRESTApi<ServerGroupData>(
+        `groups/${thread.groupID}`,
+      );
+      action = `asked a new question in ${customerGroup?.name}.`;
+    }
+  } else {
+    action = `replied.`;
+  }
+  const url = isCommunityMessage
+    ? `${SERVER_HOST}${thread.url}`
+    : `${thread.url}/${thread.id}`;
+  const content: MessageContent = [
+    {
+      type: MessageNodeType.PARAGRAPH,
+      children: [
+        {
+          text: `${author} `,
+          bold: true,
+        },
+        { text: `${action}` },
+      ],
+    },
+    {
+      type: MessageNodeType.PARAGRAPH,
+      children: [{ text: url }],
+    },
+    {
+      type: MessageNodeType.PARAGRAPH,
+      children: [{ text: message.plaintext }],
+    },
+  ];
+  await addContentToClack(event.threadID, content);
+}
 
 /**
  * This API route is the starting point for using our Events Webhook.
@@ -8,7 +75,8 @@ import { CORD_SECRET } from '@/consts';
  * See https://docs.cord.com/reference/events-webhook
  **/
 export async function POST(request: NextRequest) {
-  const data = await request.json();
+  const data: WebhookWrapperProperties<'thread-message-added'> =
+    await request.json();
   validateWebhookSignature(
     {
       header: (header) => request.headers.get(header) ?? '',
@@ -16,5 +84,11 @@ export async function POST(request: NextRequest) {
     },
     CORD_SECRET,
   );
+  if (data.type === 'url-verification') {
+    return NextResponse.json({ success: true }, { status: 200 });
+  }
+
+  await sendNotificationToClack(data.event);
+
   return NextResponse.json({ success: true }, { status: 200 });
 }
