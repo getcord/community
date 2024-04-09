@@ -44,7 +44,7 @@ export default function TileInner({
 
   const metadata = getTypedMetadata(thread.metadata);
   const showIcons = metadata.admin || metadata.pinned;
-
+  const url = `/post/${threadID}/${slugify(thread.name)}`;
   return (
     <article className={styles.container}>
       <div className={styles.heading}>
@@ -61,11 +61,7 @@ export default function TileInner({
               </span>
             )}
             <h3 className={styles.threadName}>
-              <Link
-                className={styles.link}
-                href={`/post/${threadID}/${slugify(thread.name)}`}
-                aria-label={thread.name}
-              >
+              <Link className={styles.link} href={url} aria-label={thread.name}>
                 {thread.name}
               </Link>
             </h3>
@@ -73,10 +69,14 @@ export default function TileInner({
           <CategoryPills categories={metadata.categories} />
         </div>
         <div className={styles.timestamp}>
-          <div className={styles.replies}>
+          <a
+            href={url}
+            className={styles.replies}
+            title={thread.total - 1 + ' replies'}
+          >
             {thread.total - 1}
             <ChatBubbleOvalLeftEllipsisIcon width={14} strokeWidth={2} />
-          </div>
+          </a>
           <experimental.Timestamp
             type="message"
             className={styles.column}
