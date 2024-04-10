@@ -22,12 +22,6 @@ import {
 } from '@cord-sdk/react/dist/mjs/types/experimental';
 import { EntityMetadata } from '@cord-sdk/types';
 
-export type ThreadData = {
-  id: string;
-  metadata: Metadata;
-  name: string;
-};
-
 const PostContext = createContext<{
   userIsAdmin: boolean;
   threadID: string | null;
