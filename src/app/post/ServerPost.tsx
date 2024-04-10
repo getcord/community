@@ -57,6 +57,7 @@ function ServerThread({ messages }: { messages: CoreMessageData[] }) {
             edited={false}
             attachments={[]}
             content={message.content as any}
+            className={styles.serverMessageContent}
           />
           {/* TODO: reactions */}
         </div>
