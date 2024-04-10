@@ -19,7 +19,7 @@ export default function UpdateUserDetails({ user }: UpdateUserDetailsProps) {
   // info on any user client-side api
   const viewer = CordUser.useViewerData();
 
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState(user.name);
   const [error, setError] = useState('');
   const [sendEmailNotifications, setSendEmailNotifications] = useState(
     viewer?.notificationPreferences.sendViaEmail,
@@ -83,8 +83,8 @@ export default function UpdateUserDetails({ user }: UpdateUserDetailsProps) {
       <Input
         id="username"
         name="username"
-        placeholder={user.name}
         onChange={(e) => setUserName(e.target.value)}
+        value={userName}
         onKeyUp={handleKeyUp}
         label={'User Name:'}
       />
