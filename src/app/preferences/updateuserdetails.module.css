@@ -18,10 +18,7 @@
   min-width: 400px;
 }
 
-.error {
-  font-size: 0.8rem;
-}
-
-.error {
-  color: var(--cord-orange);
+.submitMessageAndButton {
+  display: flex;
+  gap: 16px;
 }

@@ -1,0 +1,44 @@
+.container {
+  flex: 1;
+}
+.messageContainer {
+  box-sizing: border-box;
+  border-radius: 4px;
+  display: flex;
+  padding: 9px;
+  justify-content: space-between;
+  background-color: var(--cord-white);
+  border: 1px solid var(--cord-white);
+}
+
+.error {
+  border-color: var(--cord-orange);
+  color: var(--cord-orange);
+}
+
+.success {
+  border-color: var(--cord-green);
+  color: var(--cord-green);
+}
+
+.messageContainer p {
+  margin: 0;
+  color: inherit;
+  line-height: 18px;
+}
+
+.messageContainer button {
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  color: inherit;
+  display: flex;
+  padding: 0;
+  justify-content: center;
+  align-items: center;
+}
+
+.messageContainer button:hover {
+  background-color: var(--cord-grey-light);
+}

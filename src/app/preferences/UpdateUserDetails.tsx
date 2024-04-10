@@ -7,6 +7,7 @@ import styles from './updateuserdetails.module.css';
 import { SERVER_HOST } from '@/consts';
 import Input, { Label } from '@/app/ui/Input';
 import { user as CordUser } from '@cord-sdk/react';
+import { ResultMessage } from '@/app/components/ResultMessage';
 
 interface UpdateUserDetailsProps {
   user: User;
@@ -20,7 +21,8 @@ export default function UpdateUserDetails({ user }: UpdateUserDetailsProps) {
   const viewer = CordUser.useViewerData();
 
   const [userName, setUserName] = useState(user.name);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [sendEmailNotifications, setSendEmailNotifications] = useState(
     viewer?.notificationPreferences.sendViaEmail,
   );
@@ -49,6 +51,8 @@ export default function UpdateUserDetails({ user }: UpdateUserDetailsProps) {
       const response = await res.json();
       if (!response.success) {
         setError(`Unable to update name: ${response.error}`);
+      } else {
+        setSuccess('Successfully updated user details');
       }
     }
 
@@ -60,6 +64,7 @@ export default function UpdateUserDetails({ user }: UpdateUserDetailsProps) {
         .setNotificationPreferences({
           sendViaEmail: sendEmailNotifications,
         })
+        .then(() => setSuccess('Successfully updated user details'))
         .catch((error) => {
           setError(
             `Unable to update email notifications preferences: ${error?.message}`,
@@ -109,14 +114,21 @@ export default function UpdateUserDetails({ user }: UpdateUserDetailsProps) {
           aria-label="Toggle email notifications"
         />
       </div>
-      <span className={styles.error}>{error}</span>
-      <Button
-        behaveAs={'button'}
-        style={{ justifySelf: 'right' }}
-        onClick={handleSaveUserDetails}
-      >
-        Save
-      </Button>
+      <div className={styles.submitMessageAndButton}>
+        <ResultMessage
+          successMessage={success}
+          onCloseSuccesMessage={() => setSuccess(null)}
+          errorMessage={error}
+          onCloseErrorMessage={() => setError(null)}
+        />
+        <Button
+          behaveAs={'button'}
+          style={{ marginLeft: 'auto' }}
+          onClick={handleSaveUserDetails}
+        >
+          Save
+        </Button>
+      </div>
     </div>
   );
 }
