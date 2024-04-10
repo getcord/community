@@ -3,6 +3,7 @@ import { ServerListThreads } from '@cord-sdk/types';
 import Tile from '@/app/components/Tile';
 import { buildQueryParams, fetchCordRESTApi } from '@/app/fetchCordRESTApi';
 import { Category } from '@/app/types';
+import { mapCategoryEndpointsToTitles } from '@/utils';
 
 const getThreadsData = async (category: Category | undefined) => {
   // Fetch all threads for the 'community_all' group and then any in the
@@ -47,15 +48,36 @@ export default async function ThreadList({
 
   if (threads.length < 1) {
     // flickering -> to be fixed
-    return <p>No posts yet!</p>;
+
+    return (
+      <>
+        <ThreadListHeader category={category} />
+        <p>No posts yet!</p>
+      </>
+    );
   }
 
   return (
-    <section className={styles.container}>
-      {threads?.length > 0 &&
-        threads.map((thread) => {
-          return <Tile key={thread.id} threadID={thread.id} thread={thread} />;
-        })}
+    <>
+      <ThreadListHeader category={category} />
+      <section className={styles.container}>
+        {threads?.length > 0 &&
+          threads.map((thread) => {
+            return (
+              <Tile key={thread.id} threadID={thread.id} thread={thread} />
+            );
+          })}
+      </section>
+    </>
+  );
+}
+
+export function ThreadListHeader({ category }: { category?: Category }) {
+  return (
+    <section>
+      <h1 className={styles.pageTitle}>
+        {category ? mapCategoryEndpointsToTitles(category) : 'All Posts'}
+      </h1>
     </section>
   );
 }

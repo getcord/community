@@ -7,3 +7,10 @@
     max-width: calc(100vw - 76px - 16px); /* left and right padding */
   }
 }
+
+.pageTitle {
+  border-bottom: 1px solid var(--cord-grey);
+  margin-top: 0;
+  margin-bottom: 16px;
+  padding: 8px 0 20px 0;
+}
