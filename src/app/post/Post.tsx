@@ -116,6 +116,7 @@ function CommunityMessageWithContext(props: MessageProps) {
 function CommunityMenu(props: MenuProps) {
   const postContext = useContext(PostContext);
   const messageContext = useContext(MessageContext);
+  const threadData = threadHooks.useThread(postContext.threadID ?? '');
   const markAsAnswer = useCallback(() => {
     if (!window.CordSDK) {
       console.error('Cord SDK not found');
@@ -161,7 +162,12 @@ function CommunityMenu(props: MenuProps) {
   }, [markAsAnswer]);
 
   const communityMenuProps = useMemo(() => {
-    if (!postContext.userIsAdmin) {
+    // Don't show the Mark as Answer menu item if the user is not admin
+    // or if it is the first message
+    if (
+      !postContext.userIsAdmin ||
+      threadData.thread?.firstMessage?.id === messageContext.messageID
+    ) {
       return props;
     }
 
@@ -169,7 +175,13 @@ function CommunityMenu(props: MenuProps) {
       ...props,
       items: [markWithAnswer, ...props.items],
     };
-  }, [markWithAnswer, postContext.userIsAdmin, props]);
+  }, [
+    markWithAnswer,
+    postContext.userIsAdmin,
+    props,
+    threadData,
+    messageContext.messageID,
+  ]);
 
   return <experimental.Menu {...communityMenuProps} />;
 }
