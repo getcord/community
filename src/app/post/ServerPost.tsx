@@ -66,7 +66,7 @@ function ServerThread({
           />
           <CordMessageContent
             edited={false}
-            attachments={[]}
+            attachments={message.attachments}
             content={message.content as any}
             className={styles.serverMessageContent}
           />
