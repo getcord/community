@@ -1,6 +1,7 @@
 'use client';
 
-import { thread as threadHooks, experimental } from '@cord-sdk/react';
+import { thread as threadHooks, experimental, user } from '@cord-sdk/react';
+import Image from 'next/image';
 import styles from './post.module.css';
 import { getTypedMetadata } from '@/utils';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
@@ -13,41 +14,50 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useState,
 } from 'react';
 
 import {
   MenuItemProps,
   MenuProps,
   MessageProps,
+  UsernameProps,
 } from '@cord-sdk/react/dist/mjs/types/experimental';
 import { EntityMetadata } from '@cord-sdk/types';
+import logo from '@/static/cord-logo-grey.svg';
+import { getUserById } from '@/app/helpers/user';
 
 const PostContext = createContext<{
   userIsAdmin: boolean;
   threadID: string | null;
   metadata: EntityMetadata | null;
+  admins: Set<string>;
 }>({
   userIsAdmin: false,
   threadID: null,
   metadata: null,
+  admins: new Set(),
 });
 
 const MessageContext = createContext<{ messageID: string | null }>({
   messageID: null,
 });
 
-const REPLACEMENTS = {
+const REPLACEMENTS: experimental.ReplaceConfig = {
   Message: CommunityMessageWithContext,
   Menu: CommunityMenu,
   MenuItem: CommunityMenuItem,
+  Username: CommunityUsername,
 };
 
 export default function Post({
   threadID,
   isAdmin,
+  adminMembersSet,
 }: {
   threadID: string;
   isAdmin: boolean;
+  adminMembersSet: Set<string>;
 }) {
   const threadData = threadHooks.useThread(threadID);
   const { thread, loading, hasMore, fetchMore } = threadData;
@@ -63,8 +73,9 @@ export default function Post({
       threadID,
       metadata: thread?.metadata ?? null,
       userIsAdmin: isAdmin,
+      admins: adminMembersSet,
     };
-  }, [isAdmin, thread?.metadata, threadID]);
+  }, [adminMembersSet, isAdmin, thread?.metadata, threadID]);
 
   if (!thread && !loading) {
     return <ThreadNotFound />;
@@ -184,4 +195,18 @@ function CommunityMenuItem(props: MenuItemProps) {
     return <experimental.MenuItem {...props} />;
   }
   return null;
+}
+
+function CommunityUsername(props: UsernameProps) {
+  const postContext = useContext(PostContext);
+  if (!postContext || !postContext.admins.has(props.userData?.id ?? '')) {
+    return <experimental.Username {...props} />;
+  } else {
+    return (
+      <>
+        <experimental.Username {...props} />
+        <Image src={logo} alt={`cord icon logo`} height={16} width={48} />
+      </>
+    );
+  }
 }
