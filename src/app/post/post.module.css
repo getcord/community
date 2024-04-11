@@ -5,7 +5,11 @@
 
   --thread-border-radius: 0px;
   --thread-border-bottom: 1px solid var(--cord-grey);
-  --thread-padding-bottom: 52px;
+  --thread-padding-bottom: 24px;
+  --thread-margin-bottom: 12px;
+
+  --thread-message-border-bottom: 1px solid var(--cord-grey-mid-light);
+  --thread-message-padding-bottom: 4px;
 }
 
 .heading {
@@ -38,13 +42,14 @@
   border-radius: var(--thread-border-radius);
   padding-bottom: var(--thread-padding-bottom);
   border-bottom: var(--thread-border-bottom);
+  margin-bottom: var(--thread-margin-bottom);
 }
 
 .serverMessage:not(:first-child) {
   padding-top: 16px;
 }
 .serverMessage {
-  padding-left: 12px;
+  border-bottom: var(--thread-message-border-bottom);
   display: grid;
   grid-gap: 8px;
   grid-template-columns: minmax(0, auto) 1fr;
@@ -53,6 +58,8 @@
     'avatar name'
     '. messageContent'
     '. reactions';
+  padding-left: 12px;
+  padding-bottom: var(--thread-message-padding-bottom);
 }
 
 .serverMessageContent {
@@ -122,8 +129,12 @@
   border-radius: var(--thread-border-radius);
   padding-bottom: var(--thread-padding-bottom);
   border-bottom: var(--thread-border-bottom);
+  margin-bottom: var(--thread-margin-bottom);
 }
 
 .container :global(.cord-component.cord-v2 .cord-message) {
   margin-top: 8px;
+  border-bottom: var(--thread-message-border-bottom);
+
+  padding-bottom: var(--thread-message-padding-bottom);
 }

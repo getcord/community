@@ -1,25 +1,26 @@
 body {
   --cord-black: #121314;
-  --cord-grey-dark: #696A6C;
-  --cord-grey: #DADCE0;
-  --cord-grey-light: #F6F6F6;
-  --cord-acid: #F4FFA0;
-  --cord-acid-light: #FBFFDD;
-  --cord-orange: #EF927B;
-  --cord-orange-light: #FDEFEF;
-  --cord-purple: #9A6AFF;
-  --cord-purple-dark: #6949AC;
-  --cord-purple-light: #EBE9FF ;
-  --cord-purple-highlight: #A076FF ;
-  --cord-blue: #0079FF;
-  --cord-blue-light: #CAE3FF;
-  --cord-green: #71BC8F;
-  --cord-green-light: #C8EDD7;
-  --cord-white: #FFFFFF;
+  --cord-grey-dark: #696a6c;
+  --cord-grey: #dadce0;
+  --cord-grey-mid-light: #f1f1f1;
+  --cord-grey-light: #f6f6f6;
+  --cord-acid: #f4ffa0;
+  --cord-acid-light: #fbffdd;
+  --cord-orange: #ef927b;
+  --cord-orange-light: #fdefef;
+  --cord-purple: #9a6aff;
+  --cord-purple-dark: #6949ac;
+  --cord-purple-light: #ebe9ff;
+  --cord-purple-highlight: #a076ff;
+  --cord-blue: #0079ff;
+  --cord-blue-light: #cae3ff;
+  --cord-green: #71bc8f;
+  --cord-green-light: #c8edd7;
+  --cord-white: #ffffff;
 
   /* category colors
-    calculated using oklch with 
-    stable lightness (72%) and chroma (0.15), 
+    calculated using oklch with
+    stable lightness (72%) and chroma (0.15),
     for hue then 360 / number of categories.
     handy converter: https://oklch.com/
 
@@ -28,7 +29,7 @@ body {
   --cat-components: #dd9314;
   --cat-announcements: #64bc65;
   --cat-customization: #00b8d7;
-  --cat-api: #a193fc;   
+  --cat-api: #a193fc;
   --cat-documentation: #ee79a1;
 
   /* sizing */
@@ -40,9 +41,9 @@ html,
 body {
   height: 100%;
   margin: 0;
-  font-family: Lato, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans',
-        'Helvetica Neue', sans-serif;
+  font-family: Lato, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
   --cord-font-family: Lato, -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans',
     'Helvetica Neue', sans-serif;
@@ -70,6 +71,8 @@ html .cord-component.cord-component-thread {
   border: none;
 }
 
-html .cord-component .cord-send-button.cord-primary.cord-with-icon.cord-button.cord-small {
+html
+  .cord-component
+  .cord-send-button.cord-primary.cord-with-icon.cord-button.cord-small {
   color: white;
 }
