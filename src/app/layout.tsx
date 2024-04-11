@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
-import './global.css';
 import { getClientAuthToken } from '@cord-sdk/server';
+import { ServerGroupData } from '@cord-sdk/types';
+import { ServerListGroup } from '@cord-sdk/types';
+import { Analytics } from '@vercel/analytics/react';
+
+import './global.css';
 import CordIntegration from './CordIntegration';
 import Header from './components/Header';
 import styles from './styles.module.css';
@@ -12,8 +16,6 @@ import {
   CustomerInfo,
   getCustomerInfoForUserId,
 } from '@/app/helpers/customerInfo';
-import { ServerGroupData } from '@cord-sdk/types';
-import { ServerListGroup } from '@cord-sdk/types';
 import { EVERYONE_GROUP_ID } from '@/consts';
 import MainNav from '@/app/components/MainNav';
 
