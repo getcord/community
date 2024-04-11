@@ -1,6 +1,11 @@
 'use client';
 
-import { thread as threadHooks, experimental, user } from '@cord-sdk/react';
+import {
+  thread as threadHooks,
+  experimental,
+  user,
+  thread,
+} from '@cord-sdk/react';
 import Image from 'next/image';
 import styles from './post.module.css';
 import { getTypedMetadata } from '@/utils';
@@ -159,18 +164,33 @@ function CommunityMenu(props: MenuProps) {
     postContext.threadID,
   ]);
 
+  const { threadHasAnswer, isMarkedAsAnswer } = useMemo(() => {
+    const answerMessageID = threadData?.thread?.metadata.answerMessageID;
+    return {
+      threadHasAnswer: Boolean(answerMessageID),
+      isMarkedAsAnswer: answerMessageID === messageContext.messageID,
+    };
+  }, [messageContext.messageID, threadData?.thread?.metadata.answerMessageID]);
+
   const markWithAnswer = useMemo(() => {
     return {
       name: 'mark-as-answer',
       element: (
         <experimental.MenuItem
-          label="Mark as answer"
+          label={
+            isMarkedAsAnswer
+              ? 'Marked as answer'
+              : threadHasAnswer
+              ? 'Mark as new answer'
+              : 'Mark as answer'
+          }
           menuItemAction="mark-as-answer"
           onClick={markAsAnswer}
+          disabled={isMarkedAsAnswer}
         />
       ),
     };
-  }, [markAsAnswer]);
+  }, [isMarkedAsAnswer, markAsAnswer, threadHasAnswer]);
 
   const communityMenuProps = useMemo(() => {
     // Don't show the Mark as Answer menu item if the user is not admin
