@@ -190,6 +190,7 @@ export default async function RootLayout({
           </MainNav>
         </CordIntegration>
       </body>
+      <script src="https://cord.com/events.js" async={true}></script>
     </html>
   );
 }
