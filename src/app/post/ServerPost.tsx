@@ -99,23 +99,13 @@ async function ServerAuthorTimestamp({
 function LoggedOutComposer({ postID }: { postID: string }) {
   return (
     <div className={styles.serverComposerContainer}>
-      <p>
-        To interact with this post at all you&apos;ll have to log in to Cord.
-        Or, if you&apos;re already a Cord customer then sign as your{' '}
-        <a href="https://console.cord.com" aria-label="cord console">
-          console
-        </a>{' '}
-        user and you&apos;re ready to go!
-      </p>
-      <div className={styles.serverComposerButtons}>
-        <Button
-          behaveAs="a"
-          href={`/api/auth/login?returnTo=/post/${postID}`}
-          variant="outline"
-        >
-          Sign in
-        </Button>
-      </div>
+      <Button
+        behaveAs="a"
+        href={`/api/auth/login?returnTo=/post/${postID}`}
+        variant="outline"
+      >
+        Sign in to comment
+      </Button>
     </div>
   );
 }

@@ -80,22 +80,10 @@
 }
 .serverComposerContainer {
   display: flex;
+  flex-direction: column;
   background-color: var(--cord-purple-light);
   padding: 20px;
   align-items: center;
-}
-
-@media (max-width: 1024px) {
-  .serverComposerContainer {
-    flex-direction: column;
-  }
-}
-
-.serverComposerButtons {
-  display: flex;
-  gap: 8px;
-  padding-top: 8px;
-  justify-content: flex-end;
 }
 
 /* Cord Component Styles */
