@@ -67,7 +67,7 @@
   grid-area: name;
   display: flex;
   gap: 4px;
-  align-items: baseline;
+  align-items: center;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -75,6 +75,7 @@
 .serverAuthorName {
   font-weight: bold;
 }
+
 .serverNameAndTimestamp :global(.cord-component.cord-timestamp) {
   color: var(--cord-grey-dark);
 }

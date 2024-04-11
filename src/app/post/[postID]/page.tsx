@@ -1,3 +1,4 @@
+import { getAdminMembersSet } from '@/app/helpers/admins';
 import Post from '../Post';
 import ServerPost from '../ServerPost';
 import styles from '../post.module.css';
@@ -11,12 +12,17 @@ export default async function Page({
 }) {
   const threadID = decodeURIComponent(params?.postID || '');
   const user = await getUser();
+  const adminMembersSet = await getAdminMembersSet();
 
   return (
     <div className={styles.container}>
       {user.userID ? (
         // logged in, client side rendered
-        <Post threadID={threadID} isAdmin={user.isAdmin ?? false} />
+        <Post
+          threadID={threadID}
+          isAdmin={user.isAdmin ?? false}
+          adminMembersSet={adminMembersSet}
+        />
       ) : (
         // not logged in, SSR
         <ServerPost threadID={threadID} />
