@@ -191,6 +191,7 @@ export default async function RootLayout({
             <div className={styles.content}>{children}</div>
           </MainNav>
         </CordIntegration>
+        <Analytics />
       </body>
       <script src="https://cord.com/events.js" async={true}></script>
     </html>
