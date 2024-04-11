@@ -1,5 +1,5 @@
 import { CLACK_APP_ID, CLACK_APP_SECRET, CORD_API_URL } from '@/consts';
-import { fetchCordRESTApi, getServerAuthToken } from '@cord-sdk/server';
+import { fetchCordRESTApi } from '@cord-sdk/server';
 import type { MessageContent } from '@cord-sdk/types';
 
 export async function addContentToClack(id: string, content: MessageContent) {
