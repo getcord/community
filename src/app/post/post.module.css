@@ -9,7 +9,7 @@
   --thread-margin-bottom: 12px;
 
   --thread-message-border-bottom: 1px solid var(--cord-grey-mid-light);
-  --thread-message-padding-bottom: 4px;
+  --thread-message-padding-bottom: 8px;
 }
 
 .heading {
