@@ -27,13 +27,23 @@ export default function UpdateUserDetails({ user }: UpdateUserDetailsProps) {
     viewer?.notificationPreferences.sendViaEmail,
   );
 
+  const [prevDetails, setPrevDetails] = useState<{
+    userName: string;
+    sendEmailNotifications: boolean;
+  }>();
+
   useEffect(() => {
     if (viewer?.notificationPreferences) {
       setSendEmailNotifications(
         viewer.notificationPreferences.sendViaEmail || false,
       );
+      setPrevDetails({
+        userName: user.name ?? '',
+        sendEmailNotifications:
+          viewer.notificationPreferences.sendViaEmail || false,
+      });
     }
-  }, [viewer]);
+  }, [user.name, viewer]);
 
   const handleSaveUserDetails = useCallback(async () => {
     if (!userID) {
@@ -51,8 +61,7 @@ export default function UpdateUserDetails({ user }: UpdateUserDetailsProps) {
       const response = await res.json();
       if (!response.success) {
         setError(`Unable to update name: ${response.error}`);
-      } else {
-        setSuccess('Successfully updated user details');
+        return;
       }
     }
 
@@ -60,18 +69,30 @@ export default function UpdateUserDetails({ user }: UpdateUserDetailsProps) {
       window.CordSDK !== undefined &&
       sendEmailNotifications !== viewer?.notificationPreferences.sendViaEmail
     ) {
-      window.CordSDK.user
-        .setNotificationPreferences({
+      try {
+        await window.CordSDK.user.setNotificationPreferences({
           sendViaEmail: sendEmailNotifications,
-        })
-        .then(() => setSuccess('Successfully updated user details'))
-        .catch((error) => {
-          setError(
-            `Unable to update email notifications preferences: ${error?.message}`,
-          );
         });
+      } catch (error) {
+        if (error instanceof Error) {
+          setError(
+            `Unable to update email notifications preferences: ${error.message}`,
+          );
+          return;
+        }
+      }
     }
-  }, [userID, userName, viewer, sendEmailNotifications]);
+    setSuccess('Successfully updated user details');
+    setPrevDetails({
+      userName: userName ?? '',
+      sendEmailNotifications: sendEmailNotifications || false,
+    });
+  }, [
+    userID,
+    userName,
+    sendEmailNotifications,
+    viewer?.notificationPreferences.sendViaEmail,
+  ]);
 
   const handleKeyUp = useCallback(
     async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -125,6 +146,11 @@ export default function UpdateUserDetails({ user }: UpdateUserDetailsProps) {
           behaveAs={'button'}
           style={{ marginLeft: 'auto' }}
           onClick={handleSaveUserDetails}
+          disabled={
+            !prevDetails ||
+            (prevDetails.userName === userName &&
+              prevDetails.sendEmailNotifications === sendEmailNotifications)
+          }
         >
           Save
         </Button>
