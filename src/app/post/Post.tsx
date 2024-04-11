@@ -14,7 +14,6 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState,
 } from 'react';
 
 import {
@@ -24,8 +23,7 @@ import {
   UsernameProps,
 } from '@cord-sdk/react/dist/mjs/types/experimental';
 import { EntityMetadata } from '@cord-sdk/types';
-import logo from '@/static/cord-logo-grey.svg';
-import { getUserById } from '@/app/helpers/user';
+import logo from '@/static/cord-icon.png';
 
 const PostContext = createContext<{
   userIsAdmin: boolean;
@@ -205,7 +203,7 @@ function CommunityUsername(props: UsernameProps) {
     return (
       <>
         <experimental.Username {...props} />
-        <Image src={logo} alt={`cord icon logo`} height={16} width={48} />
+        <Image src={logo} alt={`cord icon logo`} height={16} width={16} />
       </>
     );
   }

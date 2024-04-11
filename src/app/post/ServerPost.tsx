@@ -9,7 +9,7 @@ import Image from 'next/image';
 import Button from '../ui/Button';
 import { getStructuredQAData } from '@/lib/structuredData';
 import { JSONLD } from '@/lib/JSONLD';
-import logo from '@/static/cord-logo-grey.svg';
+import logo from '@/static/cord-icon.png';
 
 async function getData(
   threadID: string,
@@ -93,7 +93,7 @@ async function ServerAuthorTimestamp({
       <div className={styles.serverNameAndTimestamp}>
         <span className={styles.serverAuthorName}>{user.name}</span>
         {user.isAdmin && (
-          <Image src={logo} alt={`cord icon logo`} height={16} width={48} />
+          <Image src={logo} alt={`cord icon logo`} height={16} width={16} />
         )}
         <CordTimestamp type="message" value={timestamp} />
       </div>
