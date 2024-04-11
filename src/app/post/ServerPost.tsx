@@ -1,7 +1,7 @@
 import {
   CoreThreadData,
   CoreMessageData,
-  ClientUserData,
+  ClientThreadData,
 } from '@cord-sdk/types';
 import cx from 'classnames';
 import { getTypedMetadata } from '@/utils';
@@ -10,10 +10,10 @@ import {
   CordMessageContent,
   CordTimestamp,
 } from '../components/CordClient';
-import { getClientUserById, getUserById } from '../helpers/user';
+import { getClientUserById } from '../helpers/user';
 import { ThreadNotFound, ThreadHeading } from './Post';
 import styles from './post.module.css';
-import { buildQueryParams, fetchCordRESTApi } from '../fetchCordRESTApi';
+import { fetchCordRESTClientApi } from '../fetchCordRESTApi';
 import Image from 'next/image';
 import Button from '../ui/Button';
 import { getStructuredQAData } from '@/lib/structuredData';
@@ -21,19 +21,19 @@ import { JSONLD } from '@/lib/JSONLD';
 import logo from '@/static/cord-icon.png';
 import { Metadata } from '@/app/types';
 import { SolutionLabel } from '@/app/components/SolutionLabel';
+import { THREAD_INITIAL_FETCH_COUNT } from '@/consts';
 
 async function getData(
   threadID: string,
 ): Promise<[CoreThreadData | undefined, CoreMessageData[] | undefined]> {
-  const categoryQueryParams = buildQueryParams([
-    { field: 'sortDirection', value: 'ascending' },
-  ]);
-  return await Promise.all([
-    fetchCordRESTApi<CoreThreadData>(`threads/${threadID}`),
-    fetchCordRESTApi<CoreMessageData[]>(
-      `threads/${threadID}/messages${categoryQueryParams}`,
-    ),
-  ]);
+  const result = await fetchCordRESTClientApi<ClientThreadData>(
+    'anonymous',
+    `/thread/${threadID}?initialFetchCount=${THREAD_INITIAL_FETCH_COUNT}`,
+  );
+  if (!(result?.thread && result?.messages && result.messages.length > 0)) {
+    return [undefined, undefined];
+  }
+  return [result.thread, result.messages];
 }
 
 export default async function ServerPost({

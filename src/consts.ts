@@ -11,3 +11,5 @@ export const SERVER_HOST = process.env.NEXT_PUBLIC_SERVER_HOST!;
 
 export const CLACK_APP_ID = process.env.CLACK_APP_ID!;
 export const CLACK_APP_SECRET = process.env.CLACK_APP_SECRET!;
+
+export const THREAD_INITIAL_FETCH_COUNT = 100;

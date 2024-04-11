@@ -33,6 +33,7 @@ import { SolutionLabel } from '@/app/components/SolutionLabel';
 import { deleteMessage, deleteThread } from '@/app/actions';
 import { useRouter } from 'next/navigation';
 import { User } from '@/app/helpers/user';
+import { THREAD_INITIAL_FETCH_COUNT } from '@/consts';
 
 const PostContext = createContext<{
   userIsAdmin: boolean;
@@ -75,7 +76,7 @@ export default function Post({
   adminMembersSet: Set<string>;
 }) {
   const threadData = threadHooks.useThread(threadID, {
-    initialFetchCount: 100,
+    initialFetchCount: THREAD_INITIAL_FETCH_COUNT,
   });
   const { thread, loading, hasMore, fetchMore } = threadData;
 

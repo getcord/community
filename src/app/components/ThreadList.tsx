@@ -4,6 +4,7 @@ import Tile from '@/app/components/Tile';
 import { buildQueryParams, fetchCordRESTApi } from '@/app/fetchCordRESTApi';
 import { Category } from '@/app/types';
 import { mapCategoryEndpointsToTitles } from '@/utils';
+import { EVERYONE_GROUP_ID } from '@/consts';
 
 const getThreadsData = async (category: Category | undefined) => {
   // Fetch all threads for the 'community_all' group and then any in the
@@ -13,7 +14,7 @@ const getThreadsData = async (category: Category | undefined) => {
       field: 'filter',
       value: JSON.stringify({
         ...(category && { metadata: { [category]: true } }),
-        groupID: 'community_all',
+        groupID: EVERYONE_GROUP_ID,
       }),
     },
   ]);

@@ -1,13 +1,13 @@
 import { ServerListThreads } from '@cord-sdk/types';
 import { buildQueryParams, fetchCordRESTApi } from '@/app/fetchCordRESTApi';
 import { CATEGORIES } from '@/app/types';
-import { SERVER_HOST } from '@/consts';
+import { EVERYONE_GROUP_ID, SERVER_HOST } from '@/consts';
 import { MetadataRoute } from 'next';
 import { slugify } from '@/utils';
 
 async function loadPosts() {
   const filter = buildQueryParams([
-    { field: 'filter', value: JSON.stringify({ groupID: 'community_all' }) },
+    { field: 'filter', value: JSON.stringify({ groupID: EVERYONE_GROUP_ID }) },
   ]);
   const threads = await fetchCordRESTApi<ServerListThreads>(`threads${filter}`);
   if (!threads) {
