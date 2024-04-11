@@ -14,6 +14,7 @@ export interface Metadata {
   pinned: boolean;
   admin: boolean;
   categories: Category[];
+  answerMessageID: string | null;
 }
 
 export interface SupportChat {

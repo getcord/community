@@ -1,4 +1,5 @@
 import { CoreThreadData, CoreMessageData } from '@cord-sdk/types';
+import cx from 'classnames';
 import { getTypedMetadata } from '@/utils';
 import { CordMessageContent, CordTimestamp } from '../components/CordClient';
 import { getUserById } from '../helpers/user';
@@ -10,6 +11,8 @@ import Button from '../ui/Button';
 import { getStructuredQAData } from '@/lib/structuredData';
 import { JSONLD } from '@/lib/JSONLD';
 import logo from '@/static/cord-icon.png';
+import { Metadata } from '@/app/types';
+import { SolutionLabel } from '@/app/components/SolutionLabel';
 
 async function getData(
   threadID: string,
@@ -39,13 +42,19 @@ export default async function ServerPost({ threadID }: { threadID: string }) {
     <>
       {structuredData && <JSONLD json={structuredData} />}
       <ThreadHeading metadata={metadata} threadName={thread.name} />
-      <ServerThread messages={messages} />
+      <ServerThread messages={messages} metadata={metadata} />
       <LoggedOutComposer postID={threadID} />
     </>
   );
 }
 
-function ServerThread({ messages }: { messages: CoreMessageData[] }) {
+function ServerThread({
+  messages,
+  metadata,
+}: {
+  messages: CoreMessageData[];
+  metadata: Metadata;
+}) {
   return (
     <div>
       {messages.map((message) => (
@@ -53,6 +62,7 @@ function ServerThread({ messages }: { messages: CoreMessageData[] }) {
           <ServerAuthorTimestamp
             userID={message.authorID}
             timestamp={message.updatedTimestamp ?? message.createdTimestamp}
+            isAnswer={metadata.answerMessageID === message.id}
           />
           <CordMessageContent
             edited={false}
@@ -70,9 +80,11 @@ function ServerThread({ messages }: { messages: CoreMessageData[] }) {
 async function ServerAuthorTimestamp({
   userID,
   timestamp,
+  isAnswer,
 }: {
   userID: string;
   timestamp: Date;
+  isAnswer: boolean;
 }) {
   const user = await getUserById(userID);
 
@@ -96,6 +108,11 @@ async function ServerAuthorTimestamp({
           <Image src={logo} alt={`cord icon logo`} height={16} width={16} />
         )}
         <CordTimestamp type="message" value={timestamp} />
+        {isAnswer && (
+          <SolutionLabel
+            className={cx(styles.solutionLabel, styles.marginLeft)}
+          />
+        )}
       </div>
     </>
   );

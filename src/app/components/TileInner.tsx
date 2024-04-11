@@ -1,5 +1,5 @@
 'use client';
-import { thread as threadHooks, experimental, Avatar } from '@cord-sdk/react';
+import { thread as threadHooks, experimental } from '@cord-sdk/react';
 import {
   CoreMessageData,
   EntityMetadata,
@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { getTypedMetadata, slugify } from '@/utils';
 import { PushPinSvg } from './PushPinSVG';
 import { CategoryPills } from '@/app/components/CategoryPills';
+import { SolutionLabel } from '@/app/components/SolutionLabel';
 
 type ServerThread = {
   id: string;
@@ -65,6 +66,7 @@ export default function TileInner({
                 {thread.name}
               </Link>
             </h3>
+            {metadata.answerMessageID && <SolutionLabel />}
           </div>
           <CategoryPills categories={metadata.categories} />
         </div>

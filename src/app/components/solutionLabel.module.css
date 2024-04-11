@@ -1,0 +1,8 @@
+.solutionLabel.solutionTag {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--cord-green);
+  border: 1px solid var(--cord-green);
+  border-radius: 11px;
+  padding: 2px 6px;
+}

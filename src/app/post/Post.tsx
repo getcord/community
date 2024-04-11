@@ -1,11 +1,7 @@
 'use client';
 
-import {
-  thread as threadHooks,
-  experimental,
-  user,
-  thread,
-} from '@cord-sdk/react';
+import { thread as threadHooks, experimental } from '@cord-sdk/react';
+import cx from 'classnames';
 import Image from 'next/image';
 import styles from './post.module.css';
 import { getTypedMetadata } from '@/utils';
@@ -25,10 +21,12 @@ import {
   MenuItemProps,
   MenuProps,
   MessageProps,
+  TimestampProps,
   UsernameProps,
 } from '@cord-sdk/react/dist/mjs/types/experimental';
 import { EntityMetadata } from '@cord-sdk/types';
 import logo from '@/static/cord-icon.png';
+import { SolutionLabel } from '@/app/components/SolutionLabel';
 
 const PostContext = createContext<{
   userIsAdmin: boolean;
@@ -42,14 +40,19 @@ const PostContext = createContext<{
   admins: new Set(),
 });
 
-const MessageContext = createContext<{ messageID: string | null }>({
+const MessageContext = createContext<{
+  messageID: string | null;
+  isAnswer: boolean;
+}>({
   messageID: null,
+  isAnswer: false,
 });
 
 const REPLACEMENTS: experimental.ReplaceConfig = {
   Message: CommunityMessageWithContext,
   Menu: CommunityMenu,
   MenuItem: CommunityMenuItem,
+  Timestamp: TimestampAndMaybeSolutionsLabel,
   Username: CommunityUsername,
 };
 
@@ -117,12 +120,18 @@ export function ThreadHeading({
 }
 
 function CommunityMessageWithContext(props: MessageProps) {
+  const postContext = useContext(PostContext);
+  const metadata = getTypedMetadata(postContext?.metadata ?? undefined);
+
   const contextValue = useMemo(() => {
-    return { messageID: props.message.id };
-  }, [props.message.id]);
+    return {
+      messageID: props.message.id,
+      isAnswer: metadata.answerMessageID === props.message.id,
+    };
+  }, [metadata.answerMessageID, props.message.id]);
   return (
     <MessageContext.Provider value={contextValue}>
-      <experimental.Message {...props} />
+      <experimental.Message {...props}></experimental.Message>
     </MessageContext.Provider>
   );
 }
@@ -227,4 +236,18 @@ function CommunityUsername(props: UsernameProps) {
       </>
     );
   }
+}
+
+function TimestampAndMaybeSolutionsLabel(props: TimestampProps) {
+  const messageContext = useContext(MessageContext);
+  return (
+    <>
+      <experimental.Timestamp {...props} />
+      {messageContext.isAnswer && (
+        <SolutionLabel
+          className={cx(styles.solutionLabel, styles.marginLeft)}
+        />
+      )}
+    </>
+  );
 }

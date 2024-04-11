@@ -13,7 +13,12 @@ export function mapCategoryEndpointsToTitles(category: string) {
 }
 
 export function getTypedMetadata(data: EntityMetadata | undefined): Metadata {
-  const metadata: Metadata = { pinned: false, admin: false, categories: [] };
+  const metadata: Metadata = {
+    pinned: false,
+    admin: false,
+    categories: [],
+    answerMessageID: null,
+  };
   if (!data) {
     return metadata;
   }
@@ -22,6 +27,13 @@ export function getTypedMetadata(data: EntityMetadata | undefined): Metadata {
   }
   if (typeof data.admin === 'boolean') {
     metadata.admin = data.admin;
+  }
+
+  if (
+    'answerMessageID' in data &&
+    typeof data['answerMessageID'] === 'string'
+  ) {
+    metadata.answerMessageID = data.answerMessageID;
   }
   for (const key in data) {
     // This is to make Typescript happy as it doesn't seem to consider an

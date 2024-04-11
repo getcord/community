@@ -73,6 +73,7 @@
 .serverNameAndTimestamp {
   grid-area: name;
   display: flex;
+  flex-wrap: wrap;
   gap: 4px;
   align-items: center;
   overflow: hidden;
@@ -142,4 +143,8 @@
 .container :global(.cord-composer.cord-component),
 .container :global(.cord-thread-seen-by-container.cord-component) {
   margin-top: 12px;
+}
+
+.solutionLabel.marginLeft {
+  margin-left: auto;
 }
