@@ -138,3 +138,7 @@
 
   padding-bottom: var(--thread-message-padding-bottom);
 }
+
+.container :global(.cord-composer.cord-component) {
+  margin-top: 12px;
+}
