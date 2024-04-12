@@ -8,6 +8,8 @@ import styles from '../../post.module.css';
 import { getUser } from '@/app/helpers/user';
 import { getAdminMembersSet } from '@/app/helpers/admins';
 import { fetchCordRESTApi } from '@/app/fetchCordRESTApi';
+import { Cipher } from 'crypto';
+import { SERVER_HOST } from '@/consts';
 
 type Props = {
   params: { postID: string; postSlug: string };
@@ -60,6 +62,7 @@ export async function generateMetadata(
     description = 'A new post in the Cord Community forum';
   }
 
+  const images = [SERVER_HOST + '/opengraph-image.png'];
   return {
     title,
     description,
@@ -67,10 +70,12 @@ export async function generateMetadata(
       type: 'article',
       title,
       description,
+      images,
     },
     twitter: {
       title,
       description,
+      images,
     },
   };
 }

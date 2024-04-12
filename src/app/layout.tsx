@@ -16,7 +16,7 @@ import {
   CustomerInfo,
   getCustomerInfoForUserId,
 } from '@/app/helpers/customerInfo';
-import { EVERYONE_GROUP_ID } from '@/consts';
+import { EVERYONE_GROUP_ID, SERVER_HOST } from '@/consts';
 import MainNav from '@/app/components/MainNav';
 
 async function createCordEntitiesAsNeeded(sessionUser: Claims) {
@@ -143,9 +143,23 @@ async function getData() {
   };
 }
 
+const title = 'Cord Developer Community';
+const description = 'Hub for Cord developers and users to connect';
+const images = [SERVER_HOST + '/opengraph-image.png'];
 export const metadata: Metadata = {
-  title: 'Cord Community',
-  description: 'Hub for Cord users to connect',
+  title,
+  description,
+  openGraph: {
+    type: 'website',
+    title,
+    description,
+    images,
+  },
+  twitter: {
+    title,
+    description,
+    images,
+  },
 };
 
 export default async function RootLayout({
