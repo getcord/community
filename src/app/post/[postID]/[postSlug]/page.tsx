@@ -38,7 +38,7 @@ export async function generateMetadata(
   ) {
     title = threadData.name;
     if (threadData.total > 1) {
-      description = threadData.total + ' comments\n';
+      description = threadData.total + ' comments | ';
     }
   }
 
