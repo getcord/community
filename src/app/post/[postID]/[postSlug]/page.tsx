@@ -1,20 +1,77 @@
-import { Metadata } from 'next';
+import { Metadata, ResolvingMetadata } from 'next';
+import { thread as threadHooks } from '@cord-sdk/react';
+
 import Post from '../../Post';
 import ServerPost from '../../ServerPost';
 import styles from '../../post.module.css';
 
 import { getUser } from '@/app/helpers/user';
 import { getAdminMembersSet } from '@/app/helpers/admins';
+import { fetchCordRESTApi } from '@/app/fetchCordRESTApi';
 
 type Props = {
   params: { postID: string; postSlug: string };
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const title = params?.postSlug.split('-').join(' ');
+export async function generateMetadata(
+  { params }: { params: { postID: string } },
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const { postID } = params;
+
+  const [threadData, messageData] = await Promise.all([
+    fetchCordRESTApi(`threads/${encodeURIComponent(postID)}`, 'GET'),
+    fetchCordRESTApi(
+      `threads/${encodeURIComponent(postID)}/messages?sortDirection=ascending`,
+    ),
+  ]);
+
+  let title = 'New Post';
+  let description = '';
+  if (
+    threadData &&
+    typeof threadData === 'object' &&
+    'name' in threadData &&
+    typeof threadData.name === 'string' &&
+    'total' in threadData &&
+    typeof threadData.total === 'number'
+  ) {
+    title = threadData.name;
+    if (threadData.total > 1) {
+      description = threadData.total + ' comments\n';
+    }
+  }
+
+  if (messageData && Array.isArray(messageData) && messageData.length) {
+    const msg = messageData[0];
+    if (
+      typeof msg === 'object' &&
+      'plaintext' in msg &&
+      typeof msg.plaintext === 'string' &&
+      typeof msg
+    ) {
+      description += msg.plaintext.replace(/\n/g, ' ');
+      if (description.length > 200) {
+        description = description.substring(0, 197) + '...';
+      }
+    }
+  }
+  if (description === '') {
+    description = 'A new post in the Cord Community forum';
+  }
 
   return {
-    title: `${title} | Cord Community`,
+    title,
+    description,
+    openGraph: {
+      type: 'article',
+      title,
+      description,
+    },
+    twitter: {
+      title,
+      description,
+    },
   };
 }
 
