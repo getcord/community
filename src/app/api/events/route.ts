@@ -8,7 +8,7 @@ import {
 } from '@cord-sdk/types';
 
 import { validateWebhookSignature } from '@cord-sdk/server';
-import { CORD_SECRET, EVERYONE_GROUP_ID, SERVER_HOST } from '@/consts';
+import { CORD_SECRET, EVERYONE_GROUP_ID } from '@/consts';
 import { addContentToClack } from '@/lib/clack';
 import { isCategory } from '@/utils';
 import { fetchCordRESTApi } from '@/app/fetchCordRESTApi';
@@ -44,7 +44,7 @@ async function sendNotificationToClack(
     action = `replied.`;
   }
   const url = isCommunityMessage
-    ? `${SERVER_HOST}${thread.url}`
+    ? `${thread.url}`
     : `${thread.url}/${thread.id}`;
   const content: MessageContent = [
     {

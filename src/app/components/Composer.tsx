@@ -238,7 +238,7 @@ function ComposerImpl() {
             location: { page: 'posts' },
             name: title,
             metadata,
-            url: `/post/${threadID}/${slugify(title)}`,
+            url: `${SERVER_HOST}/post/${threadID}/${slugify(title)}`,
           }}
           threadId={threadID}
         />
