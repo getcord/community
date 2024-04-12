@@ -71,14 +71,16 @@ export default function TileInner({
           <CategoryPills categories={metadata.categories} />
         </div>
         <div className={styles.timestamp}>
-          <a
-            href={url}
-            className={styles.replies}
-            title={thread.total - 1 + ' replies'}
-          >
-            {thread.total - 1}
-            <ChatBubbleOvalLeftEllipsisIcon width={14} strokeWidth={2} />
-          </a>
+          {thread.total > 1 && (
+            <a
+              href={url}
+              className={styles.replies}
+              title={thread.total - 1 + ' replies'}
+            >
+              {thread.total - 1}
+              <ChatBubbleOvalLeftEllipsisIcon width={14} strokeWidth={2} />
+            </a>
+          )}
           <experimental.Timestamp
             type="message"
             className={styles.column}
