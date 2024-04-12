@@ -1,8 +1,4 @@
 User-agent: *
 Disallow: /support
 
-
-User-agent: *
-Allow: /
-
 Sitemap: https://community.cord.com/sitemap.xml
