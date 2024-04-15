@@ -1,4 +1,4 @@
-import { getServerAuthToken } from '@cord-sdk/server';
+import { getClientAuthToken, getServerAuthToken } from '@cord-sdk/server';
 import { CORD_APP_ID, CORD_SECRET, CORD_API_URL } from '../consts';
 
 export async function fetchCordRESTApi<T>(
@@ -36,4 +36,32 @@ export function buildQueryParams(
     }
   });
   return '?' + params.toString();
+}
+
+/**
+ * To get data that matches our js api hooks
+ * */
+export async function fetchCordRESTClientApi<T>(
+  userID: string,
+  endpoint: string,
+  method: 'GET' | 'PUT' | 'POST' | 'DELETE' = 'GET',
+  data?: object,
+): Promise<T | undefined> {
+  const clientAuthToken = getClientAuthToken(CORD_APP_ID, CORD_SECRET, {
+    user_id: userID,
+  });
+
+  const response = await fetch(`${CORD_API_URL}client${endpoint}`, {
+    method,
+    body: data ? JSON.stringify(data) : undefined,
+    headers: {
+      Authorization: `Bearer ${clientAuthToken}`,
+      'Content-Type': 'application/json',
+    },
+  });
+  if (response.ok) {
+    return response.json();
+  } else {
+    return undefined;
+  }
 }
