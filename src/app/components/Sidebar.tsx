@@ -21,7 +21,7 @@ import Button from '../ui/Button';
 import { notification } from '@cord-sdk/react';
 import Image from 'next/image';
 import classNames from 'classnames';
-import { RefObject } from 'react';
+import { RefObject, useEffect, useRef } from 'react';
 
 const resources = [
   {
@@ -63,6 +63,17 @@ export default function Sidebar({
 }) {
   const pathname = usePathname();
   const summary = notification.useSummary();
+  const categoriesRef = useRef<HTMLUListElement>(null);
+  useEffect(() => {
+    if (categoriesRef.current) {
+      if (navOpen) {
+        categoriesRef.current.style.height =
+          categoriesRef.current.scrollHeight + 'px';
+      } else {
+        categoriesRef.current.style.height = '0px';
+      }
+    }
+  }, [navOpen]);
 
   return (
     <nav
@@ -125,6 +136,7 @@ export default function Sidebar({
         )}
       </ul>
       <ul
+        ref={categoriesRef}
         className={classNames({
           [styles.navItems]: true,
           [styles.categories]: true,

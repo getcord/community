@@ -81,7 +81,6 @@
 }
 
 .categories {
-  height: 280px;
   overflow: hidden;
   transition: height 0.5s;
 }

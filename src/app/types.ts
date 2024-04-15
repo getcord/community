@@ -6,6 +6,7 @@ export const CATEGORIES = [
   'announcements',
   'customization',
   'documentation',
+  'bugreport',
 ] as const;
 
 export type Category = (typeof CATEGORIES)[number];

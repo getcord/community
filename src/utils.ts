@@ -9,6 +9,9 @@ export function mapCategoryEndpointsToTitles(category: string) {
   if (category === 'api') {
     return 'API';
   }
+  if (category === 'bugreport') {
+    return 'Bug Report';
+  }
   return capitalizeFirstLetter(category);
 }
 
