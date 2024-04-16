@@ -1,5 +1,8 @@
-import { fetchCordRESTApi } from '@/app/fetchCordRESTApi';
-import type { ServerGetUser } from '@cord-sdk/types';
+import {
+  fetchCordRESTApi,
+  fetchCordRESTClientApi,
+} from '@/app/fetchCordRESTApi';
+import type { ServerGetUser, ClientUserData } from '@cord-sdk/types';
 import { getSession } from '@auth0/nextjs-auth0';
 import { ADMINS_GROUP_ID } from '@/consts';
 
@@ -33,4 +36,17 @@ export async function getUserById(userID: string): Promise<User> {
     profilePictureURL: user.profilePictureURL ?? undefined,
     isAdmin,
   };
+}
+
+export async function getClientUserById(
+  userID: string,
+): Promise<ClientUserData | null> {
+  const user = await fetchCordRESTClientApi<ClientUserData>(
+    userID,
+    `/user/${userID}`,
+  );
+  if (!user) {
+    return null;
+  }
+  return user;
 }

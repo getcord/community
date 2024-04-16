@@ -95,7 +95,7 @@ export default async function Page({ params }: Props) {
         />
       ) : (
         // not logged in, SSR
-        <ServerPost threadID={threadID} />
+        <ServerPost threadID={threadID} adminMembersSet={adminMembersSet} />
       )}
     </div>
   );

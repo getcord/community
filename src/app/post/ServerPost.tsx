@@ -1,8 +1,16 @@
-import { CoreThreadData, CoreMessageData } from '@cord-sdk/types';
+import {
+  CoreThreadData,
+  CoreMessageData,
+  ClientUserData,
+} from '@cord-sdk/types';
 import cx from 'classnames';
 import { getTypedMetadata } from '@/utils';
-import { CordMessageContent, CordTimestamp } from '../components/CordClient';
-import { getUserById } from '../helpers/user';
+import {
+  CordAvatar,
+  CordMessageContent,
+  CordTimestamp,
+} from '../components/CordClient';
+import { getClientUserById, getUserById } from '../helpers/user';
 import { ThreadNotFound, ThreadHeading } from './Post';
 import styles from './post.module.css';
 import { buildQueryParams, fetchCordRESTApi } from '../fetchCordRESTApi';
@@ -28,7 +36,13 @@ async function getData(
   ]);
 }
 
-export default async function ServerPost({ threadID }: { threadID: string }) {
+export default async function ServerPost({
+  threadID,
+  adminMembersSet,
+}: {
+  threadID: string;
+  adminMembersSet: Set<string>;
+}) {
   const [thread, messages] = await getData(threadID);
 
   if (!thread || !messages) {
@@ -42,7 +56,11 @@ export default async function ServerPost({ threadID }: { threadID: string }) {
     <>
       {structuredData && <JSONLD json={structuredData} />}
       <ThreadHeading metadata={metadata} threadName={thread.name} />
-      <ServerThread messages={messages} metadata={metadata} />
+      <ServerThread
+        messages={messages}
+        metadata={metadata}
+        adminMembersSet={adminMembersSet}
+      />
       <LoggedOutComposer postID={threadID} />
     </>
   );
@@ -51,9 +69,11 @@ export default async function ServerPost({ threadID }: { threadID: string }) {
 function ServerThread({
   messages,
   metadata,
+  adminMembersSet,
 }: {
   messages: CoreMessageData[];
   metadata: Metadata;
+  adminMembersSet: Set<string>;
 }) {
   return (
     <div>
@@ -63,6 +83,7 @@ function ServerThread({
             userID={message.authorID}
             timestamp={message.updatedTimestamp ?? message.createdTimestamp}
             isAnswer={metadata.answerMessageID === message.id}
+            authorIsAdmin={adminMembersSet.has(message.authorID)}
           />
           <CordMessageContent
             edited={false}
@@ -81,30 +102,21 @@ async function ServerAuthorTimestamp({
   userID,
   timestamp,
   isAnswer,
+  authorIsAdmin,
 }: {
   userID: string;
   timestamp: Date;
   isAnswer: boolean;
+  authorIsAdmin: boolean;
 }) {
-  const user = await getUserById(userID);
+  const user = await getClientUserById(userID);
 
-  if (!user.profilePictureURL) {
-    // TODO: don't think this should happen? But should probably have a catch here
-    return null;
-  }
   return (
     <>
-      <Image
-        src={user.profilePictureURL}
-        alt={`${user.name} profile picture`}
-        width={20}
-        height={20}
-        className={styles.serverAvatar}
-      />
-
+      {user && <CordAvatar user={user} />}
       <div className={styles.serverNameAndTimestamp}>
-        <span className={styles.serverAuthorName}>{user.name}</span>
-        {user.isAdmin && (
+        <span className={styles.serverAuthorName}>{user?.name}</span>
+        {authorIsAdmin && (
           <Image src={logo} alt={`cord icon logo`} height={16} width={16} />
         )}
         <CordTimestamp type="message" value={timestamp} />
