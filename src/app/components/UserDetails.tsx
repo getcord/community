@@ -42,8 +42,8 @@ export function UserDetails({ user }: UserDetailsProps) {
     <>
       {userID && (
         <div onClick={openUserDetailsMenu} className={styles.avatarWrapper}>
-          <experimental.Avatar
-            userId={userID}
+          <experimental.Avatar.ByID
+            userID={userID}
             className={styles.profileAvatar}
           />
         </div>
