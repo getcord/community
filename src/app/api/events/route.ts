@@ -75,8 +75,10 @@ async function sendNotificationToClack(
  * See https://docs.cord.com/reference/events-webhook
  **/
 export async function POST(request: NextRequest) {
-  const data: WebhookWrapperProperties<'thread-message-added'> =
-    await request.json();
+  const data: WebhookWrapperProperties<
+    'thread-message-added' | 'url-verification'
+  > = await request.json();
+
   validateWebhookSignature(
     {
       header: (header) => request.headers.get(header) ?? '',
@@ -84,11 +86,13 @@ export async function POST(request: NextRequest) {
     },
     CORD_SECRET,
   );
+
   if (data.type === 'url-verification') {
     return NextResponse.json({ success: true }, { status: 200 });
   }
 
-  await sendNotificationToClack(data.event);
+  const threadData = data as WebhookWrapperProperties<'thread-message-added'>;
+  await sendNotificationToClack(threadData.event);
 
   return NextResponse.json({ success: true }, { status: 200 });
 }
