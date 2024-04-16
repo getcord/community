@@ -94,24 +94,23 @@ export default function UpdateUserDetails({ user }: UpdateUserDetailsProps) {
     viewer?.notificationPreferences.sendViaEmail,
   ]);
 
-  const handleKeyUp = useCallback(
-    async (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') {
-        await handleSaveUserDetails();
-      }
+  const onButtonClick: React.MouseEventHandler<HTMLButtonElement> = useCallback(
+    async (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      await handleSaveUserDetails();
     },
     [handleSaveUserDetails],
   );
 
   return (
-    <div className={styles.container}>
+    <form className={styles.container}>
       <h4 className={styles.title}>Your User Details</h4>
       <Input
         id="username"
         name="username"
         onChange={(e) => setUserName(e.target.value)}
         value={userName}
-        onKeyUp={handleKeyUp}
         label={'User Name:'}
       />
       <Input
@@ -119,7 +118,6 @@ export default function UpdateUserDetails({ user }: UpdateUserDetailsProps) {
         name="email"
         placeholder={user.email}
         onChange={(e) => setUserName(e.target.value)}
-        onKeyUp={handleKeyUp}
         label={'Email Address:'}
         disabled
       />
@@ -145,7 +143,7 @@ export default function UpdateUserDetails({ user }: UpdateUserDetailsProps) {
         <Button
           behaveAs={'button'}
           style={{ marginLeft: 'auto' }}
-          onClick={handleSaveUserDetails}
+          onClick={onButtonClick}
           disabled={
             !prevDetails ||
             (prevDetails.userName === userName &&
@@ -155,6 +153,6 @@ export default function UpdateUserDetails({ user }: UpdateUserDetailsProps) {
           Save
         </Button>
       </div>
-    </div>
+    </form>
   );
 }
