@@ -44,16 +44,13 @@ export function buildQueryParams(
 export async function fetchCordRESTClientApi<T>(
   userID: string,
   endpoint: string,
-  method: 'GET' | 'PUT' | 'POST' | 'DELETE' = 'GET',
-  data?: object,
 ): Promise<T | undefined> {
   const clientAuthToken = getClientAuthToken(CORD_APP_ID, CORD_SECRET, {
     user_id: userID,
   });
 
   const response = await fetch(`${CORD_API_URL}client${endpoint}`, {
-    method,
-    body: data ? JSON.stringify(data) : undefined,
+    method: 'GET',
     headers: {
       Authorization: `Bearer ${clientAuthToken}`,
       'Content-Type': 'application/json',
