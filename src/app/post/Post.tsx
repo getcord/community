@@ -51,7 +51,6 @@ const MessageContext = createContext<{
 const REPLACEMENTS: experimental.ReplaceConfig = {
   Message: CommunityMessageWithContext,
   Menu: CommunityMenu,
-  MenuItem: CommunityMenuItem,
   Timestamp: TimestampAndMaybeSolutionsLabel,
   Username: CommunityUsername,
 };
@@ -202,6 +201,12 @@ function CommunityMenu(props: MenuProps) {
   }, [isMarkedAsAnswer, markAsAnswer, threadHasAnswer]);
 
   const communityMenuProps = useMemo(() => {
+    // Don't show resolve or delete messsage menu items. We don't use resolving/unresolving feature in
+    // community and we'll replace the soft delete default option with a permanent delete menu option.
+    const customizedItems = props.items.filter(
+      (item) => !['message-delete', 'thread-resolve'].includes(item.name),
+    );
+
     // Don't show the Mark as Answer menu item if the user is not admin
     // or if it is the first message
     if (!postContext.userIsAdmin || isFirstMessage) {
@@ -210,18 +215,11 @@ function CommunityMenu(props: MenuProps) {
 
     return {
       ...props,
-      items: [markWithAnswer, ...props.items],
+      items: customizedItems,
     };
-  }, [markWithAnswer, postContext.userIsAdmin, props, isFirstMessage]);
+  }, [props, postContext.userIsAdmin, isFirstMessage]);
 
   return <experimental.Menu {...communityMenuProps} />;
-}
-
-function CommunityMenuItem(props: MenuItemProps) {
-  if (props.menuItemAction !== 'thread-resolve') {
-    return <experimental.MenuItem {...props} />;
-  }
-  return null;
 }
 
 function CommunityUsername(props: UsernameProps) {
