@@ -1,3 +1,4 @@
+import { touchSession } from '@auth0/nextjs-auth0/edge';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const config = {
@@ -23,4 +24,6 @@ export async function middleware(request: NextRequest) {
     loginUrl.searchParams.append('returnTo', returnTo);
     return NextResponse.redirect(loginUrl);
   }
+  // This is used to help refresh the session cookie
+  await touchSession();
 }
