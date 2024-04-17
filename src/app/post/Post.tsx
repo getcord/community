@@ -1,11 +1,11 @@
 'use client';
 
-import { thread as threadHooks, experimental } from '@cord-sdk/react';
+import { thread as threadHooks, experimental, user } from '@cord-sdk/react';
 import cx from 'classnames';
 import Image from 'next/image';
 import styles from './post.module.css';
 import { getTypedMetadata } from '@/utils';
-import { LockClosedIcon } from '@heroicons/react/24/outline';
+import { LockClosedIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { PushPinSvg } from '@/app/components/PushPinSVG';
 import { CategoryPills } from '@/app/components/CategoryPills';
 import { Metadata } from '@/app/types';
@@ -15,10 +15,10 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useState,
 } from 'react';
 
 import {
-  MenuItemProps,
   MenuProps,
   MessageProps,
   TimestampProps,
@@ -27,6 +27,8 @@ import {
 import { EntityMetadata } from '@cord-sdk/types';
 import logo from '@/static/cord-icon.png';
 import { SolutionLabel } from '@/app/components/SolutionLabel';
+import { deleteMessage, deleteThread } from '@/app/actions';
+import { useRouter } from 'next/navigation';
 
 const PostContext = createContext<{
   userIsAdmin: boolean;
@@ -43,9 +45,11 @@ const PostContext = createContext<{
 const MessageContext = createContext<{
   messageID: string | null;
   isAnswer: boolean;
+  userIsAuthor: boolean;
 }>({
   messageID: null,
   isAnswer: false,
+  userIsAuthor: false,
 });
 
 const REPLACEMENTS: experimental.ReplaceConfig = {
@@ -121,13 +125,21 @@ export function ThreadHeading({
 function CommunityMessageWithContext(props: MessageProps) {
   const postContext = useContext(PostContext);
   const metadata = getTypedMetadata(postContext?.metadata ?? undefined);
+  const data = user.useViewerData();
 
   const contextValue = useMemo(() => {
     return {
       messageID: props.message.id,
       isAnswer: metadata.answerMessageID === props.message.id,
+      userIsAuthor: props.message.authorID === data?.id,
     };
-  }, [metadata.answerMessageID, props.message.id]);
+  }, [
+    data?.id,
+    metadata.answerMessageID,
+    props.message.authorID,
+    props.message.id,
+  ]);
+
   return (
     <MessageContext.Provider value={contextValue}>
       <experimental.Message {...props}></experimental.Message>
@@ -136,6 +148,8 @@ function CommunityMessageWithContext(props: MessageProps) {
 }
 
 function CommunityMenu(props: MenuProps) {
+  const router = useRouter();
+
   const postContext = useContext(PostContext);
   const messageContext = useContext(MessageContext);
   const threadData = threadHooks.useThread(postContext.threadID ?? '');
@@ -172,6 +186,28 @@ function CommunityMenu(props: MenuProps) {
     postContext.threadID,
   ]);
 
+  const onClickDeleteMessage = useCallback(() => {
+    if (!postContext.threadID) {
+      console.error('Thread ID not found');
+      return;
+    }
+    if (!messageContext.messageID) {
+      console.error('Message ID not found');
+      return;
+    }
+    deleteMessage(postContext.threadID, messageContext.messageID);
+    props.closeMenu();
+  }, [postContext.threadID, messageContext.messageID, props]);
+
+  const onClickDeletePost = useCallback(() => {
+    if (!postContext.threadID) {
+      console.error('Thread ID not found');
+      return;
+    }
+    deleteThread(postContext.threadID);
+    router.replace('/');
+  }, [postContext.threadID, router]);
+
   const { threadHasAnswer, isMarkedAsAnswer } = useMemo(() => {
     const answerMessageID = threadData?.thread?.metadata.answerMessageID;
     return {
@@ -200,24 +236,72 @@ function CommunityMenu(props: MenuProps) {
     };
   }, [isMarkedAsAnswer, markAsAnswer, threadHasAnswer]);
 
+  const deletePostMenuItem = useMemo(() => {
+    return {
+      name: 'delete-post',
+      element: (
+        <experimental.MenuItem
+          label={'Delete post'}
+          menuItemAction="delete-post"
+          onClick={onClickDeletePost}
+          leftItem={
+            <TrashIcon width={16} height={16} className={styles.leftIcon} />
+          }
+        />
+      ),
+    };
+  }, [onClickDeletePost]);
+
+  const deleteMessageMenuItem = useMemo(() => {
+    return {
+      name: 'delete-message',
+      element: (
+        <experimental.MenuItem
+          label={'Delete message'}
+          menuItemAction="delete-message"
+          onClick={onClickDeleteMessage}
+          leftItem={
+            <TrashIcon width={16} height={16} className={styles.leftIcon} />
+          }
+        />
+      ),
+    };
+  }, [onClickDeleteMessage]);
+
   const communityMenuProps = useMemo(() => {
     // Don't show resolve or delete messsage menu items. We don't use resolving/unresolving feature in
-    // community and we'll replace the soft delete default option with a permanent delete menu option.
+    // community and we replace the soft delete default option with a permanent delete menu option.
     const customizedItems = props.items.filter(
       (item) => !['message-delete', 'thread-resolve'].includes(item.name),
     );
 
-    // Don't show the Mark as Answer menu item if the user is not admin
-    // or if it is the first message
-    if (!postContext.userIsAdmin || isFirstMessage) {
-      return { ...props, items: customizedItems };
+    if (postContext.userIsAdmin || messageContext.userIsAuthor) {
+      // first messages should have `deletePost` item for authors and admins
+      if (isFirstMessage) {
+        customizedItems.push(deletePostMenuItem);
+      } else {
+        // only admins should be able to mark post as answered
+        if (postContext.userIsAdmin) {
+          customizedItems.push(markWithAnswer);
+        }
+        // all admins and message authors should be able to delete a message
+        customizedItems.push(deleteMessageMenuItem);
+      }
     }
 
     return {
       ...props,
       items: [markWithAnswer, ...customizedItems],
     };
-  }, [props, postContext.userIsAdmin, isFirstMessage, markWithAnswer]);
+  }, [
+    props,
+    postContext.userIsAdmin,
+    messageContext.userIsAuthor,
+    isFirstMessage,
+    deletePostMenuItem,
+    deleteMessageMenuItem,
+    markWithAnswer,
+  ]);
 
   return <experimental.Menu {...communityMenuProps} />;
 }
