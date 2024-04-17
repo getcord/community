@@ -2,6 +2,7 @@
 
 import {
   createContext,
+  forwardRef,
   useCallback,
   useContext,
   useMemo,
@@ -91,7 +92,10 @@ function NewPostInputProvider(
   );
 }
 
-function CommunityComposer(props: ComposerProps) {
+const CommunityComposer = forwardRef(function CommunityComposer(
+  props: ComposerProps,
+  ref: React.ForwardedRef<HTMLElement>,
+) {
   const router = useRouter();
   const {
     title,
@@ -149,6 +153,7 @@ function CommunityComposer(props: ComposerProps) {
           </label>
           <experimental.CordComposer
             {...props}
+            ref={ref}
             onSubmit={(message) => {
               onSubmit(message);
             }}
@@ -165,9 +170,12 @@ function CommunityComposer(props: ComposerProps) {
       </section>
     </>
   );
-}
+});
 
-function CommunityComposerLayout(props: ComposerLayoutProps) {
+const CommunityComposerLayout = forwardRef(function CommunityComposerLayout(
+  props: ComposerLayoutProps,
+  ref: React.ForwardedRef<HTMLElement>,
+) {
   const { error, userIsAdmin, pinned, setPinned } =
     useContext(NewPostInputContext);
   const sendButton = props.toolbarItems?.find(
@@ -177,6 +185,7 @@ function CommunityComposerLayout(props: ComposerLayoutProps) {
   return (
     <>
       <experimental.ComposerLayout
+        ref={ref}
         toolbarItems={props.toolbarItems?.filter(
           (item) => item.name !== 'sendButton',
         )}
@@ -198,7 +207,7 @@ function CommunityComposerLayout(props: ComposerLayoutProps) {
       {sendButton?.element}
     </>
   );
-}
+});
 
 function CommunitySendButton(props: SendButtonProps) {
   return (
