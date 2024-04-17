@@ -50,10 +50,10 @@ const MessageContext = createContext<{
 
 const REPLACEMENTS: experimental.ReplaceConfig = {
   Message: CommunityMessageWithContext,
-  Menu: CommunityMenu,
   MenuItem: CommunityMenuItem,
   Timestamp: TimestampAndMaybeSolutionsLabel,
   Username: CommunityUsername,
+  within: { OptionsMenu: { Menu: CommunityMenu } },
 };
 
 export default function Post({
