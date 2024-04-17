@@ -16,3 +16,8 @@
   border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 22px 24px 4px;
 }
+
+/* don't display box-shadow if we have a dark overlay */
+.darkOverlay .modalContainer {
+  box-shadow: none;
+}

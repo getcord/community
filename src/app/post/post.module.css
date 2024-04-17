@@ -148,3 +148,7 @@
 .solutionLabel.marginLeft {
   margin-left: auto;
 }
+
+.leftIcon {
+  padding: 2px;
+}

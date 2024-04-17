@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import type { PropsWithChildren, CSSProperties } from 'react';
 import { ReactPortal } from '@/app/components/ReactPortal';
 import cx from 'classnames';
@@ -22,6 +22,21 @@ export default function Modal({
   position,
   hasDarkBackground,
 }: ModalProps) {
+  const modalDialogRef = useRef<HTMLDivElement | null>(null);
+  // TODO-FIX: auto-focus the modal dialog when opened
+  useEffect(() => {
+    if (isOpen && modalDialogRef?.current) {
+      modalDialogRef?.current.focus();
+    }
+  }, [isOpen, modalDialogRef]);
+
+  const handleContentClick = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) => {
+    // Prevent modal closing when we click on it
+    e.stopPropagation();
+  };
+
   useEffect(() => {
     const handleBodyScroll = () => {
       // Disable scrolling when the modal is open
@@ -54,10 +69,13 @@ export default function Modal({
           [styles.darkOverlay]: hasDarkBackground,
         })}
         onClick={onClose}
+        tabIndex={-1}
       >
         <div
           className={cx(styles.modalContainer, className)}
           style={modalStyle}
+          onClick={handleContentClick}
+          ref={modalDialogRef}
         >
           {children}
         </div>
