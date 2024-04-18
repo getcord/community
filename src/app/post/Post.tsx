@@ -5,7 +5,11 @@ import cx from 'classnames';
 import Image from 'next/image';
 import styles from './post.module.css';
 import { getTypedMetadata } from '@/utils';
-import { LockClosedIcon, TrashIcon } from '@heroicons/react/24/outline';
+import {
+  CheckIcon,
+  LockClosedIcon,
+  TrashIcon,
+} from '@heroicons/react/24/outline';
 import { PushPinSvg } from '@/app/components/PushPinSVG';
 import { CategoryPills } from '@/app/components/CategoryPills';
 import { Metadata } from '@/app/types';
@@ -28,22 +32,28 @@ import { EntityMetadata } from '@cord-sdk/types';
 import logo from '@/static/cord-icon.png';
 import { SolutionLabel } from '@/app/components/SolutionLabel';
 import DeletePostModal from '@/app/components/DeletePostModal';
+import { User } from '@/app/helpers/user';
 
-type ModalState = 'POST' | 'MESSAGE' | null;
 const PostContext = createContext<{
   userIsAdmin: boolean;
   threadID: string | null;
   metadata: EntityMetadata | null;
   admins: Set<string>;
-  deleteModalState: ModalState;
-  setDeleteModalState: (value: ModalState) => void;
+  viewerUserID: string | null;
+  isDeleteModalOpen: boolean;
+  setIsDeleteModalOpen: (value: boolean) => void;
+  messageToDelete: string | null;
+  setMessageToDelete: (id: string | null) => void;
 }>({
   userIsAdmin: false,
   threadID: null,
   metadata: null,
   admins: new Set(),
-  deleteModalState: null,
-  setDeleteModalState: () => {},
+  viewerUserID: null,
+  isDeleteModalOpen: false,
+  setIsDeleteModalOpen: () => {},
+  messageToDelete: null,
+  setMessageToDelete: () => {},
 });
 
 const MessageContext = createContext<{
@@ -58,21 +68,22 @@ const MessageContext = createContext<{
 
 const REPLACEMENTS: experimental.ReplaceConfig = {
   Message: CommunityMessageWithContext,
-  Menu: CommunityMenu,
   Timestamp: TimestampAndMaybeSolutionsLabel,
   Username: CommunityUsername,
+  within: { OptionsMenu: { Menu: CommunityMenu } },
 };
 
 export default function Post({
   threadID,
-  isAdmin,
+  user,
   adminMembersSet,
 }: {
   threadID: string;
-  isAdmin: boolean;
+  user: User;
   adminMembersSet: Set<string>;
 }) {
-  const [deleteModalState, setDeleteModalState] = useState<ModalState>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [messageToDelete, setMessageToDelete] = useState<string | null>(null);
 
   const threadData = threadHooks.useThread(threadID);
   const { thread, loading, hasMore, fetchMore } = threadData;
@@ -87,17 +98,27 @@ export default function Post({
     return {
       threadID,
       metadata: thread?.metadata ?? null,
-      userIsAdmin: isAdmin,
+      userIsAdmin: user.isAdmin ?? false,
       admins: adminMembersSet,
-      deleteModalState,
-      setDeleteModalState,
+      viewerUserID: user.userID ?? null,
+      isDeleteModalOpen,
+      setIsDeleteModalOpen,
+      setMessageToDelete,
+      messageToDelete,
     };
-  }, [adminMembersSet, deleteModalState, isAdmin, thread?.metadata, threadID]);
-
+  }, [
+    threadID,
+    thread?.metadata,
+    user.isAdmin,
+    user.userID,
+    adminMembersSet,
+    isDeleteModalOpen,
+    messageToDelete,
+  ]);
   const onCloseModal = useCallback(() => {
-    setDeleteModalState(null);
+    setIsDeleteModalOpen(false);
+    setMessageToDelete(null);
   }, []);
-
   if (!thread && !loading) {
     return <ThreadNotFound />;
   }
@@ -109,8 +130,9 @@ export default function Post({
       <experimental.Thread thread={threadData} replace={REPLACEMENTS} />
       <DeletePostModal
         onClose={onCloseModal}
-        isOpen={deleteModalState === 'POST'}
+        isOpen={!!isDeleteModalOpen}
         threadID={threadID}
+        messageID={messageToDelete}
       />
     </PostContext.Provider>
   );
@@ -142,36 +164,39 @@ export function ThreadHeading({
 function CommunityMessageWithContext(props: MessageProps) {
   const postContext = useContext(PostContext);
   const metadata = getTypedMetadata(postContext?.metadata ?? undefined);
-  const data = user.useViewerData();
 
   const contextValue = useMemo(() => {
     return {
       messageID: props.message.id,
       isAnswer: metadata.answerMessageID === props.message.id,
-      userIsAuthor: props.message.authorID === data?.id,
+      userIsAuthor: props.message.authorID === postContext?.viewerUserID,
     };
   }, [
-    data?.id,
     metadata.answerMessageID,
+    postContext?.viewerUserID,
     props.message.authorID,
     props.message.id,
   ]);
 
-  const onCloseModal = useCallback(() => {
-    postContext.setDeleteModalState(null);
-  }, [postContext]);
-
   return (
     <MessageContext.Provider value={contextValue}>
       <experimental.Message {...props}></experimental.Message>
-      <DeletePostModal
-        onClose={onCloseModal}
-        isOpen={postContext.deleteModalState === 'MESSAGE'}
-        threadID={props.message.threadID}
-        messageID={props.message.id}
-      />
     </MessageContext.Provider>
   );
+}
+
+type CustomMenuItemName = 'mark-as-answer' | 'delete-post' | 'delete-message';
+function MenuItemLeftIcon(props: {
+  iconFor: CustomMenuItemName;
+  active?: boolean;
+}) {
+  switch (props.iconFor) {
+    case 'mark-as-answer':
+      return <CheckIcon width={16} className={styles.leftIcon} />;
+    case 'delete-post':
+    case 'delete-message':
+      return <TrashIcon width={16} className={styles.leftIcon} />;
+  }
 }
 
 function CommunityMenu(props: MenuProps) {
@@ -211,13 +236,16 @@ function CommunityMenu(props: MenuProps) {
     postContext.threadID,
   ]);
 
-  const deleteMessage = useCallback(() => {
-    postContext.setDeleteModalState('MESSAGE');
-  }, [postContext]);
+  const onClickDeleteMessage = useCallback(() => {
+    postContext.setMessageToDelete(messageContext.messageID);
+    postContext.setIsDeleteModalOpen(true);
+    props.closeMenu();
+  }, [messageContext.messageID, postContext, props]);
 
-  const deletePost = useCallback(() => {
-    postContext.setDeleteModalState('POST');
-  }, [postContext]);
+  const onClickDeletePost = useCallback(() => {
+    postContext.setIsDeleteModalOpen(true);
+    props.closeMenu();
+  }, [postContext, props]);
 
   const { threadHasAnswer, isMarkedAsAnswer } = useMemo(() => {
     const answerMessageID = threadData?.thread?.metadata.answerMessageID;
@@ -242,6 +270,10 @@ function CommunityMenu(props: MenuProps) {
           menuItemAction="mark-as-answer"
           onClick={markAsAnswer}
           disabled={isMarkedAsAnswer}
+          leftItem={<MenuItemLeftIcon iconFor={'mark-as-answer'} />}
+          className={cx({
+            [styles.markedAsAnswered]: isMarkedAsAnswer,
+          })}
         />
       ),
     };
@@ -254,14 +286,13 @@ function CommunityMenu(props: MenuProps) {
         <experimental.MenuItem
           label={'Delete post'}
           menuItemAction="delete-post"
-          onClick={deletePost}
-          leftItem={
-            <TrashIcon width={16} height={16} className={styles.leftIcon} />
-          }
+          onClick={onClickDeletePost}
+          leftItem={<MenuItemLeftIcon iconFor={'delete-post'} />}
+          className={styles.deleteActionMenuItem}
         />
       ),
     };
-  }, [deletePost]);
+  }, [onClickDeletePost]);
 
   const deleteMessageMenuItem = useMemo(() => {
     return {
@@ -270,14 +301,13 @@ function CommunityMenu(props: MenuProps) {
         <experimental.MenuItem
           label={'Delete message'}
           menuItemAction="delete-message"
-          onClick={deleteMessage}
-          leftItem={
-            <TrashIcon width={16} height={16} className={styles.leftIcon} />
-          }
+          onClick={onClickDeleteMessage}
+          leftItem={<MenuItemLeftIcon iconFor={'delete-message'} />}
+          className={styles.deleteActionMenuItem}
         />
       ),
     };
-  }, [deleteMessage]);
+  }, [onClickDeleteMessage]);
 
   const communityMenuProps = useMemo(() => {
     // Don't show resolve or delete messsage menu items. We don't use resolving/unresolving feature in
@@ -314,11 +344,7 @@ function CommunityMenu(props: MenuProps) {
     markWithAnswer,
   ]);
 
-  return (
-    !postContext.deleteModalState && (
-      <experimental.Menu {...communityMenuProps} />
-    )
-  );
+  return <experimental.Menu {...communityMenuProps} />;
 }
 
 function CommunityUsername(props: UsernameProps) {

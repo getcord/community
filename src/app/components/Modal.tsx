@@ -22,16 +22,8 @@ export default function Modal({
   position,
   hasDarkBackground,
 }: ModalProps) {
-  const modalDialogRef = useRef<HTMLDivElement | null>(null);
-  // TODO-FIX: auto-focus the modal dialog when opened
-  useEffect(() => {
-    if (isOpen && modalDialogRef?.current) {
-      modalDialogRef?.current.focus();
-    }
-  }, [isOpen, modalDialogRef]);
-
   const handleContentClick = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    e: React.MouseEvent<HTMLDialogElement, MouseEvent>,
   ) => {
     // Prevent modal closing when we click on it
     e.stopPropagation();
@@ -69,16 +61,17 @@ export default function Modal({
           [styles.darkOverlay]: hasDarkBackground,
         })}
         onClick={onClose}
-        tabIndex={-1}
       >
-        <div
+        <dialog
           className={cx(styles.modalContainer, className)}
           style={modalStyle}
+          open={isOpen}
           onClick={handleContentClick}
-          ref={modalDialogRef}
+          autoFocus
+          id={id}
         >
           {children}
-        </div>
+        </dialog>
       </div>
     </ReactPortal>
   );

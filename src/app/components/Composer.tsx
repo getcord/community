@@ -2,6 +2,7 @@
 
 import {
   createContext,
+  forwardRef,
   useCallback,
   useContext,
   useMemo,
@@ -15,6 +16,7 @@ import {
   ComposerLayoutProps,
   ComposerProps,
   SendButtonProps,
+  TextEditorProps,
 } from '@cord-sdk/react/dist/mjs/types/experimental';
 import { EVERYONE_GROUP_ID, SERVER_HOST } from '@/consts';
 import { useRouter } from 'next/navigation';
@@ -90,7 +92,10 @@ function NewPostInputProvider(
   );
 }
 
-function CommunityComposer(props: ComposerProps) {
+const CommunityComposer = forwardRef(function CommunityComposer(
+  props: ComposerProps,
+  ref: React.ForwardedRef<HTMLElement>,
+) {
   const router = useRouter();
   const {
     title,
@@ -148,14 +153,9 @@ function CommunityComposer(props: ComposerProps) {
           </label>
           <experimental.CordComposer
             {...props}
+            ref={ref}
             onSubmit={(message) => {
               onSubmit(message);
-            }}
-            onKeyDown={({ event }: { event: React.KeyboardEvent }) => {
-              if (event.key === 'Enter') {
-                return;
-              }
-              props.onKeyDown({ event });
             }}
             onResetState={() => {
               if (!title || !categories.length) {
@@ -170,9 +170,12 @@ function CommunityComposer(props: ComposerProps) {
       </section>
     </>
   );
-}
+});
 
-function CommunityComposerLayout(props: ComposerLayoutProps) {
+const CommunityComposerLayout = forwardRef(function CommunityComposerLayout(
+  props: ComposerLayoutProps,
+  ref: React.ForwardedRef<HTMLElement>,
+) {
   const { error, userIsAdmin, pinned, setPinned } =
     useContext(NewPostInputContext);
   const sendButton = props.toolbarItems?.find(
@@ -182,6 +185,7 @@ function CommunityComposerLayout(props: ComposerLayoutProps) {
   return (
     <>
       <experimental.ComposerLayout
+        ref={ref}
         toolbarItems={props.toolbarItems?.filter(
           (item) => item.name !== 'sendButton',
         )}
@@ -203,7 +207,7 @@ function CommunityComposerLayout(props: ComposerLayoutProps) {
       {sendButton?.element}
     </>
   );
-}
+});
 
 function CommunitySendButton(props: SendButtonProps) {
   return (
@@ -217,6 +221,27 @@ function CommunitySendButton(props: SendButtonProps) {
   );
 }
 
+function CommunityTextEditor(props: TextEditorProps) {
+  const onKeyDown = useCallback(
+    ({ event }: { event: React.KeyboardEvent }) => {
+      // Override Enter to not be a submit by treating it as if the user were
+      // holding down the shift key
+      // This will cause us to not send by default on Enter and require users
+      // to hit the submit button
+      if (event.key === 'Enter') {
+        event.shiftKey = true;
+      }
+      props.onKeyDown({ event });
+    },
+    [props],
+  );
+  return (
+    <experimental.TextEditor
+      {...props}
+      onKeyDown={onKeyDown}
+    ></experimental.TextEditor>
+  );
+}
 function ComposerImpl() {
   const { title, categories, threadID, pinned } =
     useContext(NewPostInputContext);
@@ -230,6 +255,7 @@ function ComposerImpl() {
           ComposerLayout: CommunityComposerLayout,
           Composer: CommunityComposer,
           SendButton: CommunitySendButton,
+          TextEditor: CommunityTextEditor,
         }}
       >
         <experimental.SendComposer

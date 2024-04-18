@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 
 type DeletePostModalProps = ModalProps & {
   threadID: string;
-  messageID?: string;
+  messageID: string | null;
 };
 export default function DeletePostModal({
   isOpen,
@@ -20,6 +20,7 @@ export default function DeletePostModal({
 }: DeletePostModalProps) {
   const router = useRouter();
 
+  console.log({ messageID, threadID });
   const onDelete = useCallback(async () => {
     if (!messageID) {
       await deleteThread(threadID);

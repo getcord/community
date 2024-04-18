@@ -33,3 +33,6 @@
 .documentation {
   background-color: var(--cat-documentation);
 }
+.bugreport {
+  background-color: var(--cat-bugreport);
+}

@@ -17,6 +17,7 @@ body {
   --cord-green: #71bc8f;
   --cord-green-light: #c8edd7;
   --cord-white: #ffffff;
+  --cord-alert: #eb5757;
 
   /* category colors
     calculated using oklch with
@@ -26,11 +27,14 @@ body {
 
     This is done to keep the perceived lightness and contrast the same across all colours
   */
-  --cat-components: #dd9314;
-  --cat-announcements: #64bc65;
-  --cat-customization: #00b8d7;
-  --cat-api: #a193fc;
-  --cat-documentation: #ee79a1;
+  --category-count : 6;
+  --offset-angle: 72;
+  --cat-components: oklch(72% 0.15 calc((360 / var(--category-count) * 0) + var(--offset-angle)));
+  --cat-announcements: oklch(72% 0.15 calc((360 / var(--category-count) * 1) + var(--offset-angle)));
+  --cat-customization: oklch(72% 0.15 calc((360 / var(--category-count) * 2) + var(--offset-angle)));
+  --cat-api: oklch(72% 0.15 calc((360 / var(--category-count) * 3) + var(--offset-angle)));
+  --cat-documentation: oklch(72% 0.15 calc((360 / var(--category-count) * 4) + var(--offset-angle)));
+  --cat-bugreport: oklch(72% 0.15 calc((360 / var(--category-count) * 5) + var(--offset-angle)));
 
   /* sizing */
   --max-sidebar-width: 250px;

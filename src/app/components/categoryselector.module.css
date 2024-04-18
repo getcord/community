@@ -32,21 +32,13 @@
 .documentation.selected {
   background-color: var(--cat-documentation);
 }
+.bugreport.selected {
+  background-color: var(--cat-bugreport);
+}
 
-.components:hover {
-  background-color: var(--cat-components);
-}
-.announcements:hover {
-  background-color: var(--cat-announcements);
-}
-.customization:hover {
-  background-color: var(--cat-customization);
-}
-.api:hover {
-  background-color: var(--cat-api);
-}
-.documentation:hover {
-  background-color: var(--cat-documentation);
+
+.categoryPill:hover {
+  text-decoration: underline;
 }
 
 .components:active {
@@ -67,5 +59,9 @@
 }
 .documentation:active {
   background-color: var(--cat-documentation);
+  filter: saturate(0.5);
+}
+.bugreport:active {
+  background-color: var(--cat-bugreport);
   filter: saturate(0.5);
 }
