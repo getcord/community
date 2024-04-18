@@ -140,7 +140,7 @@ const CommunityComposer = forwardRef(function CommunityComposer(
           <label htmlFor="titleInput" className={styles.label}>
             Title:
           </label>
-          <textarea
+          <input
             className={styles.input}
             id="titleInput"
             value={title}
