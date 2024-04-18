@@ -5,7 +5,11 @@ import cx from 'classnames';
 import Image from 'next/image';
 import styles from './post.module.css';
 import { getTypedMetadata } from '@/utils';
-import { LockClosedIcon, TrashIcon } from '@heroicons/react/24/outline';
+import {
+  CheckIcon,
+  LockClosedIcon,
+  TrashIcon,
+} from '@heroicons/react/24/outline';
 import { PushPinSvg } from '@/app/components/PushPinSVG';
 import { CategoryPills } from '@/app/components/CategoryPills';
 import { Metadata } from '@/app/types';
@@ -149,6 +153,20 @@ function CommunityMessageWithContext(props: MessageProps) {
   );
 }
 
+type CustomMenuItemName = 'mark-as-answer' | 'delete-post' | 'delete-message';
+function MenuItemLeftIcon(props: {
+  iconFor: CustomMenuItemName;
+  active?: boolean;
+}) {
+  switch (props.iconFor) {
+    case 'mark-as-answer':
+      return <CheckIcon width={16} className={styles.leftIcon} />;
+    case 'delete-post':
+    case 'delete-message':
+      return <TrashIcon width={16} className={styles.leftIcon} />;
+  }
+}
+
 function CommunityMenu(props: MenuProps) {
   const router = useRouter();
 
@@ -233,6 +251,10 @@ function CommunityMenu(props: MenuProps) {
           menuItemAction="mark-as-answer"
           onClick={markAsAnswer}
           disabled={isMarkedAsAnswer}
+          leftItem={<MenuItemLeftIcon iconFor={'mark-as-answer'} />}
+          className={cx({
+            [styles.markedAsAnswered]: isMarkedAsAnswer,
+          })}
         />
       ),
     };
@@ -246,9 +268,7 @@ function CommunityMenu(props: MenuProps) {
           label={'Delete post'}
           menuItemAction="delete-post"
           onClick={onClickDeletePost}
-          leftItem={
-            <TrashIcon width={16} height={16} className={styles.leftIcon} />
-          }
+          leftItem={<MenuItemLeftIcon iconFor={'delete-post'} />}
         />
       ),
     };
@@ -262,9 +282,7 @@ function CommunityMenu(props: MenuProps) {
           label={'Delete message'}
           menuItemAction="delete-message"
           onClick={onClickDeleteMessage}
-          leftItem={
-            <TrashIcon width={16} height={16} className={styles.leftIcon} />
-          }
+          leftItem={<MenuItemLeftIcon iconFor={'delete-message'} />}
         />
       ),
     };

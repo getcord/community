@@ -152,3 +152,8 @@
 .leftIcon {
   padding: 2px;
 }
+
+.markedAsAnswered:global(.cord-component .cord-menu-item-button),
+.markedAsAnswered:global(.cord-component .cord-menu-item-button .cord-label) {
+  color: var(--cord-green);
+}
