@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import type { PropsWithChildren, CSSProperties } from 'react';
 import { ReactPortal } from '@/app/components/ReactPortal';
 import cx from 'classnames';
@@ -22,6 +22,13 @@ export default function Modal({
   position,
   hasDarkBackground,
 }: ModalProps) {
+  const handleContentClick = (
+    e: React.MouseEvent<HTMLDialogElement, MouseEvent>,
+  ) => {
+    // Prevent modal closing when we click on it
+    e.stopPropagation();
+  };
+
   useEffect(() => {
     const handleBodyScroll = () => {
       // Disable scrolling when the modal is open
@@ -32,11 +39,20 @@ export default function Modal({
       }
     };
 
+    const handleEscapeKey = (e: KeyboardEvent) => {
+      // Disable scrolling when the modal is open
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
     window.addEventListener('scroll', handleBodyScroll);
+    window.addEventListener('keydown', handleEscapeKey);
     return () => {
       window.removeEventListener('scroll', handleBodyScroll);
+      window.removeEventListener('keydown', handleEscapeKey);
     };
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
   if (!isOpen) {
     return null;
@@ -55,12 +71,16 @@ export default function Modal({
         })}
         onClick={onClose}
       >
-        <div
+        <dialog
           className={cx(styles.modalContainer, className)}
           style={modalStyle}
+          open={isOpen}
+          onClick={handleContentClick}
+          autoFocus
+          id={id}
         >
           {children}
-        </div>
+        </dialog>
       </div>
     </ReactPortal>
   );
