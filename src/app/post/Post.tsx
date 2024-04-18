@@ -1,6 +1,6 @@
 'use client';
 
-import { thread as threadHooks, experimental, user } from '@cord-sdk/react';
+import { thread as threadHooks, experimental } from '@cord-sdk/react';
 import cx from 'classnames';
 import Image from 'next/image';
 import styles from './post.module.css';
@@ -15,7 +15,6 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState,
 } from 'react';
 
 import {
@@ -29,17 +28,20 @@ import logo from '@/static/cord-icon.png';
 import { SolutionLabel } from '@/app/components/SolutionLabel';
 import { deleteMessage, deleteThread } from '@/app/actions';
 import { useRouter } from 'next/navigation';
+import { User } from '@/app/helpers/user';
 
 const PostContext = createContext<{
   userIsAdmin: boolean;
   threadID: string | null;
   metadata: EntityMetadata | null;
   admins: Set<string>;
+  viewerUserID: string | null;
 }>({
   userIsAdmin: false,
   threadID: null,
   metadata: null,
   admins: new Set(),
+  viewerUserID: null,
 });
 
 const MessageContext = createContext<{
@@ -61,11 +63,11 @@ const REPLACEMENTS: experimental.ReplaceConfig = {
 
 export default function Post({
   threadID,
-  isAdmin,
+  user,
   adminMembersSet,
 }: {
   threadID: string;
-  isAdmin: boolean;
+  user: User;
   adminMembersSet: Set<string>;
 }) {
   const threadData = threadHooks.useThread(threadID);
@@ -81,10 +83,11 @@ export default function Post({
     return {
       threadID,
       metadata: thread?.metadata ?? null,
-      userIsAdmin: isAdmin,
+      userIsAdmin: user.isAdmin ?? false,
       admins: adminMembersSet,
+      viewerUserID: user.userID,
     };
-  }, [adminMembersSet, isAdmin, thread?.metadata, threadID]);
+  }, [adminMembersSet, user, thread?.metadata, threadID]);
 
   if (!thread && !loading) {
     return <ThreadNotFound />;
@@ -125,17 +128,16 @@ export function ThreadHeading({
 function CommunityMessageWithContext(props: MessageProps) {
   const postContext = useContext(PostContext);
   const metadata = getTypedMetadata(postContext?.metadata ?? undefined);
-  const data = user.useViewerData();
 
   const contextValue = useMemo(() => {
     return {
       messageID: props.message.id,
       isAnswer: metadata.answerMessageID === props.message.id,
-      userIsAuthor: props.message.authorID === data?.id,
+      userIsAuthor: props.message.authorID === postContext?.viewerUserID,
     };
   }, [
-    data?.id,
     metadata.answerMessageID,
+    postContext?.viewerUserID,
     props.message.authorID,
     props.message.id,
   ]);
@@ -186,7 +188,7 @@ function CommunityMenu(props: MenuProps) {
     postContext.threadID,
   ]);
 
-  const onClickDeleteMessage = useCallback(() => {
+  const onClickDeleteMessage = useCallback(async () => {
     if (!postContext.threadID) {
       console.error('Thread ID not found');
       return;
@@ -195,16 +197,16 @@ function CommunityMenu(props: MenuProps) {
       console.error('Message ID not found');
       return;
     }
-    deleteMessage(postContext.threadID, messageContext.messageID);
+    await deleteMessage(postContext.threadID, messageContext.messageID);
     props.closeMenu();
   }, [postContext.threadID, messageContext.messageID, props]);
 
-  const onClickDeletePost = useCallback(() => {
+  const onClickDeletePost = useCallback(async () => {
     if (!postContext.threadID) {
       console.error('Thread ID not found');
       return;
     }
-    deleteThread(postContext.threadID);
+    await deleteThread(postContext.threadID);
     router.replace('/');
   }, [postContext.threadID, router]);
 
