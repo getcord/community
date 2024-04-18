@@ -5,7 +5,7 @@ import cx from 'classnames';
 import Image from 'next/image';
 import styles from './post.module.css';
 import { getTypedMetadata } from '@/utils';
-import { LockClosedIcon } from '@heroicons/react/24/outline';
+import { LockClosedIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { PushPinSvg } from '@/app/components/PushPinSVG';
 import { CategoryPills } from '@/app/components/CategoryPills';
 import { Metadata } from '@/app/types';
@@ -18,7 +18,6 @@ import {
 } from 'react';
 
 import {
-  MenuItemProps,
   MenuProps,
   MessageProps,
   TimestampProps,
@@ -27,25 +26,32 @@ import {
 import { EntityMetadata } from '@cord-sdk/types';
 import logo from '@/static/cord-icon.png';
 import { SolutionLabel } from '@/app/components/SolutionLabel';
+import { deleteMessage, deleteThread } from '@/app/actions';
+import { useRouter } from 'next/navigation';
+import { User } from '@/app/helpers/user';
 
 const PostContext = createContext<{
   userIsAdmin: boolean;
   threadID: string | null;
   metadata: EntityMetadata | null;
   admins: Set<string>;
+  viewerUserID: string | null;
 }>({
   userIsAdmin: false,
   threadID: null,
   metadata: null,
   admins: new Set(),
+  viewerUserID: null,
 });
 
 const MessageContext = createContext<{
   messageID: string | null;
   isAnswer: boolean;
+  userIsAuthor: boolean;
 }>({
   messageID: null,
   isAnswer: false,
+  userIsAuthor: false,
 });
 
 const REPLACEMENTS: experimental.ReplaceConfig = {
@@ -57,11 +63,11 @@ const REPLACEMENTS: experimental.ReplaceConfig = {
 
 export default function Post({
   threadID,
-  isAdmin,
+  user,
   adminMembersSet,
 }: {
   threadID: string;
-  isAdmin: boolean;
+  user: User;
   adminMembersSet: Set<string>;
 }) {
   const threadData = threadHooks.useThread(threadID);
@@ -77,10 +83,11 @@ export default function Post({
     return {
       threadID,
       metadata: thread?.metadata ?? null,
-      userIsAdmin: isAdmin,
+      userIsAdmin: user.isAdmin ?? false,
       admins: adminMembersSet,
+      viewerUserID: user.userID ?? null,
     };
-  }, [adminMembersSet, isAdmin, thread?.metadata, threadID]);
+  }, [adminMembersSet, user, thread?.metadata, threadID]);
 
   if (!thread && !loading) {
     return <ThreadNotFound />;
@@ -126,8 +133,15 @@ function CommunityMessageWithContext(props: MessageProps) {
     return {
       messageID: props.message.id,
       isAnswer: metadata.answerMessageID === props.message.id,
+      userIsAuthor: props.message.authorID === postContext?.viewerUserID,
     };
-  }, [metadata.answerMessageID, props.message.id]);
+  }, [
+    metadata.answerMessageID,
+    postContext?.viewerUserID,
+    props.message.authorID,
+    props.message.id,
+  ]);
+
   return (
     <MessageContext.Provider value={contextValue}>
       <experimental.Message {...props}></experimental.Message>
@@ -136,6 +150,8 @@ function CommunityMessageWithContext(props: MessageProps) {
 }
 
 function CommunityMenu(props: MenuProps) {
+  const router = useRouter();
+
   const postContext = useContext(PostContext);
   const messageContext = useContext(MessageContext);
   const threadData = threadHooks.useThread(postContext.threadID ?? '');
@@ -172,6 +188,28 @@ function CommunityMenu(props: MenuProps) {
     postContext.threadID,
   ]);
 
+  const onClickDeleteMessage = useCallback(async () => {
+    if (!postContext.threadID) {
+      console.error('Thread ID not found');
+      return;
+    }
+    if (!messageContext.messageID) {
+      console.error('Message ID not found');
+      return;
+    }
+    await deleteMessage(postContext.threadID, messageContext.messageID);
+    props.closeMenu();
+  }, [postContext.threadID, messageContext.messageID, props]);
+
+  const onClickDeletePost = useCallback(async () => {
+    if (!postContext.threadID) {
+      console.error('Thread ID not found');
+      return;
+    }
+    await deleteThread(postContext.threadID);
+    router.replace('/');
+  }, [postContext.threadID, router]);
+
   const { threadHasAnswer, isMarkedAsAnswer } = useMemo(() => {
     const answerMessageID = threadData?.thread?.metadata.answerMessageID;
     return {
@@ -200,24 +238,72 @@ function CommunityMenu(props: MenuProps) {
     };
   }, [isMarkedAsAnswer, markAsAnswer, threadHasAnswer]);
 
+  const deletePostMenuItem = useMemo(() => {
+    return {
+      name: 'delete-post',
+      element: (
+        <experimental.MenuItem
+          label={'Delete post'}
+          menuItemAction="delete-post"
+          onClick={onClickDeletePost}
+          leftItem={
+            <TrashIcon width={16} height={16} className={styles.leftIcon} />
+          }
+        />
+      ),
+    };
+  }, [onClickDeletePost]);
+
+  const deleteMessageMenuItem = useMemo(() => {
+    return {
+      name: 'delete-message',
+      element: (
+        <experimental.MenuItem
+          label={'Delete message'}
+          menuItemAction="delete-message"
+          onClick={onClickDeleteMessage}
+          leftItem={
+            <TrashIcon width={16} height={16} className={styles.leftIcon} />
+          }
+        />
+      ),
+    };
+  }, [onClickDeleteMessage]);
+
   const communityMenuProps = useMemo(() => {
     // Don't show resolve or delete messsage menu items. We don't use resolving/unresolving feature in
-    // community and we'll replace the soft delete default option with a permanent delete menu option.
+    // community and we replace the soft delete default option with a permanent delete menu option.
     const customizedItems = props.items.filter(
       (item) => !['message-delete', 'thread-resolve'].includes(item.name),
     );
 
-    // Don't show the Mark as Answer menu item if the user is not admin
-    // or if it is the first message
-    if (!postContext.userIsAdmin || isFirstMessage) {
-      return { ...props, items: customizedItems };
+    if (postContext.userIsAdmin || messageContext.userIsAuthor) {
+      // first messages should have `deletePost` item for authors and admins
+      if (isFirstMessage) {
+        customizedItems.push(deletePostMenuItem);
+      } else {
+        // only admins should be able to mark post as answered
+        if (postContext.userIsAdmin) {
+          customizedItems.push(markWithAnswer);
+        }
+        // all admins and message authors should be able to delete a message
+        customizedItems.push(deleteMessageMenuItem);
+      }
     }
 
     return {
       ...props,
-      items: [markWithAnswer, ...customizedItems],
+      items: customizedItems,
     };
-  }, [props, postContext.userIsAdmin, isFirstMessage, markWithAnswer]);
+  }, [
+    props,
+    postContext.userIsAdmin,
+    messageContext.userIsAuthor,
+    isFirstMessage,
+    deletePostMenuItem,
+    deleteMessageMenuItem,
+    markWithAnswer,
+  ]);
 
   return <experimental.Menu {...communityMenuProps} />;
 }

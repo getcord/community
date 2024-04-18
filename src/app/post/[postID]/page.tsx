@@ -20,7 +20,7 @@ export default async function Page({
         // logged in, client side rendered
         <Post
           threadID={threadID}
-          isAdmin={user.isAdmin ?? false}
+          user={user}
           adminMembersSet={adminMembersSet}
         />
       ) : (
