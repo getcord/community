@@ -2,25 +2,24 @@
 
 import Divider from '@/app/ui/Divider';
 import Modal, { ModalProps } from './Modal';
-import styles from './deletepostmodal.module.css';
+import styles from './deleteconfirmationmodal.module.css';
 import Button from '@/app/ui/Button';
 import { useCallback } from 'react';
 import { deleteMessage, deleteThread } from '@/app/actions';
 import { useRouter } from 'next/navigation';
 
-type DeletePostModalProps = ModalProps & {
+type DeleteConfirmationModalProps = ModalProps & {
   threadID: string;
   messageID: string | null;
 };
-export default function DeletePostModal({
+export default function DeleteConfirmationModal({
   isOpen,
   onClose,
   threadID,
   messageID,
-}: DeletePostModalProps) {
+}: DeleteConfirmationModalProps) {
   const router = useRouter();
 
-  console.log({ messageID, threadID });
   const onDelete = useCallback(async () => {
     if (!messageID) {
       await deleteThread(threadID);

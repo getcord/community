@@ -31,7 +31,7 @@ import {
 import { EntityMetadata } from '@cord-sdk/types';
 import logo from '@/static/cord-icon.png';
 import { SolutionLabel } from '@/app/components/SolutionLabel';
-import DeletePostModal from '@/app/components/DeletePostModal';
+import DeleteConfirmationModal from '@/app/components/DeleteConfirmationModal';
 import { User } from '@/app/helpers/user';
 
 const PostContext = createContext<{
@@ -128,7 +128,7 @@ export default function Post({
     <PostContext.Provider value={contextValue}>
       <ThreadHeading metadata={metadata} threadName={thread?.name || ''} />
       <experimental.Thread thread={threadData} replace={REPLACEMENTS} />
-      <DeletePostModal
+      <DeleteConfirmationModal
         onClose={onCloseModal}
         isOpen={!!isDeleteModalOpen}
         threadID={threadID}

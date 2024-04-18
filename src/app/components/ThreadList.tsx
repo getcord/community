@@ -19,7 +19,7 @@ const getThreadsData = async (category: Category | undefined) => {
   ]);
 
   const threadsData = await fetchCordRESTApi<ServerListThreads>(
-    `threads`,
+    `threads${filter}`,
     'GET',
   );
   const pinnedResults = threadsData?.threads
