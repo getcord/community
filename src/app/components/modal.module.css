@@ -6,7 +6,12 @@
   height: 100%;
   pointer-events: auto;
 }
-.darkOverlay {
+
+.modalOverlay dialog {
+  border: none;
+}
+
+.modalOverlay.darkOverlay {
   background-color: rgba(0, 0, 0, 0.3);
 }
 
@@ -15,4 +20,10 @@
   padding: 16px;
   border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 22px 24px 4px;
+  pointer-events: auto;
+}
+
+/* don't display box-shadow if we have a dark overlay */
+.darkOverlay .modalContainer {
+  box-shadow: none;
 }
