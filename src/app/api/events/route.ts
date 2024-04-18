@@ -7,7 +7,7 @@ import {
   WebhookWrapperProperties,
 } from '@cord-sdk/types';
 
-import { validateWebhookSignature } from '@cord-sdk/server';
+import { parseWebhookBody, validateWebhookSignature } from '@cord-sdk/server';
 import { CORD_SECRET, EVERYONE_GROUP_ID } from '@/consts';
 import { addContentToClack } from '@/lib/clack';
 import { isCategory } from '@/utils';
@@ -75,16 +75,17 @@ async function sendNotificationToClack(
  * See https://docs.cord.com/reference/events-webhook
  **/
 export async function POST(request: NextRequest) {
+  const text = await request.text();
   validateWebhookSignature(
-    await request.text(),
+    text,
     request.headers.get('X-Cord-Timestamp'),
     request.headers.get('X-Cord-Signature'),
     CORD_SECRET,
   );
 
-  const data: WebhookWrapperProperties<
-    'thread-message-added' | 'url-verification'
-  > = await request.json();
+  const data = parseWebhookBody<'thread-message-added' | 'url-verification'>(
+    text,
+  );
 
   if (data.type === 'url-verification') {
     return NextResponse.json({ success: true }, { status: 200 });
