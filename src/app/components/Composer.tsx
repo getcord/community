@@ -121,7 +121,7 @@ const CommunityComposer = forwardRef(function CommunityComposer(
 
   return (
     <>
-      <h3>Start a new discussion</h3>
+      <h3>New post</h3>
       <section className={styles.inputsContainer}>
         <div className={styles.inputContainer}>
           <label htmlFor="categorySelector" className={styles.label}>
