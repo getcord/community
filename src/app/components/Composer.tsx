@@ -151,10 +151,10 @@ const CommunityComposer = forwardRef(function CommunityComposer(
           <label htmlFor="titleInput" className={styles.label}>
             Message:
           </label>
-          <experimental.CordComposer
+          <experimental.Composer
             {...props}
             ref={ref}
-            onSubmit={(message) => {
+            onSubmit={async (message) => {
               onSubmit(message);
             }}
             onResetState={() => {
@@ -186,6 +186,7 @@ const CommunityComposerLayout = forwardRef(function CommunityComposerLayout(
     <>
       <experimental.ComposerLayout
         ref={ref}
+        {...props}
         toolbarItems={props.toolbarItems?.filter(
           (item) => item.name !== 'sendButton',
         )}
