@@ -190,7 +190,6 @@ const CommunityComposerLayout = forwardRef(function CommunityComposerLayout(
         toolbarItems={props.toolbarItems?.filter(
           (item) => item.name !== 'sendButton',
         )}
-        textEditor={props.textEditor}
       ></experimental.ComposerLayout>
       <span className={styles.error}>{error}</span>
       {userIsAdmin && (
