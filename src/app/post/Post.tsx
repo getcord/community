@@ -210,7 +210,7 @@ function CommunityMenu(props: MenuProps) {
     // Don't show the Mark as Answer menu item if the user is not admin
     // or if it is the first message
     if (!postContext.userIsAdmin || isFirstMessage) {
-      return props;
+      return { ...props, items: customizedItems };
     }
 
     return {
