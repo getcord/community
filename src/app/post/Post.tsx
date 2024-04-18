@@ -85,7 +85,7 @@ export default function Post({
       metadata: thread?.metadata ?? null,
       userIsAdmin: user.isAdmin ?? false,
       admins: adminMembersSet,
-      viewerUserID: user.userID,
+      viewerUserID: user.userID ?? null,
     };
   }, [adminMembersSet, user, thread?.metadata, threadID]);
 
