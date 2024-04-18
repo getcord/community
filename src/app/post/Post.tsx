@@ -269,6 +269,7 @@ function CommunityMenu(props: MenuProps) {
           menuItemAction="delete-post"
           onClick={onClickDeletePost}
           leftItem={<MenuItemLeftIcon iconFor={'delete-post'} />}
+          className={styles.deleteActionMenuItem}
         />
       ),
     };
@@ -283,6 +284,7 @@ function CommunityMenu(props: MenuProps) {
           menuItemAction="delete-message"
           onClick={onClickDeleteMessage}
           leftItem={<MenuItemLeftIcon iconFor={'delete-message'} />}
+          className={styles.deleteActionMenuItem}
         />
       ),
     };

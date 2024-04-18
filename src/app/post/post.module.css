@@ -157,3 +157,10 @@
 .markedAsAnswered:global(.cord-component .cord-menu-item-button .cord-label) {
   color: var(--cord-green);
 }
+
+.deleteActionMenuItem:global(.cord-component .cord-menu-item-button),
+.deleteActionMenuItem:global(
+    .cord-component .cord-menu-item-button .cord-label
+  ) {
+  color: var(--cord-alert);
+}

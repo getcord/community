@@ -17,6 +17,7 @@ body {
   --cord-green: #71bc8f;
   --cord-green-light: #c8edd7;
   --cord-white: #ffffff;
+  --cord-alert: #eb5757;
 
   /* category colors
     calculated using oklch with
