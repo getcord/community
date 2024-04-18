@@ -215,9 +215,9 @@ function CommunityMenu(props: MenuProps) {
 
     return {
       ...props,
-      items: customizedItems,
+      items: [markWithAnswer, ...customizedItems],
     };
-  }, [props, postContext.userIsAdmin, isFirstMessage]);
+  }, [props, postContext.userIsAdmin, isFirstMessage, markWithAnswer]);
 
   return <experimental.Menu {...communityMenuProps} />;
 }
