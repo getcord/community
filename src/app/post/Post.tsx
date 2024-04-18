@@ -74,7 +74,9 @@ export default function Post({
   user: User;
   adminMembersSet: Set<string>;
 }) {
-  const threadData = threadHooks.useThread(threadID);
+  const threadData = threadHooks.useThread(threadID, {
+    initialFetchCount: 100,
+  });
   const { thread, loading, hasMore, fetchMore } = threadData;
 
   useEffect(() => {
