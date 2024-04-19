@@ -33,6 +33,8 @@ type NewPostInputContextProps = {
   userIsAdmin: boolean;
   pinned: boolean;
   setPinned: (pinned: boolean) => void;
+  locked: boolean;
+  setLocked: (locked: boolean) => void;
 };
 
 const NewPostInputContext = createContext<NewPostInputContextProps>({
@@ -46,6 +48,8 @@ const NewPostInputContext = createContext<NewPostInputContextProps>({
   userIsAdmin: false,
   pinned: false,
   setPinned: () => {},
+  locked: false,
+  setLocked: () => {},
 });
 
 function NewPostInputProvider(
@@ -63,6 +67,7 @@ function NewPostInputProvider(
   const threadID = props.threadID;
   const userIsAdmin = props.userIsAdmin;
   const [pinned, setPinned] = useState(false);
+  const [locked, setLocked] = useState(false);
 
   const value = useMemo(
     () => ({
@@ -76,8 +81,20 @@ function NewPostInputProvider(
       userIsAdmin,
       pinned,
       setPinned,
+      locked,
+      setLocked,
     }),
-    [categories, title, error, threadID, userIsAdmin, pinned, setPinned],
+    [
+      categories,
+      title,
+      error,
+      threadID,
+      userIsAdmin,
+      pinned,
+      setPinned,
+      locked,
+      setLocked,
+    ],
   );
 
   return (
@@ -171,7 +188,7 @@ const CommunityComposerLayout = forwardRef(function CommunityComposerLayout(
   props: experimental.ComposerLayoutProps,
   ref: React.ForwardedRef<HTMLElement>,
 ) {
-  const { error, userIsAdmin, pinned, setPinned } =
+  const { error, userIsAdmin, pinned, setPinned, locked, setLocked } =
     useContext(NewPostInputContext);
   const sendButton = props.toolbarItems?.find(
     (item) => item.name === 'sendButton',
@@ -197,6 +214,14 @@ const CommunityComposerLayout = forwardRef(function CommunityComposerLayout(
             onChange={() => setPinned(!pinned)}
             aria-label="Toggle pinned messages"
           />
+          <Label htmlFor="locked">Locked</Label>
+          <input
+            type="checkbox"
+            id="locked"
+            checked={locked}
+            onChange={() => setLocked(!locked)}
+            aria-label="Toggle pinned messages"
+          />
         </div>
       )}
       {sendButton?.element}
@@ -216,9 +241,9 @@ function CommunitySendButton(props: experimental.SendButtonProps) {
   );
 }
 function ComposerImpl() {
-  const { title, categories, threadID, pinned } =
+  const { title, categories, threadID, pinned, locked } =
     useContext(NewPostInputContext);
-  const metadata: EntityMetadata = { pinned };
+  const metadata: EntityMetadata = { pinned, locked };
   categories.forEach((category) => (metadata[category] = true));
 
   return (
