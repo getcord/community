@@ -1,0 +1,22 @@
+.modal {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--cord-grey-dark);
+  max-width: 500px;
+}
+
+.title {
+  font-size: 14px;
+}
+
+.content {
+  display: grid;
+  gap: 6px;
+}
+
+.footer {
+  display: flex;
+  justify-self: end;
+  gap: 16px;
+}
