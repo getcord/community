@@ -52,7 +52,6 @@ export function UserDetails({ user }: UserDetailsProps) {
       <Modal
         isOpen={isModalOpen}
         onClose={closeModal}
-        id={'user-details-modal'}
         position={userDetailsMenuPosition}
         onClickOutside={closeModal}
       >
