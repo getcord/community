@@ -19,6 +19,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useState,
 } from 'react';
 
 import {
@@ -30,23 +31,33 @@ import {
 import { EntityMetadata } from '@cord-sdk/types';
 import logo from '@/static/cord-icon.png';
 import { SolutionLabel } from '@/app/components/SolutionLabel';
+import ConfirmationModal from '@/app/components/ConfirmationModal';
 import { deleteMessage, deleteThread } from '@/app/actions';
 import { useRouter } from 'next/navigation';
 import { User } from '@/app/helpers/user';
 import { THREAD_INITIAL_FETCH_COUNT } from '@/consts';
 
+type ConfirmModalState = 'DELETE_POST' | 'DELETE_MESSAGE' | null;
 const PostContext = createContext<{
   userIsAdmin: boolean;
   threadID: string | null;
   metadata: EntityMetadata | null;
   admins: Set<string>;
   viewerUserID: string | null;
+  confirmModalState: ConfirmModalState;
+  setConfirmModalState: (value: ConfirmModalState) => void;
+  messageToDelete: string | null;
+  setMessageToDelete: (id: string | null) => void;
 }>({
   userIsAdmin: false,
   threadID: null,
   metadata: null,
   admins: new Set(),
   viewerUserID: null,
+  confirmModalState: null,
+  setConfirmModalState: () => {},
+  messageToDelete: null,
+  setMessageToDelete: () => {},
 });
 
 const MessageContext = createContext<{
@@ -75,6 +86,12 @@ export default function Post({
   user: User;
   adminMembersSet: Set<string>;
 }) {
+  const router = useRouter();
+
+  const [confirmModalState, setConfirmModalState] =
+    useState<ConfirmModalState>(null);
+  const [messageToDelete, setMessageToDelete] = useState<string | null>(null);
+
   const threadData = threadHooks.useThread(threadID, {
     initialFetchCount: THREAD_INITIAL_FETCH_COUNT,
   });
@@ -93,8 +110,40 @@ export default function Post({
       userIsAdmin: user.isAdmin ?? false,
       admins: adminMembersSet,
       viewerUserID: user.userID ?? null,
+      confirmModalState,
+      setConfirmModalState,
+      setMessageToDelete,
+      messageToDelete,
     };
-  }, [adminMembersSet, user, thread?.metadata, threadID]);
+  }, [
+    threadID,
+    thread?.metadata,
+    user.isAdmin,
+    user.userID,
+    adminMembersSet,
+    confirmModalState,
+    messageToDelete,
+  ]);
+
+  const onCloseModal = useCallback(() => {
+    setConfirmModalState(null);
+  }, []);
+
+  const onConfirmModal = useCallback(async () => {
+    if (confirmModalState === 'DELETE_POST') {
+      await deleteThread(threadID);
+      router.replace('/');
+    }
+
+    if (confirmModalState === 'DELETE_MESSAGE') {
+      if (!messageToDelete) {
+        return;
+      }
+      await deleteMessage(threadID, messageToDelete);
+    }
+
+    setConfirmModalState(null);
+  }, [confirmModalState, messageToDelete, threadID]);
 
   if (!thread && !loading) {
     return <ThreadNotFound />;
@@ -105,6 +154,19 @@ export default function Post({
     <PostContext.Provider value={contextValue}>
       <ThreadHeading metadata={metadata} threadName={thread?.name || ''} />
       <experimental.Thread thread={threadData} replace={REPLACEMENTS} />
+      <ConfirmationModal
+        onClose={onCloseModal}
+        isOpen={!!confirmModalState}
+        onConfirm={onConfirmModal}
+        title={
+          confirmModalState === 'DELETE_POST' ? 'Delete Post' : 'Delete Message'
+        }
+        content={`Are you sure you want to permanently delete this 
+        ${
+          confirmModalState === 'DELETE_POST' ? 'post' : 'message'
+        }? This action cannot be undone.`}
+        confirmActionText={'Delete'}
+      />
     </PostContext.Provider>
   );
 }
@@ -171,8 +233,6 @@ function MenuItemLeftIcon(props: {
 }
 
 function CommunityMenu(props: MenuProps) {
-  const router = useRouter();
-
   const postContext = useContext(PostContext);
   const messageContext = useContext(MessageContext);
   const threadData = threadHooks.useThread(postContext.threadID ?? '');
@@ -210,26 +270,16 @@ function CommunityMenu(props: MenuProps) {
   ]);
 
   const onClickDeleteMessage = useCallback(async () => {
-    if (!postContext.threadID) {
-      console.error('Thread ID not found');
-      return;
-    }
-    if (!messageContext.messageID) {
-      console.error('Message ID not found');
-      return;
-    }
-    await deleteMessage(postContext.threadID, messageContext.messageID);
+    postContext.setConfirmModalState('DELETE_MESSAGE');
+    postContext.setMessageToDelete(messageContext.messageID);
+
     props.closeMenu();
-  }, [postContext.threadID, messageContext.messageID, props]);
+  }, [postContext, props]);
 
   const onClickDeletePost = useCallback(async () => {
-    if (!postContext.threadID) {
-      console.error('Thread ID not found');
-      return;
-    }
-    await deleteThread(postContext.threadID);
-    router.replace('/');
-  }, [postContext.threadID, router]);
+    postContext.setConfirmModalState('DELETE_POST');
+    props.closeMenu();
+  }, [postContext, props]);
 
   const { threadHasAnswer, isMarkedAsAnswer } = useMemo(() => {
     const answerMessageID = threadData?.thread?.metadata.answerMessageID;

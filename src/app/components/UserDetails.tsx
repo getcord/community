@@ -54,7 +54,7 @@ export function UserDetails({ user }: UserDetailsProps) {
         onClose={closeModal}
         id={'user-details-modal'}
         position={userDetailsMenuPosition}
-        className={styles.menu}
+        onClickOutside={closeModal}
       >
         <ul className={styles.menuItems}>
           <li>
@@ -72,6 +72,7 @@ export function UserDetails({ user }: UserDetailsProps) {
               className={styles.link}
               href={'/preferences'}
               label={'Preferences'}
+              onClick={closeModal}
             >
               <PencilSquareIcon width={14} /> Preferences
             </Button>
@@ -81,6 +82,7 @@ export function UserDetails({ user }: UserDetailsProps) {
               behaveAs={'a'}
               href={`/api/auth/logout`}
               className={styles.link}
+              onClick={closeModal}
             >
               <ArrowLeftEndOnRectangleIcon width={14} /> Log out
             </Button>
