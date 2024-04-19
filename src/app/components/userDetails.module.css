@@ -4,11 +4,6 @@
   align-items: center;
 }
 
-.modalContent {
-  background-color: var(--cord-white);
-  position: relative;
-}
-
 .menuItems {
   min-width: 240px;
   list-style: none;
