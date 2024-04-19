@@ -54,7 +54,6 @@ export function UserDetails({ user }: UserDetailsProps) {
         onClose={closeModal}
         id={'user-details-modal'}
         position={userDetailsMenuPosition}
-        className={styles.menu}
       >
         <ul className={styles.menuItems}>
           <li>
