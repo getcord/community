@@ -164,15 +164,14 @@ export default function Post({
         title={
           confirmModalState === 'DELETE_POST' ? 'Delete Post' : 'Delete Message'
         }
-        children={
-          <p>
-            Are you sure you want to permanently delete this{' '}
-            {confirmModalState === 'DELETE_POST' ? 'post' : 'message'}? This
-            action cannot be undone.
-          </p>
-        }
         confirmActionText={'Delete'}
-      />
+      >
+        <p>
+          Are you sure you want to permanently delete this{' '}
+          {confirmModalState === 'DELETE_POST' ? 'post' : 'message'}? This
+          action cannot be undone.
+        </p>
+      </ConfirmationModal>
     </PostContext.Provider>
   );
 }
