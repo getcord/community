@@ -127,6 +127,7 @@ export default function Post({
 
   const onCloseModal = useCallback(() => {
     setConfirmModalState(null);
+    setMessageToDelete(null);
   }, []);
 
   const onConfirmModal = useCallback(async () => {
