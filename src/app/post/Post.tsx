@@ -36,6 +36,7 @@ import { deleteMessage, deleteThread } from '@/app/actions';
 import { useRouter } from 'next/navigation';
 import { User } from '@/app/helpers/user';
 import { THREAD_INITIAL_FETCH_COUNT } from '@/consts';
+import CommunityTextEditor from '@/app/components/replacements/CommunityTextEditor';
 
 type ConfirmModalState = 'DELETE_POST' | 'DELETE_MESSAGE' | null;
 const PostContext = createContext<{
@@ -75,6 +76,7 @@ const REPLACEMENTS: experimental.ReplaceConfig = {
   Timestamp: TimestampAndMaybeSolutionsLabel,
   Username: CommunityUsername,
   within: { OptionsMenu: { Menu: CommunityMenu } },
+  TextEditor: CommunityTextEditor,
 };
 
 export default function Post({
@@ -162,10 +164,13 @@ export default function Post({
         title={
           confirmModalState === 'DELETE_POST' ? 'Delete Post' : 'Delete Message'
         }
-        content={`Are you sure you want to permanently delete this 
-        ${
-          confirmModalState === 'DELETE_POST' ? 'post' : 'message'
-        }? This action cannot be undone.`}
+        children={
+          <p>
+            Are you sure you want to permanently delete this{' '}
+            {confirmModalState === 'DELETE_POST' ? 'post' : 'message'}? This
+            action cannot be undone.
+          </p>
+        }
         confirmActionText={'Delete'}
       />
     </PostContext.Provider>
