@@ -4,7 +4,6 @@ import cx from 'classnames';
 import styles from './modal.module.css';
 
 export interface ModalProps extends PropsWithChildren {
-  id?: string;
   isOpen: boolean;
   onClose: () => void;
   hasDarkBackground?: boolean;
@@ -14,7 +13,6 @@ export interface ModalProps extends PropsWithChildren {
 }
 
 export default function Modal({
-  id,
   onClose,
   isOpen,
   children,
@@ -76,7 +74,6 @@ export default function Modal({
 
   return (
     <dialog
-      id={id}
       ref={dialogRef}
       className={cx(
         styles.dialog,

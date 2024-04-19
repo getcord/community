@@ -8,21 +8,18 @@ import Button from '@/app/ui/Button';
 type ConfirmationModalProps = ModalProps & {
   onConfirm: () => void;
   title: string;
-  content: string;
   confirmActionText: string;
 };
 export default function ConfirmationModal({
   isOpen,
   onClose,
   onConfirm,
-  id,
   title,
-  content,
   confirmActionText,
+  children,
 }: ConfirmationModalProps) {
   return (
     <Modal
-      id={id}
       onClose={onClose}
       isOpen={isOpen}
       hasDarkBackground={true}
@@ -35,9 +32,8 @@ export default function ConfirmationModal({
       </div>
 
       <div className={styles.content}>
-        <p>{content}</p>
+        {children}
         <Divider />
-
         <div className={styles.footer}>
           <Button
             behaveAs={'button'}
