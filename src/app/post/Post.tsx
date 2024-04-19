@@ -143,7 +143,7 @@ export default function Post({
       await deleteMessage(threadID, messageToDelete);
     }
 
-    setConfirmModalState(null);
+    onCloseModal();
   }, [confirmModalState, messageToDelete, threadID]);
 
   if (!thread && !loading) {
