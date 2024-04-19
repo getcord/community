@@ -1,5 +1,14 @@
 'use client';
 
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+
 import { thread as threadHooks, experimental } from '@cord-sdk/react';
 import cx from 'classnames';
 import Image from 'next/image';
@@ -13,21 +22,6 @@ import {
 import { PushPinSvg } from '@/app/components/PushPinSVG';
 import { CategoryPills } from '@/app/components/CategoryPills';
 import { Metadata } from '@/app/types';
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-
-import {
-  MenuProps,
-  MessageProps,
-  TimestampProps,
-  UsernameProps,
-} from '@cord-sdk/react/dist/mjs/types/experimental';
 import { EntityMetadata } from '@cord-sdk/types';
 import logo from '@/static/cord-icon.png';
 import { SolutionLabel } from '@/app/components/SolutionLabel';
@@ -38,37 +32,32 @@ import { User } from '@/app/helpers/user';
 import { THREAD_INITIAL_FETCH_COUNT } from '@/consts';
 import CommunityTextEditor from '@/app/components/replacements/CommunityTextEditor';
 
-type ConfirmModalState = 'DELETE_POST' | 'DELETE_MESSAGE' | null;
 const PostContext = createContext<{
-  userIsAdmin: boolean;
+  viewerUserID: string | null;
+  viewerIsAdmin: boolean;
+  isUserAdmin: (user: string) => boolean;
   threadID: string | null;
   metadata: EntityMetadata | null;
-  admins: Set<string>;
-  viewerUserID: string | null;
-  confirmModalState: ConfirmModalState;
-  setConfirmModalState: (value: ConfirmModalState) => void;
-  messageToDelete: string | null;
-  setMessageToDelete: (id: string | null) => void;
+  displayPostDeletionModal: () => void;
+  displayMessageDeletionModal: (messageID: string) => void;
 }>({
-  userIsAdmin: false,
+  viewerUserID: null,
+  viewerIsAdmin: false,
+  isUserAdmin: (_) => false,
   threadID: null,
   metadata: null,
-  admins: new Set(),
-  viewerUserID: null,
-  confirmModalState: null,
-  setConfirmModalState: () => {},
-  messageToDelete: null,
-  setMessageToDelete: () => {},
+  displayPostDeletionModal: () => {},
+  displayMessageDeletionModal: (_) => {},
 });
 
 const MessageContext = createContext<{
-  messageID: string | null;
+  messageID: string;
   isAnswer: boolean;
-  userIsAuthor: boolean;
+  viewerIsAuthor: boolean;
 }>({
-  messageID: null,
+  messageID: '',
   isAnswer: false,
-  userIsAuthor: false,
+  viewerIsAuthor: false,
 });
 
 const REPLACEMENTS: experimental.ReplaceConfig = {
@@ -79,6 +68,7 @@ const REPLACEMENTS: experimental.ReplaceConfig = {
   TextEditor: CommunityTextEditor,
 };
 
+type ConfirmModalState = 'DELETE_POST' | 'DELETE_MESSAGE' | null;
 export default function Post({
   threadID,
   user,
@@ -105,26 +95,38 @@ export default function Post({
     }
   }, [hasMore, fetchMore]);
 
+  const isUserAdmin = useCallback(
+    (id: string) => {
+      return adminMembersSet.has(id);
+    },
+    [adminMembersSet],
+  );
+  const displayPostDeletionModal = useCallback(() => {
+    setConfirmModalState('DELETE_POST');
+  }, []);
+  const displayMessageDeletionModal = useCallback((messageID: string) => {
+    setConfirmModalState('DELETE_MESSAGE');
+    setMessageToDelete(messageID);
+  }, []);
+
   const contextValue = useMemo(() => {
     return {
+      viewerUserID: user.userID ?? null,
+      viewerIsAdmin: user.isAdmin ?? false,
+      isUserAdmin,
       threadID,
       metadata: thread?.metadata ?? null,
-      userIsAdmin: user.isAdmin ?? false,
-      admins: adminMembersSet,
-      viewerUserID: user.userID ?? null,
-      confirmModalState,
-      setConfirmModalState,
-      setMessageToDelete,
-      messageToDelete,
+      displayPostDeletionModal,
+      displayMessageDeletionModal,
     };
   }, [
+    user.userID,
+    user.isAdmin,
+    isUserAdmin,
     threadID,
     thread?.metadata,
-    user.isAdmin,
-    user.userID,
-    adminMembersSet,
-    confirmModalState,
-    messageToDelete,
+    displayPostDeletionModal,
+    displayMessageDeletionModal,
   ]);
 
   const onCloseModal = useCallback(() => {
@@ -146,7 +148,7 @@ export default function Post({
     }
 
     onCloseModal();
-  }, [confirmModalState, messageToDelete, threadID]);
+  }, [confirmModalState, messageToDelete, threadID, onCloseModal, router]);
 
   if (!thread && !loading) {
     return <ThreadNotFound />;
@@ -199,7 +201,7 @@ export function ThreadHeading({
   );
 }
 
-function CommunityMessageWithContext(props: MessageProps) {
+function CommunityMessageWithContext(props: experimental.MessageProps) {
   const postContext = useContext(PostContext);
   const metadata = getTypedMetadata(postContext?.metadata ?? undefined);
 
@@ -207,7 +209,7 @@ function CommunityMessageWithContext(props: MessageProps) {
     return {
       messageID: props.message.id,
       isAnswer: metadata.answerMessageID === props.message.id,
-      userIsAuthor: props.message.authorID === postContext?.viewerUserID,
+      viewerIsAuthor: props.message.authorID === postContext?.viewerUserID,
     };
   }, [
     metadata.answerMessageID,
@@ -237,7 +239,7 @@ function MenuItemLeftIcon(props: {
   }
 }
 
-function CommunityMenu(props: MenuProps) {
+function CommunityMenu(props: experimental.MenuProps) {
   const postContext = useContext(PostContext);
   const messageContext = useContext(MessageContext);
   const threadData = threadHooks.useThread(postContext.threadID ?? '');
@@ -275,14 +277,12 @@ function CommunityMenu(props: MenuProps) {
   ]);
 
   const onClickDeleteMessage = useCallback(async () => {
-    postContext.setConfirmModalState('DELETE_MESSAGE');
-    postContext.setMessageToDelete(messageContext.messageID);
-
+    postContext.displayMessageDeletionModal(messageContext.messageID);
     props.closeMenu();
-  }, [postContext, props]);
+  }, [postContext, props, messageContext.messageID]);
 
   const onClickDeletePost = useCallback(async () => {
-    postContext.setConfirmModalState('DELETE_POST');
+    postContext.displayPostDeletionModal();
     props.closeMenu();
   }, [postContext, props]);
 
@@ -355,13 +355,13 @@ function CommunityMenu(props: MenuProps) {
       (item) => !['message-delete', 'thread-resolve'].includes(item.name),
     );
 
-    if (postContext.userIsAdmin || messageContext.userIsAuthor) {
+    if (postContext.viewerIsAdmin || messageContext.viewerIsAuthor) {
       // first messages should have `deletePost` item for authors and admins
       if (isFirstMessage) {
         customizedItems.push(deletePostMenuItem);
       } else {
         // only admins should be able to mark post as answered
-        if (postContext.userIsAdmin) {
+        if (postContext.viewerIsAdmin) {
           customizedItems.push(markWithAnswer);
         }
         // all admins and message authors should be able to delete a message
@@ -375,8 +375,8 @@ function CommunityMenu(props: MenuProps) {
     };
   }, [
     props,
-    postContext.userIsAdmin,
-    messageContext.userIsAuthor,
+    postContext.viewerIsAdmin,
+    messageContext.viewerIsAuthor,
     isFirstMessage,
     deletePostMenuItem,
     deleteMessageMenuItem,
@@ -386,9 +386,9 @@ function CommunityMenu(props: MenuProps) {
   return <experimental.Menu {...communityMenuProps} />;
 }
 
-function CommunityUsername(props: UsernameProps) {
+function CommunityUsername(props: experimental.UsernameProps) {
   const postContext = useContext(PostContext);
-  if (!postContext || !postContext.admins.has(props.userData?.id ?? '')) {
+  if (!postContext || !postContext.isUserAdmin(props.userData?.id ?? '')) {
     return <experimental.Username {...props} />;
   } else {
     return (
@@ -400,7 +400,7 @@ function CommunityUsername(props: UsernameProps) {
   }
 }
 
-function TimestampAndMaybeSolutionsLabel(props: TimestampProps) {
+function TimestampAndMaybeSolutionsLabel(props: experimental.TimestampProps) {
   const messageContext = useContext(MessageContext);
   return (
     <>
