@@ -2,6 +2,7 @@
 
 import {
   createContext,
+  forwardRef,
   useCallback,
   useContext,
   useEffect,
@@ -60,12 +61,29 @@ const MessageContext = createContext<{
   viewerIsAuthor: false,
 });
 
+// This composer will only allow an Admin to comment if the post is locked
+// Other users will see no composer
+// If the post is not locked, the composer will appear normal
+const LockedComposer = forwardRef(function LockedComposer(
+  props: experimental.ComposerProps,
+  ref: React.ForwardedRef<HTMLElement>,
+) {
+  const postContext = useContext(PostContext);
+  const metadata = getTypedMetadata(postContext?.metadata ?? undefined);
+  if (metadata.admin && !postContext.viewerIsAdmin) {
+    return null;
+  }
+
+  return <experimental.Composer {...props} ref={ref} />;
+});
+
 const REPLACEMENTS: experimental.ReplaceConfig = {
   Message: CommunityMessageWithContext,
   Timestamp: TimestampAndMaybeSolutionsLabel,
   Username: CommunityUsername,
   within: { OptionsMenu: { Menu: CommunityMenu } },
   TextEditor: CommunityTextEditor,
+  Composer: LockedComposer,
 };
 
 type ConfirmModalState = 'DELETE_POST' | 'DELETE_MESSAGE' | null;
