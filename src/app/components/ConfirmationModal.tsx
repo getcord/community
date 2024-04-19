@@ -26,12 +26,9 @@ export default function ConfirmationModal({
       className={styles.modal}
       onClickOutside={onClose}
     >
-      <div>
-        <h2 className={styles.title}>{title}</h2>
+      <div className={styles.modalContent}>
+        <h2 className={styles.header}>{title}</h2>
         <Divider />
-      </div>
-
-      <div className={styles.content}>
         {children}
         <Divider />
         <div className={styles.footer}>

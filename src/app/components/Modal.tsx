@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import type { PropsWithChildren, CSSProperties } from 'react';
 import cx from 'classnames';
 import styles from './modal.module.css';

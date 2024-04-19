@@ -6,17 +6,18 @@
   max-width: 500px;
 }
 
-.title {
-  font-size: 14px;
+.modalContent {
+  display: flex;
+  flex-direction: column;
 }
 
-.content {
-  display: grid;
-  gap: 6px;
+.header {
+  font-size: 14px;
 }
 
 .footer {
   display: flex;
-  justify-self: end;
+  flex-direction: row;
+  justify-content: end;
   gap: 16px;
 }
