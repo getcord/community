@@ -11,7 +11,7 @@ import {
 } from '@heroicons/react/24/outline';
 import styles from './tile.module.css';
 import Link from 'next/link';
-import { getTypedMetadata, slugify } from '@/utils';
+import { getPostMetadata, slugify } from '@/utils';
 import { PushPinSvg } from './PushPinSVG';
 import { CategoryPills } from '@/app/components/CategoryPills';
 import { SolutionLabel } from '@/app/components/SolutionLabel';
@@ -43,8 +43,8 @@ export default function TileInner({
     return;
   }
 
-  const metadata = getTypedMetadata(thread.metadata);
-  const showIcons = metadata.admin || metadata.pinned;
+  const metadata = getPostMetadata(thread.metadata);
+  const showIcons = metadata.locked || metadata.pinned;
   const url = `/post/${threadID}/${slugify(thread.name)}`;
   return (
     <article className={styles.container}>
@@ -53,7 +53,7 @@ export default function TileInner({
           <div className={styles.headingTextWithIcons}>
             {showIcons && (
               <span className={styles.icons}>
-                {metadata.admin && (
+                {metadata.locked && (
                   <LockClosedIcon width="14px" strokeWidth={3} />
                 )}
                 {metadata.pinned && (

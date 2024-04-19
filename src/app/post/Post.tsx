@@ -14,7 +14,7 @@ import { thread as threadHooks, experimental } from '@cord-sdk/react';
 import cx from 'classnames';
 import Image from 'next/image';
 import styles from './post.module.css';
-import { getTypedMetadata } from '@/utils';
+import { getPostMetadata } from '@/utils';
 import {
   CheckIcon,
   LockClosedIcon,
@@ -22,7 +22,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { PushPinSvg } from '@/app/components/PushPinSVG';
 import { CategoryPills } from '@/app/components/CategoryPills';
-import { Metadata } from '@/app/types';
+import { PostMetadata } from '@/app/types';
 import { EntityMetadata } from '@cord-sdk/types';
 import logo from '@/static/cord-icon.png';
 import { SolutionLabel } from '@/app/components/SolutionLabel';
@@ -69,8 +69,8 @@ const LockedComposer = forwardRef(function LockedComposer(
   ref: React.ForwardedRef<HTMLElement>,
 ) {
   const postContext = useContext(PostContext);
-  const metadata = getTypedMetadata(postContext?.metadata ?? undefined);
-  if (metadata.admin && !postContext.viewerIsAdmin) {
+  const metadata = getPostMetadata(postContext?.metadata ?? undefined);
+  if (metadata.locked && !postContext.viewerIsAdmin) {
     return null;
   }
 
@@ -171,7 +171,7 @@ export default function Post({
   if (!thread && !loading) {
     return <ThreadNotFound />;
   }
-  const metadata = getTypedMetadata(thread?.metadata);
+  const metadata = getPostMetadata(thread?.metadata);
 
   return (
     <PostContext.Provider value={contextValue}>
@@ -204,13 +204,13 @@ export function ThreadHeading({
   metadata,
   threadName,
 }: {
-  metadata: Metadata;
+  metadata: PostMetadata;
   threadName: string;
 }) {
   return (
     <div className={styles.heading}>
       <span className={styles.icons}>
-        {metadata.admin && <LockClosedIcon width="24px" strokeWidth={3} />}
+        {metadata.locked && <LockClosedIcon width="24px" strokeWidth={3} />}
         {metadata.pinned && <PushPinSvg className={`${styles.pinIcon}`} />}
       </span>
       <h1 className={styles.threadName}>{threadName}</h1>
@@ -221,7 +221,7 @@ export function ThreadHeading({
 
 function CommunityMessageWithContext(props: experimental.MessageProps) {
   const postContext = useContext(PostContext);
-  const metadata = getTypedMetadata(postContext?.metadata ?? undefined);
+  const metadata = getPostMetadata(postContext?.metadata ?? undefined);
 
   const contextValue = useMemo(() => {
     return {

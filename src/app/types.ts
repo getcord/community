@@ -11,12 +11,12 @@ export const CATEGORIES = [
 
 export type Category = (typeof CATEGORIES)[number];
 
-export interface Metadata {
+export type PostMetadata = {
   pinned: boolean;
-  admin: boolean;
+  locked: boolean;
   categories: Category[];
   answerMessageID: string | null;
-}
+};
 
 export interface SupportChat {
   customerID: ID;

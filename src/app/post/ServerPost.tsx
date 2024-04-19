@@ -4,7 +4,7 @@ import {
   ClientThreadData,
 } from '@cord-sdk/types';
 import cx from 'classnames';
-import { getTypedMetadata } from '@/utils';
+import { getPostMetadata } from '@/utils';
 import {
   CordAvatar,
   CordMessageContent,
@@ -19,7 +19,7 @@ import Button from '../ui/Button';
 import { getStructuredQAData } from '@/lib/structuredData';
 import { JSONLD } from '@/lib/JSONLD';
 import logo from '@/static/cord-icon.png';
-import { Metadata } from '@/app/types';
+import { PostMetadata } from '@/app/types';
 import { SolutionLabel } from '@/app/components/SolutionLabel';
 import { THREAD_INITIAL_FETCH_COUNT } from '@/consts';
 
@@ -48,7 +48,7 @@ export default async function ServerPost({
   if (!thread || !messages) {
     return <ThreadNotFound />;
   }
-  const metadata = getTypedMetadata(thread.metadata);
+  const metadata = getPostMetadata(thread.metadata);
 
   const structuredData = getStructuredQAData(thread, messages);
 
@@ -72,7 +72,7 @@ function ServerThread({
   adminMembersSet,
 }: {
   messages: CoreMessageData[];
-  metadata: Metadata;
+  metadata: PostMetadata;
   adminMembersSet: Set<string>;
 }) {
   return (

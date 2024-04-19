@@ -1,5 +1,5 @@
 import { EntityMetadata } from '@cord-sdk/types';
-import { Metadata, CATEGORIES, Category } from './app/types';
+import { PostMetadata, CATEGORIES, Category } from './app/types';
 
 export function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -15,10 +15,12 @@ export function mapCategoryEndpointsToTitles(category: string) {
   return capitalizeFirstLetter(category);
 }
 
-export function getTypedMetadata(data: EntityMetadata | undefined): Metadata {
-  const metadata: Metadata = {
+export function getPostMetadata(
+  data: EntityMetadata | undefined,
+): PostMetadata {
+  const metadata: PostMetadata = {
     pinned: false,
-    admin: false,
+    locked: false,
     categories: [],
     answerMessageID: null,
   };
@@ -28,8 +30,8 @@ export function getTypedMetadata(data: EntityMetadata | undefined): Metadata {
   if (typeof data.pinned === 'boolean') {
     metadata.pinned = data.pinned;
   }
-  if (typeof data.admin === 'boolean') {
-    metadata.admin = data.admin;
+  if (typeof data.locked === 'boolean') {
+    metadata.locked = data.locked;
   }
 
   if (
