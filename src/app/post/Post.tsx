@@ -34,6 +34,7 @@ import { deleteMessage, deleteThread } from '@/app/actions';
 import { useRouter } from 'next/navigation';
 import { User } from '@/app/helpers/user';
 import { THREAD_INITIAL_FETCH_COUNT } from '@/consts';
+import CommunityTextEditor from '@/app/components/replacements/CommunityTextEditor';
 
 const PostContext = createContext<{
   userIsAdmin: boolean;
@@ -64,6 +65,7 @@ const REPLACEMENTS: experimental.ReplaceConfig = {
   Timestamp: TimestampAndMaybeSolutionsLabel,
   Username: CommunityUsername,
   within: { OptionsMenu: { Menu: CommunityMenu } },
+  TextEditor: CommunityTextEditor,
 };
 
 export default function Post({
