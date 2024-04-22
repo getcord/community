@@ -126,7 +126,7 @@
 }
 
 /* The SSR and client side rendered thread need to match, so using the variables from above */
-.container :global(.cord-component .cord-message:first-child) {
+.container :global(.cord-component.cord-v2.cord-message:first-child) {
   border-radius: var(--thread-border-radius);
   padding-bottom: var(--thread-padding-bottom);
   border-bottom: var(--thread-border-bottom);
