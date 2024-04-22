@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
-  /* screen heigh - (header height + content padding)  */
+  /* view height - (header height + content padding)  */
   height: calc(100vh - (48px + 32px));
 
   --thread-border-radius: 0px;
