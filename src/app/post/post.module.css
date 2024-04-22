@@ -124,6 +124,9 @@
 .container :global(.cord-component.cord-v2.cord-thread) {
   border: none;
 }
+.container :global(.cord-component.cord-v2.cord-thread-header-container) {
+  display: none;
+}
 
 /* The SSR and client side rendered thread need to match, so using the variables from above */
 .container :global(.cord-component.cord-v2.cord-message:first-child) {
