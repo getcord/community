@@ -52,7 +52,7 @@ async function sendNotificationToClack(
       type: MessageNodeType.PARAGRAPH,
       children: [
         {
-          text: `${author} [${authorID}]`,
+          text: `${author} [${authorID}] `,
           bold: true,
         },
         { text: `${action}` },
