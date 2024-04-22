@@ -2,6 +2,8 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
+  /* screen heigh - (header height + content padding)  */
+  height: calc(100vh - (48px + 32px));
 
   --thread-border-radius: 0px;
   --thread-border-bottom: 1px solid var(--cord-grey);
@@ -123,6 +125,16 @@
 /* for experiemental thread */
 .container :global(.cord-component.cord-v2.cord-thread) {
   border: none;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.container :global(.cord-component.cord-v2.cord-scroll-container) {
+  flex: 1;
+  max-height: unset;
+}
+.container :global(.cord-component.cord-v2.cord-thread-header-container) {
+  display: none;
 }
 
 /* The SSR and client side rendered thread need to match, so using the variables from above */
