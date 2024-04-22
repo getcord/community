@@ -122,7 +122,7 @@
   visibility: visible;
 }
 
-/* for experiemental thread */
+/* for experimental thread */
 .container :global(.cord-component.cord-v2.cord-thread) {
   border: none;
   display: flex;
