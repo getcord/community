@@ -7,7 +7,6 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from 'react';
 
@@ -33,8 +32,6 @@ import { useRouter } from 'next/navigation';
 import { User } from '@/app/helpers/user';
 import { THREAD_INITIAL_FETCH_COUNT } from '@/consts';
 import CommunityTextEditor from '@/app/components/replacements/CommunityTextEditor';
-import useIsVisible from '@/app/hooks/useIsVisible';
-import React from 'react';
 
 const PostContext = createContext<{
   viewerUserID: string | null;
@@ -442,26 +439,7 @@ function TimestampAndMaybeSolutionsLabel(props: experimental.TimestampProps) {
 }
 
 function CommunityScrollContainer(props: experimental.ScrollContainerProps) {
-  const hiddenLastChildRef = useRef<HTMLDivElement>(null); // Ref for the last message
-
-  const [autoScrollToNewest, setAutoScrollToNewest] =
-    useState<experimental.ScrollContainerProps['autoScrollToNewest']>('never');
-
-  const isLastChildInContainerVisible = useIsVisible(hiddenLastChildRef);
-
-  useEffect(() => {
-    if (isLastChildInContainerVisible) {
-      setAutoScrollToNewest('always');
-    }
-  }, [isLastChildInContainerVisible]);
-
   return (
-    <experimental.ScrollContainer
-      {...props}
-      autoScrollToNewest={autoScrollToNewest}
-    >
-      <>{props.children}</>
-      <div ref={hiddenLastChildRef} />
-    </experimental.ScrollContainer>
+    <experimental.ScrollContainer {...props} autoScrollToNewest={'never'} />
   );
 }
