@@ -84,6 +84,7 @@ const REPLACEMENTS: experimental.ReplaceConfig = {
   within: { OptionsMenu: { Menu: CommunityMenu } },
   TextEditor: CommunityTextEditor,
   Composer: LockedComposer,
+  ScrollContainer: CommunityScrollContainer,
 };
 
 type ConfirmModalState = 'DELETE_POST' | 'DELETE_MESSAGE' | null;
@@ -434,5 +435,11 @@ function TimestampAndMaybeSolutionsLabel(props: experimental.TimestampProps) {
         />
       )}
     </>
+  );
+}
+
+function CommunityScrollContainer(props: experimental.ScrollContainerProps) {
+  return (
+    <experimental.ScrollContainer {...props} autoScrollToNewest={'never'} />
   );
 }
