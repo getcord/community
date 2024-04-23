@@ -9,6 +9,7 @@ import {
 import { ThreadSummary } from '@cord-sdk/types';
 import { useRouter } from 'next/navigation';
 import styles from './support.module.css';
+import { PaginationTrigger } from '@/app/components/PaginationTrigger';
 
 export default function Support({
   customerID,
@@ -17,14 +18,12 @@ export default function Support({
   customerID: string;
   customerName: string;
 }) {
-  const data = threadHooks.useThreads({
+  const { threads, loading, fetchMore, hasMore } = threadHooks.useThreads({
     filter: {
       groupID: customerID,
     },
     sortDirection: 'descending',
   });
-
-  const threads = data.threads;
 
   return (
     <div className={styles.threads}>
@@ -33,17 +32,22 @@ export default function Support({
       </div>
       <div className={styles.messages}>
         {threads.length > 0 &&
-          !data.loading &&
+          !loading &&
           threads.map((thread) => (
             <Message key={thread.id} thread={thread} customerID={customerID} />
           ))}
-        {!data.hasMore && (
+        {!hasMore && (
           <div>
             <h4>This is the very beginning of the chat.</h4>
             {threads.length > 0 && <hr />}
           </div>
         )}
       </div>
+      <PaginationTrigger
+        loading={loading}
+        hasMore={hasMore}
+        fetchMore={fetchMore}
+      />
       <Composer
         // margin matches that in the thread details
         style={{ gridArea: 'composer', marginTop: '12px' }}
