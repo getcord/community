@@ -1,6 +1,6 @@
-'use client'
-import { experimental } from "@cord-sdk/react"
+'use client';
+import { betaV2 } from '@cord-sdk/react';
 
-export const CordTimestamp = experimental.Timestamp;
-export const CordAvatar = experimental.Avatar;
-export const CordMessageContent = experimental.MessageContent;
+export const CordTimestamp = betaV2.Timestamp;
+export const CordAvatar = betaV2.Avatar;
+export const CordMessageContent = betaV2.MessageContent;

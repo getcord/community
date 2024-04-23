@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Modal from './Modal';
-import { experimental } from '@cord-sdk/react';
+import { betaV2 } from '@cord-sdk/react';
 import { User } from '@/app/helpers/user';
 import styles from './userDetails.module.css';
 import {
@@ -42,7 +42,7 @@ export function UserDetails({ user }: UserDetailsProps) {
     <>
       {userID && (
         <div onClick={openUserDetailsMenu} className={styles.avatarWrapper}>
-          <experimental.Avatar.ByID
+          <betaV2.Avatar.ByID
             userID={userID}
             className={styles.profileAvatar}
           />

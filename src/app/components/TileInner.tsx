@@ -1,5 +1,5 @@
 'use client';
-import { thread as threadHooks, experimental } from '@cord-sdk/react';
+import { thread as threadHooks, betaV2 } from '@cord-sdk/react';
 import {
   CoreMessageData,
   EntityMetadata,
@@ -81,7 +81,7 @@ export default function TileInner({
               <ChatBubbleOvalLeftEllipsisIcon width={14} strokeWidth={2} />
             </a>
           )}
-          <experimental.Timestamp
+          <betaV2.Timestamp
             type="message"
             className={styles.column}
             value={

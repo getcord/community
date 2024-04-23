@@ -9,7 +9,7 @@ import {
   useState,
 } from 'react';
 import type { ClientMessageData, EntityMetadata } from '@cord-sdk/types';
-import { experimental } from '@cord-sdk/react';
+import { betaV2 } from '@cord-sdk/react';
 import styles from './composer.module.css';
 import CategorySelector from '@/app/components/CategorySelector';
 import { EVERYONE_GROUP_ID, SERVER_HOST } from '@/consts';
@@ -105,7 +105,7 @@ function NewPostInputProvider(
 }
 
 const CommunityComposer = forwardRef(function CommunityComposer(
-  props: experimental.ComposerProps,
+  props: betaV2.ComposerProps,
   ref: React.ForwardedRef<HTMLElement>,
 ) {
   const router = useRouter();
@@ -163,7 +163,7 @@ const CommunityComposer = forwardRef(function CommunityComposer(
           <label htmlFor="titleInput" className={styles.label}>
             Message:
           </label>
-          <experimental.Composer
+          <betaV2.Composer
             {...props}
             ref={ref}
             onSubmit={async (message) => {
@@ -185,7 +185,7 @@ const CommunityComposer = forwardRef(function CommunityComposer(
 });
 
 const CommunityComposerLayout = forwardRef(function CommunityComposerLayout(
-  props: experimental.ComposerLayoutProps,
+  props: betaV2.ComposerLayoutProps,
   ref: React.ForwardedRef<HTMLElement>,
 ) {
   const { error, userIsAdmin, pinned, setPinned, locked, setLocked } =
@@ -196,13 +196,13 @@ const CommunityComposerLayout = forwardRef(function CommunityComposerLayout(
 
   return (
     <>
-      <experimental.ComposerLayout
+      <betaV2.ComposerLayout
         ref={ref}
         {...props}
         toolbarItems={props.toolbarItems?.filter(
           (item) => item.name !== 'sendButton',
         )}
-      ></experimental.ComposerLayout>
+      ></betaV2.ComposerLayout>
       <span className={styles.error}>{error}</span>
       {userIsAdmin && (
         <div className={styles.toggleContainer}>
@@ -229,7 +229,7 @@ const CommunityComposerLayout = forwardRef(function CommunityComposerLayout(
   );
 });
 
-function CommunitySendButton(props: experimental.SendButtonProps) {
+function CommunitySendButton(props: betaV2.SendButtonProps) {
   return (
     <Button
       behaveAs={'button'}
@@ -248,7 +248,7 @@ function ComposerImpl() {
 
   return (
     <div className={styles.container}>
-      <experimental.Replace
+      <betaV2.Replace
         replace={{
           ComposerLayout: CommunityComposerLayout,
           Composer: CommunityComposer,
@@ -256,7 +256,7 @@ function ComposerImpl() {
           TextEditor: CommunityTextEditor,
         }}
       >
-        <experimental.SendComposer
+        <betaV2.SendComposer
           createThread={{
             groupID: EVERYONE_GROUP_ID,
             location: { page: 'posts' },
@@ -266,7 +266,7 @@ function ComposerImpl() {
           }}
           threadId={threadID}
         />
-      </experimental.Replace>
+      </betaV2.Replace>
     </div>
   );
 }

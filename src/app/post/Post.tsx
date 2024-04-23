@@ -9,7 +9,7 @@ import {
   useState,
 } from 'react';
 
-import { thread as threadHooks, experimental } from '@cord-sdk/react';
+import { thread as threadHooks, betaV2 } from '@cord-sdk/react';
 import cx from 'classnames';
 import Image from 'next/image';
 import styles from './post.module.css';
@@ -64,7 +64,7 @@ const MessageContext = createContext<{
 // Other users will see no composer
 // If the post is not locked, the composer will appear normal
 const LockedComposer = forwardRef(function LockedComposer(
-  props: experimental.ComposerProps,
+  props: betaV2.ComposerProps,
   ref: React.ForwardedRef<HTMLElement>,
 ) {
   const postContext = useContext(PostContext);
@@ -73,10 +73,10 @@ const LockedComposer = forwardRef(function LockedComposer(
     return null;
   }
 
-  return <experimental.Composer {...props} ref={ref} />;
+  return <betaV2.Composer {...props} ref={ref} />;
 });
 
-const REPLACEMENTS: experimental.ReplaceConfig = {
+const REPLACEMENTS: betaV2.ReplaceConfig = {
   Message: CommunityMessageWithContext,
   Timestamp: TimestampAndMaybeSolutionsLabel,
   Username: CommunityUsername,
@@ -170,7 +170,7 @@ export default function Post({
   return (
     <PostContext.Provider value={contextValue}>
       <ThreadHeading metadata={metadata} threadName={thread?.name || ''} />
-      <experimental.Thread
+      <betaV2.Thread
         threadData={threadData}
         replace={REPLACEMENTS}
         // this doesn't do anything currently, so we'll have a CSS work-around
@@ -218,7 +218,7 @@ export function ThreadHeading({
   );
 }
 
-function CommunityMessageWithContext(props: experimental.MessageProps) {
+function CommunityMessageWithContext(props: betaV2.MessageProps) {
   const postContext = useContext(PostContext);
   const metadata = getPostMetadata(postContext?.metadata ?? undefined);
 
@@ -237,7 +237,7 @@ function CommunityMessageWithContext(props: experimental.MessageProps) {
 
   return (
     <MessageContext.Provider value={contextValue}>
-      <experimental.Message {...props}></experimental.Message>
+      <betaV2.Message {...props}></betaV2.Message>
     </MessageContext.Provider>
   );
 }
@@ -256,7 +256,7 @@ function MenuItemLeftIcon(props: {
   }
 }
 
-function CommunityMenu(props: experimental.MenuProps) {
+function CommunityMenu(props: betaV2.MenuProps) {
   const postContext = useContext(PostContext);
   const messageContext = useContext(MessageContext);
   const threadData = threadHooks.useThread(postContext.threadID ?? '');
@@ -315,7 +315,7 @@ function CommunityMenu(props: experimental.MenuProps) {
     return {
       name: 'mark-as-answer',
       element: (
-        <experimental.MenuItem
+        <betaV2.MenuItem
           label={
             isMarkedAsAnswer
               ? 'Marked as answer'
@@ -339,7 +339,7 @@ function CommunityMenu(props: experimental.MenuProps) {
     return {
       name: 'delete-post',
       element: (
-        <experimental.MenuItem
+        <betaV2.MenuItem
           label={'Delete post'}
           menuItemAction="delete-post"
           onClick={onClickDeletePost}
@@ -354,7 +354,7 @@ function CommunityMenu(props: experimental.MenuProps) {
     return {
       name: 'delete-message',
       element: (
-        <experimental.MenuItem
+        <betaV2.MenuItem
           label={'Delete message'}
           menuItemAction="delete-message"
           onClick={onClickDeleteMessage}
@@ -400,28 +400,28 @@ function CommunityMenu(props: experimental.MenuProps) {
     markWithAnswer,
   ]);
 
-  return <experimental.Menu {...communityMenuProps} />;
+  return <betaV2.Menu {...communityMenuProps} />;
 }
 
-function CommunityUsername(props: experimental.UsernameProps) {
+function CommunityUsername(props: betaV2.UsernameProps) {
   const postContext = useContext(PostContext);
   if (!postContext || !postContext.isUserAdmin(props.userData?.id ?? '')) {
-    return <experimental.Username {...props} />;
+    return <betaV2.Username {...props} />;
   } else {
     return (
       <>
-        <experimental.Username {...props} />
+        <betaV2.Username {...props} />
         <Image src={logo} alt={`cord icon logo`} height={16} width={16} />
       </>
     );
   }
 }
 
-function TimestampAndMaybeSolutionsLabel(props: experimental.TimestampProps) {
+function TimestampAndMaybeSolutionsLabel(props: betaV2.TimestampProps) {
   const messageContext = useContext(MessageContext);
   return (
     <>
-      <experimental.Timestamp {...props} />
+      <betaV2.Timestamp {...props} />
       {messageContext.isAnswer && (
         <SolutionLabel
           className={cx(styles.solutionLabel, styles.marginLeft)}
@@ -431,8 +431,6 @@ function TimestampAndMaybeSolutionsLabel(props: experimental.TimestampProps) {
   );
 }
 
-function CommunityScrollContainer(props: experimental.ScrollContainerProps) {
-  return (
-    <experimental.ScrollContainer {...props} autoScrollToNewest={'never'} />
-  );
+function CommunityScrollContainer(props: betaV2.ScrollContainerProps) {
+  return <betaV2.ScrollContainer {...props} autoScrollToNewest={'never'} />;
 }

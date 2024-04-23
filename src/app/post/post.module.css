@@ -121,7 +121,7 @@
   visibility: visible;
 }
 
-/* for experimental thread */
+/* for betaV2 thread */
 .container :global(.cord-component.cord-v2.cord-thread) {
   border: none;
 }
