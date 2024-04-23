@@ -125,13 +125,8 @@
 /* for experimental thread */
 .container :global(.cord-component.cord-v2.cord-thread) {
   border: none;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
 }
-.container :global(.cord-component.cord-v2.cord-scroll-container) {
-  flex: 1;
-}
+
 .container :global(.cord-component.cord-v2.cord-thread-header-container) {
   display: none;
 }
