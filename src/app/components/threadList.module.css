@@ -1,5 +1,6 @@
 .container {
   box-sizing: border-box;
+  overflow-y: scroll;
 }
 
 @media (max-width: 1024px) {
