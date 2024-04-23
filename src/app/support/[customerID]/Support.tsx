@@ -36,12 +36,6 @@ export default function Support({
           threads.map((thread) => (
             <Message key={thread.id} thread={thread} customerID={customerID} />
           ))}
-        {!hasMore && (
-          <div>
-            <h4>This is the very beginning of the chat.</h4>
-            {threads.length > 0 && <hr />}
-          </div>
-        )}
       </div>
       <PaginationTrigger
         loading={loading}
