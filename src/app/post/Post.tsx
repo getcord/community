@@ -450,8 +450,8 @@ function CommunityScrollContainer(props: experimental.ScrollContainerProps) {
   const isLastChildInContainerVisible = useIsVisible(hiddenLastChildRef);
 
   useEffect(() => {
-    if (autoScrollToNewest !== 'always' && isLastChildInContainerVisible) {
-      setAutoScrollToNewest('always');
+    if (isLastChildInContainerVisible) {
+      setAutoScrollToNewest('auto');
     }
   }, [isLastChildInContainerVisible]);
 
