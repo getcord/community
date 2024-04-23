@@ -19,6 +19,7 @@ async function sendNotificationToClack(
   const isFirstMessage = event.thread.total === 1;
   const isCommunityMessage = event.groupID === EVERYONE_GROUP_ID;
   const author = event.author.name;
+  const authorID = event.author.id;
   const thread = event.thread;
   const message = event.message;
   let action = '';
@@ -31,17 +32,17 @@ async function sendNotificationToClack(
           categories.push(key);
         }
       }
-      action = `created a new post in ${categories.join(', ')} : ${
-        thread.name
-      }.`;
+      action = `created a new post [${thread.id}] in ${categories.join(
+        ', ',
+      )} : ${thread.name}.`;
     } else {
       const customerGroup = await fetchCordRESTApi<ServerGroupData>(
         `groups/${thread.groupID}`,
       );
-      action = `asked a new question in ${customerGroup?.name}.`;
+      action = `asked a new question [${thread.id}] in ${customerGroup?.name}.`;
     }
   } else {
-    action = `replied.`;
+    action = `replied [${message.id}].`;
   }
   const url = isCommunityMessage
     ? `${thread.url}`
@@ -51,7 +52,7 @@ async function sendNotificationToClack(
       type: MessageNodeType.PARAGRAPH,
       children: [
         {
-          text: `${author} `,
+          text: `${author} [${authorID}] `,
           bold: true,
         },
         { text: `${action}` },
