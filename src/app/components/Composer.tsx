@@ -264,7 +264,7 @@ function ComposerImpl() {
             metadata,
             url: `${SERVER_HOST}/post/${threadID}/${slugify(title)}`,
           }}
-          threadId={threadID}
+          threadID={threadID}
         />
       </betaV2.Replace>
     </div>
