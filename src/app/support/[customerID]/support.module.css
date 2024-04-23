@@ -8,7 +8,7 @@
   border-bottom: 1px solid var(--cord-grey);
 }
 
-.threads {
+.supportChatContainer {
   display: grid;
   grid-template-rows: auto 1fr auto;
   grid-template-areas:
@@ -20,7 +20,7 @@
   height: 100%;
 }
 
-.messages {
+.threads {
   grid-area: messages;
   display: flex;
   flex-direction: column-reverse;
@@ -28,7 +28,7 @@
   overflow: auto;
 }
 
-.messageReplies {
+.threadReplies {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -36,4 +36,10 @@
   color: var(--cord-grey-dark);
   padding-left: 36px;
   cursor: pointer;
+}
+
+.supportChatContainer :global(.cord-component .cord-composer) {
+  grid-area: composer;
+  /*  margin matches that in the thread details */
+  margin-top: 12px;
 }

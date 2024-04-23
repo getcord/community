@@ -26,15 +26,19 @@ export default function Support({
   });
 
   return (
-    <div className={styles.threads}>
+    <div className={styles.supportChatContainer}>
       <div className={styles.header}>
         <h3>{customerName}</h3>
       </div>
-      <div className={styles.messages}>
+      <div className={styles.threads}>
         {threads.length > 0 &&
           !loading &&
           threads.map((thread) => (
-            <Message key={thread.id} thread={thread} customerID={customerID} />
+            <CustomThread
+              key={thread.id}
+              thread={thread}
+              customerID={customerID}
+            />
           ))}
       </div>
       <PaginationTrigger
@@ -43,8 +47,6 @@ export default function Support({
         fetchMore={fetchMore}
       />
       <Composer
-        // margin matches that in the thread details
-        style={{ gridArea: 'composer', marginTop: '12px' }}
         // this will be updated to have only the customer's group
         groupId={customerID}
         showExpanded
@@ -53,7 +55,7 @@ export default function Support({
   );
 }
 
-function Message({
+function CustomThread({
   thread,
   customerID,
 }: {
@@ -76,7 +78,7 @@ function Message({
       />
       {numOfReplies > 0 && (
         <div
-          className={styles.messageReplies}
+          className={styles.threadReplies}
           onClick={() => router.push(`/support/${customerID}/${thread.id}`)}
         >
           <Facepile users={thread.repliers} />
