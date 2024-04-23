@@ -132,7 +132,6 @@
 .container :global(.cord-component.cord-v2.cord-scroll-container) {
   flex: 1;
 }
-
 .container :global(.cord-component.cord-v2.cord-thread-header-container) {
   display: none;
 }
