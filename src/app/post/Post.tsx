@@ -32,7 +32,6 @@ import { useRouter } from 'next/navigation';
 import { User } from '@/app/helpers/user';
 import { THREAD_INITIAL_FETCH_COUNT } from '@/consts';
 import CommunityTextEditor from '@/app/components/replacements/CommunityTextEditor';
-import React from 'react';
 
 const PostContext = createContext<{
   viewerUserID: string | null;
