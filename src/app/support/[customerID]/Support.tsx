@@ -31,21 +31,19 @@ export default function Support({
         <h3>{customerName}</h3>
       </div>
       <div className={styles.threads}>
-        {threads.length > 0 &&
-          !loading &&
-          threads.map((thread) => (
-            <CustomThread
-              key={thread.id}
-              thread={thread}
-              customerID={customerID}
-            />
-          ))}
+        {threads.map((thread) => (
+          <CustomThread
+            key={thread.id}
+            thread={thread}
+            customerID={customerID}
+          />
+        ))}
+        <PaginationTrigger
+          loading={loading}
+          hasMore={hasMore}
+          fetchMore={fetchMore}
+        />
       </div>
-      <PaginationTrigger
-        loading={loading}
-        hasMore={hasMore}
-        fetchMore={fetchMore}
-      />
       <Composer
         // this will be updated to have only the customer's group
         groupId={customerID}
