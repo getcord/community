@@ -7,6 +7,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 
@@ -32,6 +33,8 @@ import { useRouter } from 'next/navigation';
 import { User } from '@/app/helpers/user';
 import { THREAD_INITIAL_FETCH_COUNT } from '@/consts';
 import CommunityTextEditor from '@/app/components/replacements/CommunityTextEditor';
+import useIsVisible from '@/app/hooks/useIsVisible';
+import React from 'react';
 
 const PostContext = createContext<{
   viewerUserID: string | null;
@@ -84,6 +87,7 @@ const REPLACEMENTS: experimental.ReplaceConfig = {
   within: { OptionsMenu: { Menu: CommunityMenu } },
   TextEditor: CommunityTextEditor,
   Composer: LockedComposer,
+  ScrollContainer: CommunityScrollContainer,
 };
 
 type ConfirmModalState = 'DELETE_POST' | 'DELETE_MESSAGE' | null;
@@ -176,7 +180,12 @@ export default function Post({
   return (
     <PostContext.Provider value={contextValue}>
       <ThreadHeading metadata={metadata} threadName={thread?.name || ''} />
-      <experimental.Thread thread={threadData} replace={REPLACEMENTS} />
+      <experimental.Thread
+        threadData={threadData}
+        replace={REPLACEMENTS}
+        // this doesn't do anything currently, so we'll have a CSS work-around
+        showHeader={false}
+      />
       <ConfirmationModal
         onClose={onCloseModal}
         isOpen={!!confirmModalState}
@@ -429,5 +438,30 @@ function TimestampAndMaybeSolutionsLabel(props: experimental.TimestampProps) {
         />
       )}
     </>
+  );
+}
+
+function CommunityScrollContainer(props: experimental.ScrollContainerProps) {
+  const hiddenLastChildRef = useRef<HTMLDivElement>(null); // Ref for the last message
+
+  const [autoScrollToNewest, setAutoScrollToNewest] =
+    useState<experimental.ScrollContainerProps['autoScrollToNewest']>('never');
+
+  const isLastChildInContainerVisible = useIsVisible(hiddenLastChildRef);
+
+  useEffect(() => {
+    if (isLastChildInContainerVisible) {
+      setAutoScrollToNewest('always');
+    }
+  }, [isLastChildInContainerVisible]);
+
+  return (
+    <experimental.ScrollContainer
+      {...props}
+      autoScrollToNewest={autoScrollToNewest}
+    >
+      <>{props.children}</>
+      <div ref={hiddenLastChildRef} />
+    </experimental.ScrollContainer>
   );
 }
