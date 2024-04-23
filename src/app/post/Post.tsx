@@ -5,7 +5,6 @@ import {
   forwardRef,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -106,13 +105,7 @@ export default function Post({
   const threadData = threadHooks.useThread(threadID, {
     initialFetchCount: THREAD_INITIAL_FETCH_COUNT,
   });
-  const { thread, loading, hasMore, fetchMore } = threadData;
-
-  useEffect(() => {
-    if (hasMore) {
-      void fetchMore(10);
-    }
-  }, [hasMore, fetchMore]);
+  const { thread, loading } = threadData;
 
   const isUserAdmin = useCallback(
     (id: string) => {
