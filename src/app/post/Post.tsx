@@ -442,7 +442,7 @@ function TimestampAndMaybeSolutionsLabel(props: experimental.TimestampProps) {
 }
 
 function CommunityScrollContainer(props: experimental.ScrollContainerProps) {
-  const hiddenLastChildRef = useRef<HTMLDivElement>(null); // Ref for the last message
+  const hiddenLastChildRef = useRef<HTMLDivElement>(null);
 
   const [autoScrollToNewest, setAutoScrollToNewest] =
     useState<experimental.ScrollContainerProps['autoScrollToNewest']>('never');
