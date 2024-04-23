@@ -2,8 +2,8 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
-  /* view height - (header height + content padding)  */
-  height: calc(100vh - (48px + 32px));
+  /* view height minus (header height + content padding)  */
+  height: calc(100vh - (48px + 16px));
 
   --thread-border-radius: 0px;
   --thread-border-bottom: 1px solid var(--cord-grey);
@@ -131,7 +131,6 @@
 }
 .container :global(.cord-component.cord-v2.cord-scroll-container) {
   flex: 1;
-  max-height: unset;
 }
 .container :global(.cord-component.cord-v2.cord-thread-header-container) {
   display: none;
