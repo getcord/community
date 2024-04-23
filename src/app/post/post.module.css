@@ -3,7 +3,7 @@
   flex-direction: column;
   gap: 18px;
   /* view height minus (header height + content padding)  */
-  height: calc(100vh - (48px + 16px));
+  height: calc(100vh - (48px + 32px));
 
   --thread-border-radius: 0px;
   --thread-border-bottom: 1px solid var(--cord-grey);
