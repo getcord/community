@@ -39,6 +39,6 @@
   border-top: 1px solid var(--cord-grey);
 }
 
-.threadWrapper {
-  margin-bottom: 12px;
+.drawer :global(.cord-component.cord-v2.cord-thread) {
+  border: none;
 }
