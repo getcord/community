@@ -4,15 +4,22 @@
   overflow: auto;
   border-right: 2px solid var(--cord-grey);
   padding-bottom: 60px;
-  position: relative;
   z-index: 1;
   transition: width 0.5s;
   width: 200px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding-top: 50px;
+  padding-left: 30px;
 }
 
 .container.collapsed {
   overflow: hidden;
   width: 56px;
+  padding-left: 0;
 }
 
 .menuToggle {
@@ -37,11 +44,6 @@
 
 @media (max-width: 1024px) {
   .container {
-    position: fixed;
-    top: 0px;
-    left: 0;
-    right: 0;
-    bottom: 0;
     padding-top: 60px;
   }
 
