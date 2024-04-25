@@ -8,3 +8,18 @@
   overflow-x: hidden;
   overflow-y: auto;
 }
+
+/* 
+We had a margin: 0 auto on mainNav that would center the whole container
+meaning they'd never be flexible space between the sidebar nav and content.
+However, now that the navbar is fixed, we can no longer get that behaviour
+using simple margin, so opting for the code below instead
+
+1360 is basically calc(var(--max-sidebar-width) + var(--max-content-width))
+we have to hard-code this number as we can't use global vars on media query in CSS
+*/
+@media (min-width: 1360px) {
+  .mainNav nav {
+    margin-left: calc((100vw - 1360px) / 2);
+  }
+}
