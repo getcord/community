@@ -1,13 +1,13 @@
 .container {
   background: #fff;
   grid-area: sidebar;
-  overflow: auto;
+  position: sticky;
+  top: 0;
+  height: 100%;
   border-right: 2px solid var(--cord-grey);
   padding-bottom: 60px;
-  position: relative;
   z-index: 1;
   transition: width 0.5s;
-  width: 200px;
 }
 
 .container.collapsed {
@@ -43,6 +43,7 @@
     right: 0;
     bottom: 0;
     padding-top: 60px;
+    height: 100vh;
   }
 
   .menuToggle {

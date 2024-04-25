@@ -1,11 +1,18 @@
 .content {
   max-width: var(--max-content-width);
   padding: 16px;
+  /* overflow-y: auto; */
+  /* view height minus (header + padding)*/
+  /* height: calc(100vh - 80px); */
 }
 
 @media (max-width: 1024px) {
   .content {
     padding-top: 76px;
     padding-left: 76px;
+    /* view height minus (header + padding)*/
+    /* i think height on content breaks things - adds an extra scrollbar and maintains scrollability 
+    of the container, so have to do other additions to make things work */
+    /* height: calc(100vh - 92px); */
   }
 }

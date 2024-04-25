@@ -11,6 +11,10 @@
 
   --thread-message-border-bottom: 1px solid var(--cord-grey-mid-light);
   --thread-message-padding-bottom: 8px;
+
+  /* not sure what this does anymore, and it probably breaks something on 
+  mobile, i haven't testes it out yet */
+  /* height: calc(100vh - 80px); */
 }
 
 .heading {
