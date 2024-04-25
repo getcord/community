@@ -1,6 +1,7 @@
 .content {
   max-width: var(--max-content-width);
   padding: 16px;
+  padding-bottom: 0;
 }
 
 @media (max-width: 1024px) {
