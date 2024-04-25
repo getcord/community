@@ -1,4 +1,6 @@
 .mainNav {
+  /* view height minus header */
+  height: calc(100vh - 60px);
   max-width: calc(var(--max-sidebar-width) + var(--max-content-width));
   margin: 0 auto;
 }
@@ -10,10 +12,12 @@
 }
 
 /* 
-We had a margin: 0 auto on mainNav that would center the whole container
-meaning they'd never be flexible space between the sidebar nav and content.
-However, now that the navbar is fixed, we can no longer get that behaviour
-using simple margin, so opting for the code below instead
+The margin: 0 auto on mainNav that originally centered the whole container
+will now only be centering the content container, as the sidebar has position:fixed.
+
+This means we no longer have the flexible space between the sidebar nav and content
+and we have to do some extra work to make it behave the same as before while 
+maitaining the fixed behaviour of the nav bar.
 
 1360 is basically calc(var(--max-sidebar-width) + var(--max-content-width))
 we have to hard-code this number as we can't use global vars on media query in CSS

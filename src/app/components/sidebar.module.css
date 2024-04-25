@@ -41,10 +41,6 @@
 }
 
 @media (max-width: 1024px) {
-  .container {
-    padding-left: 0;
-  }
-
   .menuToggle {
     display: flex;
     flex: 1;
