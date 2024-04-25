@@ -12,5 +12,4 @@
   max-width: var(--max-sidebar-width);
   overflow-x: hidden;
   overflow-y: auto;
-  max-height: 100%;
 }
