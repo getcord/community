@@ -8,7 +8,9 @@
 .mainNav nav {
   max-width: var(--max-sidebar-width);
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: overlay;
+  transition: scrollbar-color 0.25s ease-in-out;
+  transition-delay: 0.5s;
 }
 
 /* 
