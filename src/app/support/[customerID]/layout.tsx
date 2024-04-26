@@ -15,9 +15,11 @@ async function getData(customerID: string) {
     );
 
     // Make sure they're part of the customer group
-    await fetchCordRESTApi(`groups/${customerID}/members`, 'POST', {
-      add: [userID],
-    });
+    if (userID && !customerGroup?.members.includes(userID)) {
+      await fetchCordRESTApi(`groups/${customerID}/members`, 'POST', {
+        add: [userID],
+      });
+    }
 
     return {
       customerID,
