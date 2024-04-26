@@ -17,6 +17,10 @@ const CommunityThreadLayout = forwardRef(function CommunityThreadLayout(
   }
 
   const { loading, fetchMore, hasMore, thread } = threadData;
+  if (!thread && !loading) {
+    return <h4>oops can&apos;t find this thread!</h4>;
+  }
+
   const messagesWithReplyCount = threadData.messages.map((message) => {
     if (
       message.id !== thread?.firstMessage?.id ||
