@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { PaginationTrigger } from '@/app/components/PaginationTrigger';
 
 const REPLACEMENTS: betaV2.ReplaceConfig = {
-  ThreadLayout: CommunityLayout,
+  ThreadLayout: CommunityThreadLayout,
 };
 export default function ThreadDetails({
   params,
@@ -15,7 +15,7 @@ export default function ThreadDetails({
   params: { customerID: string; threadID: string };
 }) {
   const threadID = decodeURIComponent(params.threadID);
-  const threadData = threadHooks.useThread(threadID, { initialFetchCount: 1 });
+  const threadData = threadHooks.useThread(threadID);
 
   const customerID = decodeURIComponent(params.customerID);
   const router = useRouter();
@@ -37,7 +37,7 @@ export default function ThreadDetails({
   );
 }
 
-function CommunityLayout(props: betaV2.ThreadLayoutProps) {
+function CommunityThreadLayout(props: betaV2.ThreadLayoutProps) {
   const threadData = props.threadData;
   if (!threadData) {
     return <betaV2.ThreadLayout {...props} />;
