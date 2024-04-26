@@ -5,6 +5,8 @@
   position: relative;
   box-shadow: 0px 5px 10px var(--cord-grey);
   z-index: 2;
+  position: sticky;
+  top: 0;
 }
 
 @media (max-width: 1024px) {
