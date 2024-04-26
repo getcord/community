@@ -5,7 +5,7 @@
   height: 100%;
 
   --thread-border-radius: 0px;
-  --thread-border-bottom: 1px solid var(--cord-grey);
+  --thread-border-bottom: 2px solid var(--cord-grey);
   --thread-padding-bottom: 24px;
   --thread-margin-bottom: 12px;
 
@@ -44,6 +44,7 @@
   padding-bottom: var(--thread-padding-bottom);
   border-bottom: var(--thread-border-bottom);
   margin-bottom: var(--thread-margin-bottom);
+  animation: fadeBackground 3s ease-in-out;
 }
 
 .serverMessage:not(:first-child) {
@@ -134,8 +135,9 @@
 .container :global(.cord-component.cord-v2.cord-message:first-child) {
   border-radius: var(--thread-border-radius);
   padding-bottom: var(--thread-padding-bottom);
-  border-bottom: var(--thread-border-bottom);
   margin-bottom: var(--thread-margin-bottom);
+  border-bottom: var(--thread-border-bottom);
+  animation: fadeBackground 3s ease-in-out;
 }
 
 .container :global(.cord-component.cord-v2 .cord-message) {
@@ -168,4 +170,13 @@
     .cord-component .cord-menu-item-button .cord-label
   ) {
   color: var(--cord-alert);
+}
+
+@keyframes fadeBackground {
+  0% {
+    background-color: var(--cord-grey-mid-light);
+  }
+  100% {
+    background-color: transparent;
+  }
 }
