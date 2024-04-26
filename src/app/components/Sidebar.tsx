@@ -18,7 +18,7 @@ import {
   UserIcon,
 } from '@heroicons/react/24/outline';
 import Button from '../ui/Button';
-import { notification } from '@cord-sdk/react';
+import { notification, thread } from '@cord-sdk/react';
 import Image from 'next/image';
 import classNames from 'classnames';
 import { RefObject, useEffect, useRef } from 'react';
@@ -221,9 +221,9 @@ export default function Sidebar({
                       aria-label={`support for ${customerName}`}
                       className={styles.link}
                     >
-                      <ResourceItem
-                        resourceType="Support"
-                        resourceName={customerName}
+                      <SupportItem
+                        customerID={customerID}
+                        customerName={customerName}
                         navOpen={navOpen}
                       />
                     </Link>
@@ -237,7 +237,31 @@ export default function Sidebar({
   );
 }
 
-export function ResourceItem({
+function SupportItem({
+  customerID,
+  customerName,
+  navOpen,
+}: {
+  customerID: string;
+  customerName: string;
+  navOpen: boolean;
+}) {
+  const counts = thread.useThreadCounts({ filter: { groupID: customerID } });
+  return (
+    <ResourceItem
+      resourceType="Support"
+      resourceName={customerName}
+      navOpen={navOpen}
+      hasActivityBadge={
+        // Show as unread if there are any totally new threads or if something
+        // this user has participated in has new messages
+        (counts?.new ?? 0) + (counts?.unreadSubscribed ?? 0) > 0
+      }
+    />
+  );
+}
+
+function ResourceItem({
   resourceType,
   resourceName,
   hasActivityBadge,
