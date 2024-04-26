@@ -80,7 +80,7 @@ const REPLACEMENTS: betaV2.ReplaceConfig = {
   Message: CommunityMessageWithContext,
   Timestamp: TimestampAndMaybeSolutionsLabel,
   Username: CommunityUsername,
-  within: { OptionsMenu: { MenuButton: CommunityMenu } },
+  within: { OptionsMenu: { MenuButton: CommunityPostMenuButton } },
   TextEditor: CommunityTextEditor,
   Composer: LockedComposer,
   ScrollContainer: CommunityScrollContainer,
@@ -251,7 +251,7 @@ function MenuItemLeftIcon(props: {
   }
 }
 
-function CommunityMenu(props: betaV2.MenuButtonProps) {
+function CommunityPostMenuButton(props: betaV2.MenuButtonProps) {
   const postContext = useContext(PostContext);
   const messageContext = useContext(MessageContext);
   const threadData = threadHooks.useThread(postContext.threadID ?? '');
@@ -261,6 +261,7 @@ function CommunityMenu(props: betaV2.MenuButtonProps) {
   const closeMenu = useCallback(() => {
     props.setMenuVisible(false);
   }, [props]);
+
   const markAsAnswer = useCallback(() => {
     if (!window.CordSDK) {
       console.error('Cord SDK not found');
@@ -364,7 +365,7 @@ function CommunityMenu(props: betaV2.MenuButtonProps) {
     };
   }, [onClickDeleteMessage]);
 
-  const communityMenuProps = useMemo(() => {
+  const communityMenuButtonProps = useMemo(() => {
     // Don't show resolve or delete messsage menu items. We don't use resolving/unresolving feature in
     // community and we replace the soft delete default option with a permanent delete menu option.
     const customizedItems = props.menuItems.filter(
@@ -399,7 +400,7 @@ function CommunityMenu(props: betaV2.MenuButtonProps) {
     markWithAnswer,
   ]);
 
-  return <betaV2.MenuButton {...communityMenuProps} />;
+  return <betaV2.MenuButton {...communityMenuButtonProps} />;
 }
 
 function CommunityUsername(props: betaV2.UsernameProps) {
