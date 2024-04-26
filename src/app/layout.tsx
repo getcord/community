@@ -112,7 +112,10 @@ async function getSupportChats(user: User, customerInfo: CustomerInfo) {
 
   return allGroups
     .filter((group) => group.metadata?.supportEnabled === true)
-    .map((group) => ({ customerID: group.id, customerName: group.name }));
+    .map((group) => ({
+      customerID: group.id.toString(),
+      customerName: group.name,
+    }));
 }
 
 async function getData() {

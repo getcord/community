@@ -1,5 +1,3 @@
-import { ID } from '@cord-sdk/types';
-
 export const CATEGORIES = [
   'api',
   'components',
@@ -19,6 +17,6 @@ export type PostMetadata = {
 };
 
 export interface SupportChat {
-  customerID: ID;
+  customerID: string;
   customerName: string;
 }
