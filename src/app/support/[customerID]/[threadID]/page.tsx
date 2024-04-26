@@ -1,26 +1,27 @@
 'use client';
 
-import { Composer, Message, thread as threadHooks } from '@cord-sdk/react';
+import { thread as threadHooks, betaV2 } from '@cord-sdk/react';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import styles from './threadDetails.module.css';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { PaginationTrigger } from '@/app/components/PaginationTrigger';
 
+const REPLACEMENTS: betaV2.ReplaceConfig = {
+  ThreadLayout: CommunityThreadLayout,
+};
 export default function ThreadDetails({
   params,
 }: {
   params: { customerID: string; threadID: string };
 }) {
-  const threadId = decodeURIComponent(params.threadID);
+  const threadID = decodeURIComponent(params.threadID);
+  const threadData = threadHooks.useThread(threadID);
+
   const customerID = decodeURIComponent(params.customerID);
   const router = useRouter();
 
-  if (!threadId) {
-    return <h1>oops can&apos;t find this thread!</h1>;
-  }
-
   return (
-    <div className={styles.drawer} key={threadId}>
+    <div className={styles.drawer} key={threadID}>
       <div className={styles.drawerHeader}>
         <h3>Thread</h3>
         <button
@@ -31,43 +32,50 @@ export default function ThreadDetails({
           <XMarkIcon width="14px" />
         </button>
       </div>
-      <div className={styles.threadWrapper}>
-        <Thread threadId={threadId} />
-      </div>
-      {/* THIS WILL NEED TO BE CONFIGURED PROPERLY TOO */}
-      <Composer groupId={customerID} threadId={threadId} />
+      <betaV2.Thread threadData={threadData} replace={REPLACEMENTS} />
     </div>
   );
 }
 
-function Thread({ threadId }: { threadId: string }) {
-  const data = threadHooks.useThread(threadId);
+function CommunityThreadLayout(props: betaV2.ThreadLayoutProps) {
+  const threadData = props.threadData;
+  if (!threadData) {
+    return <betaV2.ThreadLayout {...props} />;
+  }
 
-  useEffect(() => {
-    if (data.hasMore) {
-      data.fetchMore(10);
+  const messagesWithReplyCount = threadData.messages.map((message) => {
+    const { loading, fetchMore, hasMore, thread } = threadData;
+
+    if (
+      message.id !== thread?.firstMessage?.id ||
+      loading === undefined ||
+      fetchMore === undefined ||
+      hasMore === undefined
+    ) {
+      return <betaV2.Message key={message.id} message={message} />;
     }
-  }, [data]);
 
-  const replies = data.messages.slice(1);
-  const numOfReplies = replies.length;
-  const repliesText = `${numOfReplies} ${
-    numOfReplies === 1 ? 'reply' : 'replies'
-  }`;
+    const numReplies = (thread?.total ?? 1) - 1;
+    const repliesText = `${numReplies} ${
+      numReplies === 1 ? 'reply' : 'replies'
+    }`;
+    return (
+      <>
+        <betaV2.Message key={message.id} message={message} />
+        {numReplies > 0 && (
+          <div className={styles.divider}>
+            <span>{repliesText}</span>
+            <hr className={styles.line} />
+          </div>
+        )}
+        <PaginationTrigger
+          loading={loading}
+          hasMore={hasMore}
+          fetchMore={fetchMore}
+        />
+      </>
+    );
+  });
 
-  return (
-    <>
-      <Message threadId={threadId} />
-      {replies.length > 0 && (
-        <div className={styles.divider}>
-          <span>{repliesText}</span>
-          <hr className={styles.line} />
-        </div>
-      )}
-      {replies.length > 0 &&
-        replies.map((reply) => (
-          <Message key={reply.id} threadId={threadId} messageId={reply.id} />
-        ))}
-    </>
-  );
+  return <betaV2.ThreadLayout {...props} messages={messagesWithReplyCount} />;
 }
