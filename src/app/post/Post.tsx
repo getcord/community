@@ -170,12 +170,7 @@ export default function Post({
   return (
     <PostContext.Provider value={contextValue}>
       <ThreadHeading metadata={metadata} threadName={thread?.name || ''} />
-      <betaV2.Thread
-        threadData={threadData}
-        replace={REPLACEMENTS}
-        // this doesn't do anything currently, so we'll have a CSS work-around
-        showHeader={false}
-      />
+      <betaV2.Thread threadData={threadData} replace={REPLACEMENTS} />
       <ConfirmationModal
         onClose={onCloseModal}
         isOpen={!!confirmModalState}
