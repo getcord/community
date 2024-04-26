@@ -23,6 +23,16 @@ async function getData(customerID: string) {
   return getCustomerInfo();
 }
 
+async function addAdminIfNecessary(customerID: string) {
+  const user = await getUser();
+  if (user.isAdmin) {
+    // Now lets make sure the admin is part of the group
+    await fetchCordRESTApi(`groups/${customerID}/members`, 'POST', {
+      add: [user.userID],
+    });
+  }
+}
+
 export default async function Layout({
   children,
   params,
@@ -39,6 +49,8 @@ export default async function Layout({
     // if they have account but not support enabled show upgrade button
     return <h1>Oh no! Looks like you don&apos;t have a Cord account</h1>;
   }
+
+  await addAdminIfNecessary(params.customerID);
 
   return (
     <div className={styles.container}>
