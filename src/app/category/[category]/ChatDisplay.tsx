@@ -1,5 +1,4 @@
 import styles from './chatDisplay.module.css';
-import ThreadsHeader from '@/app/components/ThreadsHeader';
 import ThreadList from '@/app/components/ThreadList';
 import { Category } from '@/app/types';
 import { getUser } from '@/app/helpers/user';
@@ -25,8 +24,7 @@ export default async function ChatDisplay({
   const allowDiscussion = await getAllowDiscussion(channelName);
   return (
     <div className={styles.container}>
-      <ThreadsHeader allowDiscussion={allowDiscussion} category={channelName} />
-      <ThreadList category={channelName} />
+      <ThreadList category={channelName} allowDiscussion={allowDiscussion} />
     </div>
   );
 }
