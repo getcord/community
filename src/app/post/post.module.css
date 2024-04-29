@@ -168,6 +168,17 @@
   color: var(--cord-alert);
 }
 
+.usernameContainer {
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+}
+
+.usernameContainer img {
+  margin-top: 4px;
+}
+
 @keyframes fadeBackground {
   0% {
     background-color: var(--cord-grey-mid-light);

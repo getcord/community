@@ -9,7 +9,11 @@ import {
   useState,
 } from 'react';
 
-import { thread as threadHooks, betaV2 } from '@cord-sdk/react';
+import {
+  thread as threadHooks,
+  betaV2,
+  user as userHooks,
+} from '@cord-sdk/react';
 import cx from 'classnames';
 import Image from 'next/image';
 import styles from './post.module.css';
@@ -31,6 +35,11 @@ import { useRouter } from 'next/navigation';
 import { User } from '@/app/helpers/user';
 import { THREAD_INITIAL_FETCH_COUNT } from '@/consts';
 import CommunityTextEditor from '@/app/components/replacements/CommunityTextEditor';
+import { UserContext } from '@auth0/nextjs-auth0/client';
+import {
+  UserEmailContext,
+  UserEmailProvider,
+} from '@/app/post/UserEmailContext';
 
 const PostContext = createContext<{
   viewerUserID: string | null;
@@ -169,23 +178,27 @@ export default function Post({
 
   return (
     <PostContext.Provider value={contextValue}>
-      <ThreadHeading metadata={metadata} threadName={thread?.name || ''} />
-      <betaV2.Thread threadData={threadData} replace={REPLACEMENTS} />
-      <ConfirmationModal
-        onClose={onCloseModal}
-        isOpen={!!confirmModalState}
-        onConfirm={onConfirmModal}
-        title={
-          confirmModalState === 'DELETE_POST' ? 'Delete Post' : 'Delete Message'
-        }
-        confirmActionText={'Delete'}
-      >
-        <p>
-          Are you sure you want to permanently delete this{' '}
-          {confirmModalState === 'DELETE_POST' ? 'post' : 'message'}? This
-          action cannot be undone.
-        </p>
-      </ConfirmationModal>
+      <UserEmailProvider>
+        <ThreadHeading metadata={metadata} threadName={thread?.name || ''} />
+        <betaV2.Thread threadData={threadData} replace={REPLACEMENTS} />
+        <ConfirmationModal
+          onClose={onCloseModal}
+          isOpen={!!confirmModalState}
+          onConfirm={onConfirmModal}
+          title={
+            confirmModalState === 'DELETE_POST'
+              ? 'Delete Post'
+              : 'Delete Message'
+          }
+          confirmActionText={'Delete'}
+        >
+          <p>
+            Are you sure you want to permanently delete this{' '}
+            {confirmModalState === 'DELETE_POST' ? 'post' : 'message'}? This
+            action cannot be undone.
+          </p>
+        </ConfirmationModal>
+      </UserEmailProvider>
     </PostContext.Provider>
   );
 }
@@ -405,16 +418,27 @@ function CommunityPostMenuButton(props: betaV2.MenuButtonProps) {
 
 function CommunityUsername(props: betaV2.UsernameProps) {
   const postContext = useContext(PostContext);
-  if (!postContext || !postContext.isUserAdmin(props.userData?.id ?? '')) {
-    return <betaV2.Username {...props} />;
-  } else {
-    return (
-      <>
+
+  const { userEmails, fetchUserEmail } = useContext(UserEmailContext);
+  const email = props.userData?.id ? userEmails[props.userData?.id] : undefined;
+  const fetchEmail = useCallback(() => {
+    if (email || !props.userData?.id) {
+      return;
+    }
+
+    void fetchUserEmail(props.userData?.id);
+  }, [email, fetchUserEmail, props.userData?.id]);
+
+  return (
+    <betaV2.WithTooltip tooltip={email ? <p>{email}</p> : null}>
+      <div onMouseEnter={fetchEmail} className={styles.usernameContainer}>
         <betaV2.Username {...props} />
-        <Image src={logo} alt={`cord icon logo`} height={16} width={16} />
-      </>
-    );
-  }
+        {!postContext?.isUserAdmin(props.userData?.id ?? '') ? null : (
+          <Image src={logo} alt={`cord icon logo`} height={16} width={16} />
+        )}
+      </div>
+    </betaV2.WithTooltip>
+  );
 }
 
 function TimestampAndMaybeSolutionsLabel(props: betaV2.TimestampProps) {
