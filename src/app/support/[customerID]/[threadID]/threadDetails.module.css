@@ -11,6 +11,9 @@
 @media (max-width: 1024px) {
   .drawer {
     border-left: none;
+    /* view width minus left and right padding */
+    min-width: calc(100vw - 76px - 16px);
+    padding-left: 0;
   }
 }
 
