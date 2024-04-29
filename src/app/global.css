@@ -80,3 +80,7 @@ html
   .cord-send-button.cord-primary.cord-with-icon.cord-button.cord-small {
   color: white;
 }
+
+html .cord-v2.cord-composer {
+  max-height: 300px;
+}
