@@ -3,8 +3,8 @@
 import {
   Composer,
   thread as threadHooks,
-  Message as CordMessage,
   Facepile,
+  betaV2,
 } from '@cord-sdk/react';
 import { ThreadSummary } from '@cord-sdk/types';
 import { useParams, useRouter } from 'next/navigation';
@@ -59,6 +59,14 @@ export default function Support({
   );
 }
 
+function SupportMessageMenu(props: betaV2.MenuProps) {
+  const updatedProps = {
+    ...props,
+    items: props.items.filter((item) => item.name !== 'thread-resolve'),
+  };
+  return <betaV2.Menu {...updatedProps} />;
+}
+
 function CustomThread({
   thread,
   customerID,
@@ -67,6 +75,9 @@ function CustomThread({
   customerID: string;
 }) {
   const router = useRouter();
+  if (!thread.firstMessage) {
+    return <></>;
+  }
 
   const numOfReplies = thread.total - 1;
   const replyMessage = `${numOfReplies} ${
@@ -74,17 +85,23 @@ function CustomThread({
   }`;
 
   return (
-    <div>
-      <CordMessage
-        threadId={thread.id}
+    <div
+      className={styles.threadContainer}
         onClick={() => router.push(`/support/${customerID}/${thread.id}`)}
-        style={{ cursor: 'pointer', paddingBottom: 0 }}
+    >
+      <betaV2.Message
+        message={thread.firstMessage}
+        showThreadOptions
+        replace={{
+          within: {
+            OptionsMenu: {
+              Menu: SupportMessageMenu,
+            },
+          },
+        }}
       />
       {numOfReplies > 0 && (
-        <div
-          className={styles.threadReplies}
-          onClick={() => router.push(`/support/${customerID}/${thread.id}`)}
-        >
+        <div className={styles.threadReplies}>
           <Facepile users={thread.repliers} />
           <span>{replyMessage}</span>
         </div>

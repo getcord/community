@@ -49,3 +49,8 @@
   /*  margin matches that in the thread details */
   margin-top: 12px;
 }
+
+.threadContainer :global(.cord-component.cord-v2.cord-message) {
+  cursor: pointer;
+  padding-bottom: 0;
+}
