@@ -11,6 +11,7 @@ import { useParams, useRouter } from 'next/navigation';
 import styles from './support.module.css';
 import { PaginationTrigger } from '@/app/components/PaginationTrigger';
 import cx from 'classnames';
+import { forwardRef } from 'react';
 
 export default function Support({
   customerID,
@@ -59,6 +60,26 @@ export default function Support({
   );
 }
 
+const SupportMessageOptionButton = forwardRef(
+  function SupportMessageOptionButton(
+    props: betaV2.GeneralButtonProps,
+    ref: React.ForwardedRef<HTMLButtonElement>,
+  ) {
+    return (
+      <betaV2.Button
+        ref={ref}
+        {...props}
+        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          props.onClick?.(e);
+        }}
+      />
+    );
+  },
+);
+
 function SupportMessageMenu(props: betaV2.MenuProps) {
   const updatedProps = {
     ...props,
@@ -87,7 +108,7 @@ function CustomThread({
   return (
     <div
       className={styles.threadContainer}
-        onClick={() => router.push(`/support/${customerID}/${thread.id}`)}
+      onClick={() => router.push(`/support/${customerID}/${thread.id}`)}
     >
       <betaV2.Message
         message={thread.firstMessage}
@@ -96,6 +117,7 @@ function CustomThread({
           within: {
             OptionsMenu: {
               Menu: SupportMessageMenu,
+              Button: SupportMessageOptionButton,
             },
           },
         }}
