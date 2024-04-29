@@ -1,5 +1,5 @@
-import Content from '@/app/category/page';
+import ThreadList from '@/app/components/ThreadList';
 
 export default function App() {
-  return <Content />;
+  return <ThreadList />;
 }
