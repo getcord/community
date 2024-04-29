@@ -7,9 +7,10 @@ import {
   Facepile,
 } from '@cord-sdk/react';
 import { ThreadSummary } from '@cord-sdk/types';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import styles from './support.module.css';
 import { PaginationTrigger } from '@/app/components/PaginationTrigger';
+import cx from 'classnames';
 
 export default function Support({
   customerID,
@@ -18,6 +19,7 @@ export default function Support({
   customerID: string;
   customerName: string;
 }) {
+  const { threadID } = useParams();
   const { threads, loading, fetchMore, hasMore } = threadHooks.useThreads({
     filter: {
       groupID: customerID,
@@ -26,7 +28,11 @@ export default function Support({
   });
 
   return (
-    <div className={styles.supportChatContainer}>
+    <div
+      className={cx(styles.supportChatContainer, {
+        [styles.threadOpen]: threadID,
+      })}
+    >
       <div className={styles.header}>
         <h3>{customerName}</h3>
       </div>

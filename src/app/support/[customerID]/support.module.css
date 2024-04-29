@@ -3,6 +3,12 @@
   height: calc(100vh - 80px);
 }
 
+@media (max-width: 1024px) {
+  .threadOpen {
+    display: none;
+  }
+}
+
 .header {
   grid-area: header;
   border-bottom: 1px solid var(--cord-grey);
