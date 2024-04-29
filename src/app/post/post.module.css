@@ -123,12 +123,12 @@
 }
 
 /* for betaV2 thread */
-.container :global(.cord-component.cord-v2.cord-thread) {
+.container :global(.cord-v2.cord-thread) {
   border: none;
 }
 
 /* The SSR and client side rendered thread need to match, so using the variables from above */
-.container :global(.cord-component.cord-v2.cord-message:first-child) {
+.container :global(.cord-v2.cord-message:first-child) {
   border-radius: var(--thread-border-radius);
   padding-bottom: var(--thread-padding-bottom);
   margin-bottom: var(--thread-margin-bottom);
@@ -136,7 +136,7 @@
   animation: fadeBackground 3s ease-in-out;
 }
 
-.container :global(.cord-component.cord-v2 .cord-message) {
+.container :global(.cord-v2.cord-message) {
   margin-top: 8px;
   border-bottom: var(--thread-message-border-bottom);
 
@@ -169,7 +169,7 @@
 }
 
 .usernameContainer {
-  display:flex;
+  display: flex;
   flex-direction: row;
   align-items: center;
   gap: 4px;

@@ -50,7 +50,7 @@
   margin-top: 12px;
 }
 
-.threadContainer :global(.cord-component.cord-v2.cord-message) {
+.threadContainer :global(.cord-v2.cord-message) {
   cursor: pointer;
   padding-bottom: 0;
 }

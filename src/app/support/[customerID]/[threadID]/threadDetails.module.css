@@ -48,6 +48,6 @@
   border-top: 1px solid var(--cord-grey);
 }
 
-.drawer :global(.cord-component.cord-v2.cord-thread) {
+.drawer :global(.cord-v2.cord-thread) {
   border: none;
 }
