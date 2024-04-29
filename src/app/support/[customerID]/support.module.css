@@ -44,7 +44,7 @@
   cursor: pointer;
 }
 
-.supportChatContainer :global(.cord-component .cord-composer) {
+.supportChatContainer :global(.cord-v2 .cord-composer) {
   grid-area: composer;
   /*  margin matches that in the thread details */
   margin-top: 12px;

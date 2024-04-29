@@ -86,7 +86,7 @@
   font-weight: bold;
 }
 
-.serverNameAndTimestamp :global(.cord-component.cord-timestamp) {
+.serverNameAndTimestamp :global(.cord-v2.cord-timestamp) {
   color: var(--cord-grey-dark);
 }
 .serverComposerContainer {
@@ -143,8 +143,8 @@
   padding-bottom: var(--thread-message-padding-bottom);
 }
 
-.container :global(.cord-composer.cord-component),
-.container :global(.cord-thread-seen-by-container.cord-component) {
+.container :global(.cord-v2.cord-composer),
+.container :global(.cord-v2.cord-thread-seen-by-container) {
   margin-top: 12px;
 }
 
@@ -156,15 +156,13 @@
   padding: 2px;
 }
 
-.markedAsAnswered:global(.cord-component .cord-menu-item-button),
-.markedAsAnswered:global(.cord-component .cord-menu-item-button .cord-label) {
+.markedAsAnswered:global(.cord-v2 .cord-menu-item-button),
+.markedAsAnswered:global(.cord-v2 .cord-menu-item-button .cord-label) {
   color: var(--cord-green);
 }
 
-.deleteActionMenuItem:global(.cord-component .cord-menu-item-button),
-.deleteActionMenuItem:global(
-    .cord-component .cord-menu-item-button .cord-label
-  ) {
+.deleteActionMenuItem:global(.cord-v2 .cord-menu-item-button),
+.deleteActionMenuItem:global(.cord-v2 .cord-menu-item-button .cord-label) {
   color: var(--cord-alert);
 }
 

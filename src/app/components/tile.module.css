@@ -99,7 +99,7 @@
   max-width: 800px;
 }
 
-.column:global(.cord-component.cord-timestamp) {
+.column:global(.cord-v2.cord-timestamp) {
   color: var(--cord-grey-dark);
 }
 .replies {

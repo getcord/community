@@ -53,7 +53,7 @@
   min-width: 400px;
 }
 
-.inputContainer :global(.cord-component.cord-composer) {
+.inputContainer :global(.cord-v2.cord-composer) {
   min-height: 150px;
   max-height: 300px;
 }
