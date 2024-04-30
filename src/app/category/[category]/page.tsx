@@ -9,14 +9,14 @@ type Props = {
   params: { category: Category };
 };
 
-// All channels allow discussion for logged in users except
+// All categories allow discussion for logged in users except
 // `announcements` which requires the user to be an admin
-async function getAllowDiscussion(channelName: Category) {
+async function getAllowDiscussion(category: Category) {
   const { userID, isAdmin } = await getUser();
   if (!userID) {
     return false;
   }
-  if (channelName === 'announcements') {
+  if (category === 'announcements') {
     return isAdmin ?? false;
   }
   return true;
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function ChannelDisplay({ params }: Props) {
+export default async function PostsList({ params }: Props) {
   const allowDiscussion = await getAllowDiscussion(params.category);
 
   return (
