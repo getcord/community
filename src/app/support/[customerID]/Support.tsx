@@ -12,6 +12,8 @@ import styles from './support.module.css';
 import { PaginationTrigger } from '@/app/components/PaginationTrigger';
 import cx from 'classnames';
 import { createContext, forwardRef, useContext } from 'react';
+import React from 'react';
+import DateDivider from '@/app/components/DateDivider';
 
 export default function Support({
   customerID,
@@ -28,6 +30,33 @@ export default function Support({
     sortDirection: 'descending',
   });
 
+  const threadsToRender = threads.map((thread, index) => {
+    if (index < 1) {
+      return (
+        <CustomThread key={thread.id} thread={thread} customerID={customerID} />
+      );
+    }
+
+    const lastMessageTimestamp = threads[index - 1].firstMessage
+      ?.createdTimestamp
+      ? threads[index - 1].firstMessage?.createdTimestamp
+      : null;
+
+    const isDifferentDay =
+      lastMessageTimestamp &&
+      thread.firstMessage?.createdTimestamp.getDate() !==
+        lastMessageTimestamp.getDate();
+
+    return (
+      <React.Fragment key={thread.id}>
+        {isDifferentDay ? (
+          <DateDivider timestamp={lastMessageTimestamp} />
+        ) : null}
+        <CustomThread thread={thread} customerID={customerID} />
+      </React.Fragment>
+    );
+  });
+
   return (
     <div
       className={cx(styles.supportChatContainer, {
@@ -38,13 +67,7 @@ export default function Support({
         <h3>{customerName}</h3>
       </div>
       <div className={styles.threads}>
-        {threads.map((thread) => (
-          <CustomThread
-            key={thread.id}
-            thread={thread}
-            customerID={customerID}
-          />
-        ))}
+        {threadsToRender}
         <PaginationTrigger
           loading={loading}
           hasMore={hasMore}

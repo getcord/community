@@ -1,0 +1,22 @@
+.container {
+  width: 100%;
+  position: relative;
+  margin: 20px 0;
+}
+
+.line {
+  border-bottom: 1px solid var(--cord-grey);
+}
+
+.pill {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  background-color: var(--cord-white);
+  padding: 6px 16px;
+  border: 1px solid var(--cord-grey);
+  width: fit-content;
+  border-radius: 99px;
+  font-size: 13px;
+}
