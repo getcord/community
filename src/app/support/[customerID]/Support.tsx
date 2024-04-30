@@ -155,6 +155,10 @@ function MessageLayout(props: betaV2.MessageLayoutProps) {
       {props.messageContent}
       {props.reactions}
 
+      {/* Since optionMenu lives within containers in MessageLayout and the containers
+      aren't currently exposed in layoutProps - we have to create our own custom containers, 
+      and pass in the cord classnames to maintain the default positioning of the optionsMenu
+      */}
       <div className={'cord-options-menu-trigger'}>
         <div className={'cord-message-options-buttons'}>
           {props.optionsMenu}
