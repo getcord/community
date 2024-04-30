@@ -40,10 +40,13 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.8rem;
   color: var(--cord-grey-dark);
   padding-left: 36px;
   cursor: pointer;
+}
+
+.threadReplies span {
+  font-size: 0.8rem;
 }
 
 .supportChatContainer :global(.cord-v2 .cord-composer) {
@@ -72,7 +75,6 @@
 
 .threadContainer.hasReplies :global(.cord-v2.cord-message) {
   grid-template-rows: auto auto auto auto;
-
   grid-template-areas:
     'avatar authorName timestamp sentViaIcon . optionsMenu'
     '. messageContent messageContent messageContent messageContent optionsMenu'
