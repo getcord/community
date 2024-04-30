@@ -82,3 +82,7 @@
 .threadDetailsContainer {
   flex: 1;
 }
+
+.container :global(.cord-component.cord-component-composer) {
+  margin: 16px;
+}
