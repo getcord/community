@@ -147,13 +147,25 @@ function MessageLayout(props: betaV2.MessageLayoutProps) {
   const replyMessage = `${numOfReplies} ${
     numOfReplies === 1 ? 'reply' : 'replies'
   }`;
+
+  const {
+    avatar,
+    authorName,
+    timestamp,
+    messageContent,
+    reactions,
+    optionsMenu,
+    emojiPicker,
+    ...rest
+  } = props;
+
   return (
-    <div {...props}>
-      {props.avatar}
-      {props.authorName}
-      {props.timestamp}
-      {props.messageContent}
-      {props.reactions}
+    <div {...rest}>
+      {avatar}
+      {authorName}
+      {timestamp}
+      {messageContent}
+      {reactions}
 
       {/* Since optionMenu lives within containers in MessageLayout and the containers
       aren't currently exposed in layoutProps - we have to create our own custom containers, 
@@ -161,8 +173,8 @@ function MessageLayout(props: betaV2.MessageLayoutProps) {
       */}
       <div className={'cord-options-menu-trigger'}>
         <div className={'cord-message-options-buttons'}>
-          {props.optionsMenu}
-          {props.emojiPicker}
+          {optionsMenu}
+          {emojiPicker}
         </div>
       </div>
       {numOfReplies > 0 && (
