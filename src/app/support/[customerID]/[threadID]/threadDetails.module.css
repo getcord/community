@@ -5,6 +5,7 @@
   height: 100%;
   width: 100%;
   border-left: 1px solid var(--cord-grey);
+  flex: 1;
 }
 
 @media (max-width: 1024px) {
