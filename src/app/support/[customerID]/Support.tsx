@@ -138,7 +138,10 @@ export const ThreadFirstMessagContext = createContext<ThreadFirstMessageType>({
   numOfReplies: 0,
 });
 
-function MessageLayout(props: betaV2.MessageLayoutProps) {
+const MessageLayout = forwardRef(function MessageLayout(
+  props: betaV2.MessageLayoutProps,
+  ref: React.ForwardedRef<HTMLDivElement>,
+) {
   const { thread, numOfReplies } = useContext(ThreadFirstMessagContext);
   if (!thread) {
     return null;
@@ -160,7 +163,7 @@ function MessageLayout(props: betaV2.MessageLayoutProps) {
   } = props;
 
   return (
-    <div {...rest}>
+    <div {...rest} ref={ref}>
       {avatar}
       {authorName}
       {timestamp}
@@ -185,4 +188,4 @@ function MessageLayout(props: betaV2.MessageLayoutProps) {
       )}
     </div>
   );
-}
+});
