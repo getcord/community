@@ -51,7 +51,20 @@
   margin-top: 12px;
 }
 
-.threadContainer :global(.cord-v2.cord-message) {
+.threadContainer {
+  transition: background-color 0.2s;
+  padding: 8px;
   cursor: pointer;
-  padding-bottom: 0;
+}
+
+.threadContainer :global(.cord-v2.cord-message) {
+  padding: 0;
+}
+
+.threadContainer:hover {
+  background-color: var(--cord-grey-light);
+}
+
+.threadContainer :global(.cord-v2.cord-message) {
+  background-color: inherit;
 }
