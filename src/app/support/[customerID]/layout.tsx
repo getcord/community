@@ -51,7 +51,7 @@ export default async function Layout({
   return (
     <div className={styles.container}>
       <Support customerID={customerID} customerName={customerName} />
-      <div>{children}</div>
+      <div className={styles.threadDetailsContainer}>{children}</div>
     </div>
   );
 }

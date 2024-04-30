@@ -78,3 +78,7 @@
     '. messageContent messageContent messageContent messageContent optionsMenu'
     '. replies replies replies replies .';
 }
+
+.threadDetailsContainer {
+  flex: 1;
+}
