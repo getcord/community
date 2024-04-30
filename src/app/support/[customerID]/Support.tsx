@@ -11,7 +11,7 @@ import { useParams, useRouter } from 'next/navigation';
 import styles from './support.module.css';
 import { PaginationTrigger } from '@/app/components/PaginationTrigger';
 import cx from 'classnames';
-import { forwardRef } from 'react';
+import { createContext, forwardRef, useContext } from 'react';
 
 export default function Support({
   customerID,
@@ -100,28 +100,67 @@ function CustomThread({
     return <></>;
   }
 
-  const numOfReplies = thread.total - 1;
+  const numOfReplies = thread?.total - 1;
+
+  return (
+    <ThreadFirstMessagContext.Provider value={{ thread, numOfReplies }}>
+      <div
+        className={cx(styles.threadContainer, {
+          [styles.hasReplies]: numOfReplies > 0,
+        })}
+        onClick={() => router.push(`/support/${customerID}/${thread.id}`)}
+      >
+        <betaV2.Message
+          message={thread.firstMessage}
+          showThreadOptions
+          replace={{
+            within: {
+              OptionsMenu: {
+                Menu: SupportMessageMenu,
+                Button: SupportMessageOptionButton,
+              },
+            },
+            MessageLayout,
+          }}
+        />
+      </div>
+    </ThreadFirstMessagContext.Provider>
+  );
+}
+
+type ThreadFirstMessageType = {
+  thread: ThreadSummary | undefined;
+  numOfReplies: number;
+};
+
+export const ThreadFirstMessagContext = createContext<ThreadFirstMessageType>({
+  thread: undefined,
+  numOfReplies: 0,
+});
+
+function MessageLayout(props: betaV2.MessageLayoutProps) {
+  const { thread, numOfReplies } = useContext(ThreadFirstMessagContext);
+  if (!thread) {
+    return null;
+  }
+
   const replyMessage = `${numOfReplies} ${
     numOfReplies === 1 ? 'reply' : 'replies'
   }`;
-
   return (
-    <div
-      className={styles.threadContainer}
-      onClick={() => router.push(`/support/${customerID}/${thread.id}`)}
-    >
-      <betaV2.Message
-        message={thread.firstMessage}
-        showThreadOptions
-        replace={{
-          within: {
-            OptionsMenu: {
-              Menu: SupportMessageMenu,
-              Button: SupportMessageOptionButton,
-            },
-          },
-        }}
-      />
+    <div {...props}>
+      {props.avatar}
+      {props.authorName}
+      {props.timestamp}
+      {props.messageContent}
+      {props.reactions}
+
+      <div className={'cord-options-menu-trigger'}>
+        <div className={'cord-message-options-buttons'}>
+          {props.optionsMenu}
+          {props.emojiPicker}
+        </div>
+      </div>
       {numOfReplies > 0 && (
         <div className={styles.threadReplies}>
           <Facepile users={thread.repliers} />

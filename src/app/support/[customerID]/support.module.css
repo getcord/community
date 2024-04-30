@@ -36,6 +36,7 @@
 }
 
 .threadReplies {
+  grid-area: replies;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -67,4 +68,13 @@
 
 .threadContainer :global(.cord-v2.cord-message) {
   background-color: inherit;
+}
+
+.threadContainer.hasReplies :global(.cord-v2.cord-message) {
+  grid-template-rows: auto auto auto auto;
+
+  grid-template-areas:
+    'avatar authorName timestamp sentViaIcon . optionsMenu'
+    '. messageContent messageContent messageContent messageContent optionsMenu'
+    '. replies replies replies replies .';
 }
