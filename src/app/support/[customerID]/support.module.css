@@ -79,7 +79,8 @@
   grid-template-rows: 20px auto auto auto;
   grid-template-areas:
     'avatar authorName timestamp sentViaIcon . optionsMenu'
-    '. messageContent messageContent messageContent messageContent optionsMenu'
+    '. messageContent messageContent messageContent messageContent .'
+    '. reactions reactions reactions reactions .'
     '. replies replies replies replies .';
 }
 
