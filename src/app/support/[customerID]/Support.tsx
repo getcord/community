@@ -193,15 +193,13 @@ const MessageLayout = forwardRef(function MessageLayout(
       {messageContent}
       {reactions}
 
-      {/* Since optionMenu lives within containers in MessageLayout and the containers
-      aren't currently exposed in layoutProps - we have to create our own custom containers, 
+      {/* Since optionMenu lives within a container in MessageLayout and the container
+      isn't currently exposed in layoutProps - we have to create our own custom container, 
       and pass in the cord classnames to maintain the default positioning of the optionsMenu
       */}
-      <div className={'cord-options-menu-trigger'}>
-        <div className={'cord-message-options-buttons'}>
-          {optionsMenu}
-          {emojiPicker}
-        </div>
+      <div className={'cord-message-options-buttons'}>
+        {optionsMenu}
+        {emojiPicker}
       </div>
       {numOfReplies > 0 && (
         <div className={styles.threadReplies}>
