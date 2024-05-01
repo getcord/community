@@ -71,14 +71,21 @@
 
 .threadContainer :global(.cord-v2.cord-message) {
   background-color: inherit;
+  grid-template-columns: auto auto auto auto 1fr auto;
+  align-items: flex-start;
 }
 
 .threadContainer.hasReplies :global(.cord-v2.cord-message) {
-  grid-template-rows: auto auto auto auto;
+  grid-template-rows: 20px auto auto auto;
   grid-template-areas:
     'avatar authorName timestamp sentViaIcon . optionsMenu'
     '. messageContent messageContent messageContent messageContent optionsMenu'
     '. replies replies replies replies .';
+}
+
+.threadContainer :global(.cord-v2.cord-avatar-container) {
+  height: 36px;
+  width: 36px;
 }
 
 .container :global(.cord-component.cord-component-composer) {
