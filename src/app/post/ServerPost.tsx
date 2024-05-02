@@ -134,6 +134,7 @@ function ServerThread({
             authorIsAdmin={adminMembersSet.has(message.authorID)}
           />
           <CordMessageContent
+            messageID={message.id}
             edited={false}
             attachments={message.attachments}
             content={message.content}
