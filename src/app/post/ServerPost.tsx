@@ -129,7 +129,7 @@ function ServerThread({
         <div key={message.id} className={styles.serverMessage}>
           <ServerAuthorTimestamp
             user={users[message.authorID]}
-            timestamp={message.updatedTimestamp ?? message.createdTimestamp}
+            timestamp={message.createdTimestamp}
             isAnswer={metadata.answerMessageID === message.id}
             authorIsAdmin={adminMembersSet.has(message.authorID)}
           />
