@@ -136,7 +136,9 @@ function ServerThread({
           <CordMessageContent
             messageID={message.id}
             edited={false}
-            attachments={message.attachments}
+            attachments={message.attachments.filter(
+              (attachment) => attachment.type != 'link_preview',
+            )}
             content={message.content}
             className={styles.serverMessageContent}
             authorData={users[message.authorID]}
