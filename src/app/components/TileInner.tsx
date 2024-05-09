@@ -84,10 +84,7 @@ export default function TileInner({
           <betaV2.Timestamp
             type="message"
             className={styles.column}
-            value={
-              thread.lastMessage?.updatedTimestamp ??
-              thread.lastMessage?.createdTimestamp
-            }
+            value={thread.lastMessage?.createdTimestamp}
           />
         </div>
       </div>
