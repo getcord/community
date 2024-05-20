@@ -5,36 +5,107 @@ import {
   ServerGroupData,
   ThreadMessageAddedWebhookPayload,
   WebhookWrapperProperties,
+  EntityMetadata,
+  CoreMessageData,
+  CoreThreadData,
+  ClientUserData,
 } from '@cord-sdk/types';
-
 import { parseWebhookBody, validateWebhookSignature } from '@cord-sdk/server';
-import { CORD_SECRET, EVERYONE_GROUP_ID } from '@/consts';
+import {
+  COMMUNITY_SEARCH_INDEX,
+  CORD_SECRET,
+  EVERYONE_GROUP_ID,
+} from '@/consts';
 import { addContentToClack } from '@/lib/clack';
 import { isCategory } from '@/utils';
 import { fetchCordRESTApi } from '@/app/fetchCordRESTApi';
+import { createEmbedding } from '@/app/helpers/search/openai';
+import { getClientUserById } from '@/app/helpers/user';
+import { deleteURLFromIndex, storeChunk } from '@/app/helpers/search/api';
 
-async function sendNotificationToClack(
-  event: ThreadMessageAddedWebhookPayload,
-) {
-  const isFirstMessage = event.thread.total === 1;
-  const isCommunityMessage = event.groupID === EVERYONE_GROUP_ID;
-  const author = event.author.name;
-  const authorID = event.author.id;
-  const thread = event.thread;
-  const message = event.message;
+export function getCategoriesString(metadata: EntityMetadata): string {
+  const categories = Object.keys(metadata).filter(
+    (key) => metadata[key] && isCategory(key),
+  );
+  return categories.join(', ');
+}
+
+export async function fetchThreadMessagesWithAuthors(
+  threadID: string,
+): Promise<CoreMessageData[]> {
+  const messagesData = await fetchCordRESTApi<CoreMessageData[]>(
+    `threads/${threadID}/messages?sortDirection=ASCENDING`,
+    'GET',
+  );
+  if (!messagesData) {
+    return [];
+  }
+
+  const messagesWithAuthor = [];
+  const usersIdNameMap = new Map();
+  for (const message of messagesData) {
+    if (!usersIdNameMap.has(message.authorID)) {
+      const user = await getClientUserById(message.authorID);
+      usersIdNameMap.set(message.authorID, user?.name || '');
+    }
+    messagesWithAuthor.push({
+      ...message,
+      author: usersIdNameMap.get(message.authorID),
+    });
+  }
+  return messagesWithAuthor;
+}
+
+export async function createOrUpdateSearchIndexForThread({
+  thread,
+  messages,
+  replaceExisting,
+}: {
+  thread: CoreThreadData;
+  messages: (CoreMessageData & { author?: Pick<ClientUserData, 'name'> })[];
+  replaceExisting: boolean;
+}) {
+  if (replaceExisting) {
+    await deleteURLFromIndex(COMMUNITY_SEARCH_INDEX, thread.url);
+  }
+  const categories = `categories: ${getCategoriesString(thread.metadata)}`;
+  const title = `title: ${thread.name}`;
+  const conversationArray = [categories, title];
+
+  messages.forEach((message) => {
+    conversationArray.push(
+      `${message.author}: ${message.plaintext.replace(/\n/g, ' ')}`,
+    );
+  });
+
+  const chunk = conversationArray.join('\n');
+  const embedding = createEmbedding(chunk);
+  await storeChunk(
+    COMMUNITY_SEARCH_INDEX,
+    chunk,
+    embedding,
+    thread.name,
+    thread.url,
+  );
+}
+
+/*
+When a new message is created in community, we want to:
+- Send a notification in clack
+- Create a new or update the existing post in our vector db - used for search
+*/
+async function onNewMessageAdded(event: ThreadMessageAddedWebhookPayload) {
+  const { thread, message, groupID, author } = event;
+  const isFirstMessage = thread.total === 1;
+  const isCommunityMessage = groupID === EVERYONE_GROUP_ID;
+
   let action = '';
+  const categoriesString = getCategoriesString(thread.metadata);
+  let messages = [];
   if (isFirstMessage) {
     if (isCommunityMessage) {
-      const metadata = thread.metadata;
-      const categories = [];
-      for (const key in metadata) {
-        if (metadata[key] && isCategory(key)) {
-          categories.push(key);
-        }
-      }
-      action = `created a new post [${thread.id}] in ${categories.join(
-        ', ',
-      )} : ${thread.name}.`;
+      action = `created a new post [${thread.id}] in ${categoriesString} : ${thread.name}.`;
+      messages.push({ ...message, author: message.author.displayName });
     } else {
       const customerGroup = await fetchCordRESTApi<ServerGroupData>(
         `groups/${thread.groupID}`,
@@ -43,7 +114,9 @@ async function sendNotificationToClack(
     }
   } else {
     action = `replied [${message.id}].`;
+    messages = await fetchThreadMessagesWithAuthors(thread.id);
   }
+
   const url = isCommunityMessage
     ? `${thread.url}`
     : `${thread.url}/${thread.id}`;
@@ -52,7 +125,7 @@ async function sendNotificationToClack(
       type: MessageNodeType.PARAGRAPH,
       children: [
         {
-          text: `${author} [${authorID}] `,
+          text: `${author.name} [${author.id}] `,
           bold: true,
         },
         { text: `${action}` },
@@ -68,6 +141,11 @@ async function sendNotificationToClack(
     },
   ];
   await addContentToClack(event.threadID, content);
+  await createOrUpdateSearchIndexForThread({
+    thread,
+    messages,
+    replaceExisting: !isFirstMessage,
+  });
 }
 
 /**
@@ -93,7 +171,7 @@ export async function POST(request: NextRequest) {
   }
 
   const threadData = data as WebhookWrapperProperties<'thread-message-added'>;
-  await sendNotificationToClack(threadData.event);
+  await onNewMessageAdded(threadData.event);
 
   return NextResponse.json({ success: true }, { status: 200 });
 }
