@@ -1,6 +1,5 @@
 import { fetchCordRESTClientApi } from '@/app/fetchCordRESTApi';
 import { Category } from '@/app/types';
-import { DEFAULT_SEARCH_LIMIT } from '@/consts';
 import { ClientThreadData } from '@cord-sdk/types';
 
 export type SingleResultData = {
@@ -79,9 +78,12 @@ export async function parseResultsFromCommunity(
       const threadID = extractThreadIDFromURL(url);
       let content = '';
       if (threadID) {
+        // Just call the the thread api to get first message rather
+        // than trying to break down and figure our which part of the
+        // conversation is the main question and what's not just 'sounds good, thanks'
+        // so we can have render a useful preview in the FE
         content = (await getFirstMessageInThread(threadID)) ?? '';
       }
-
       parsedData.push({
         title,
         url,
