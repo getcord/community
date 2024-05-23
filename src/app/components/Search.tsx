@@ -2,11 +2,9 @@ import type { ChangeEvent, KeyboardEvent } from 'react';
 import { useCallback, useRef, useState } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import styles from './search.module.css';
-import cx from 'classnames';
 
 export default function Search() {
   const [searchValue, setSearchValue] = useState('');
-  const [results, setResults] = useState([]);
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
 
   const search = useCallback(async (searchTerm: string) => {
@@ -22,14 +20,12 @@ export default function Search() {
 
     const data = await res.json();
     console.log({ data });
-    setResults(data);
   }, []);
 
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const val = e.target.value;
       setSearchValue(val);
-      setResults([]);
       if (searchTimeoutRef.current) {
         clearTimeout(searchTimeoutRef.current);
       }
@@ -39,7 +35,7 @@ export default function Search() {
         }
       }, 300);
     },
-    [setSearchValue, setResults, search],
+    [setSearchValue, search],
   );
 
   const onKeyUp = useCallback(
