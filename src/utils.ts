@@ -66,3 +66,10 @@ export function slugify(title: string) {
 export function isCategory(value: string): value is Category {
   return CATEGORIES.includes(value.toLowerCase() as Category);
 }
+
+export function getCategoriesString(metadata: EntityMetadata): string {
+  const categories = Object.keys(metadata).filter(
+    (key) => metadata[key] && isCategory(key),
+  );
+  return categories.join(', ');
+}
