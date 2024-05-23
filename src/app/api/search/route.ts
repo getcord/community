@@ -29,15 +29,12 @@ async function getSearchResultsFromIndex({
       }),
     },
   );
-  if (!response.ok) {
-    const errorResponse = await response.json();
-    const errorMessage = errorResponse.error || response.statusText;
-    console.error(`Failed to fetch: ${errorMessage}`);
-    return { index, results: undefined };
+  if (response.ok) {
+    const results = await response.json();
+    return { index, results };
   }
 
-  const results = await response.json();
-  return { index, results };
+  return { index, results: undefined };
 }
 
 export async function GET(request: NextRequest) {

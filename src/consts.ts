@@ -17,6 +17,3 @@ export const THREAD_INITIAL_FETCH_COUNT = 100;
 export const COMMUNITY_SEARCH_INDEX = 'community';
 export const DOCS_SEARCH_INDEX = 'cord';
 export const DEFAULT_SEARCH_LIMIT = 7;
-// Fetching way more than needed so we can exclude
-// community.com results
-export const DOCS_SEARCH_LIMIT = 50;
