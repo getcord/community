@@ -54,8 +54,8 @@ export async function saveSearchData(
     }
 
     // Make sure to include categories, post title and authors as searchable elements.
-    const categories = `categories: ${getCategoriesString(thread.metadata)}`;
-    const title = `title: ${thread.name}`;
+    const categories = `Categories: ${getCategoriesString(thread.metadata)}`;
+    const title = `Title: ${thread.name}`;
     const conversationArray = [categories, title];
 
     // breaks down the cord message object to readable plaintext string
