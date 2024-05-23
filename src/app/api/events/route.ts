@@ -1,73 +1,29 @@
 import { NextResponse, NextRequest } from 'next/server';
 import {
-  MessageContent,
-  MessageNodeType,
-  ServerGroupData,
   ThreadMessageAddedWebhookPayload,
   WebhookWrapperProperties,
 } from '@cord-sdk/types';
 
 import { parseWebhookBody, validateWebhookSignature } from '@cord-sdk/server';
 import { CORD_SECRET, EVERYONE_GROUP_ID } from '@/consts';
-import { addContentToClack } from '@/lib/clack';
-import { isCategory } from '@/utils';
-import { fetchCordRESTApi } from '@/app/fetchCordRESTApi';
+import { sendNotificationToClack } from '@/app/api/events/sendNotificationToClack';
 
-async function sendNotificationToClack(
-  event: ThreadMessageAddedWebhookPayload,
-) {
-  const isFirstMessage = event.thread.total === 1;
-  const isCommunityMessage = event.groupID === EVERYONE_GROUP_ID;
-  const author = event.author.name;
-  const authorID = event.author.id;
-  const thread = event.thread;
-  const message = event.message;
-  let action = '';
-  if (isFirstMessage) {
-    if (isCommunityMessage) {
-      const metadata = thread.metadata;
-      const categories = [];
-      for (const key in metadata) {
-        if (metadata[key] && isCategory(key)) {
-          categories.push(key);
-        }
-      }
-      action = `created a new post [${thread.id}] in ${categories.join(
-        ', ',
-      )} : ${thread.name}.`;
-    } else {
-      const customerGroup = await fetchCordRESTApi<ServerGroupData>(
-        `groups/${thread.groupID}`,
-      );
-      action = `asked a new question [${thread.id}] in ${customerGroup?.name}.`;
-    }
-  } else {
-    action = `replied [${message.id}].`;
-  }
-  const url = isCommunityMessage
-    ? `${thread.url}`
-    : `${thread.url}/${thread.id}`;
-  const content: MessageContent = [
-    {
-      type: MessageNodeType.PARAGRAPH,
-      children: [
-        {
-          text: `${author} [${authorID}] `,
-          bold: true,
-        },
-        { text: `${action}` },
-      ],
-    },
-    {
-      type: MessageNodeType.PARAGRAPH,
-      children: [{ text: url }],
-    },
-    {
-      type: MessageNodeType.PARAGRAPH,
-      children: [{ text: message.plaintext }],
-    },
-  ];
-  await addContentToClack(event.threadID, content);
+/*
+When a new message is created in community, we want to:
+- Send a notification in clack
+- TODO: Create a new or update the existing post in our vector db - used for search
+*/
+async function onNewMessageAdded(event: ThreadMessageAddedWebhookPayload) {
+  const { thread, message, groupID, author } = event;
+  const isFirstMessage = thread.total === 1;
+  const isCommunityMessage = groupID === EVERYONE_GROUP_ID;
+  await sendNotificationToClack(
+    isFirstMessage,
+    isCommunityMessage,
+    thread,
+    message,
+    author,
+  );
 }
 
 /**
@@ -93,7 +49,7 @@ export async function POST(request: NextRequest) {
   }
 
   const threadData = data as WebhookWrapperProperties<'thread-message-added'>;
-  await sendNotificationToClack(threadData.event);
+  await onNewMessageAdded(threadData.event);
 
   return NextResponse.json({ success: true }, { status: 200 });
 }
