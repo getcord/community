@@ -79,9 +79,12 @@ export async function parseResultsFromCommunity(
       const threadID = extractThreadIDFromURL(url);
       let content = '';
       if (threadID) {
+        // Just call the the thread api to get first message rather
+        // than trying to break down and figure our which part of the
+        // conversation is the main question and what's not just 'sounds good, thanks'
+        // so we can have render a useful preview in the FE
         content = (await getFirstMessageInThread(threadID)) ?? '';
       }
-
       parsedData.push({
         title,
         url,
@@ -100,12 +103,19 @@ export function parseResultsFromCord(results: any[]): SingleResultData[] {
   for (const result of results) {
     if (assertResultType(result)) {
       const { chunk, title, url } = result;
+      // Since we're filtering stuff out below, make sure we
+      // stop doing that as soon as we've gotten the size we want
       if (parsedData.length >= DEFAULT_SEARCH_LIMIT) {
         return parsedData;
       }
 
       // TODO: convert chunk markdown to string - remove images, convert links
       // to proper html tags etc
+
+      // only return results if they are not coming from community since the current
+      // data we have in the 'cord' index contains everything under cord.com, we also
+      // have community results - so make sure to ignore them as we're getting them
+      // back from the 'community' index anyway
       if (result.url && !result.url.includes(COMMUNITY_HOST_NAME)) {
         parsedData.push({
           url: url,
