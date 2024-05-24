@@ -59,9 +59,7 @@ export async function saveSearchData(
       const title = `Title: ${thread.name}`;
       const conversationArray = [categories, title];
 
-      // breaks down the cord message object to readable plaintext string
-      // that we can easily convert to a vector. Make sure to not have weird
-      // characters or symbols to make it clear to the llm what's searchable.
+      // Create plaintext conversation from message content and author
       messages.forEach((message) => {
         conversationArray.push(
           `${message.authorDisplayName}: ${message.plaintext.replace(
@@ -79,8 +77,11 @@ export async function saveSearchData(
         thread.name,
         thread.url,
       );
-    } catch (_) {
-      // do nothing
+    } catch (e) {
+      console.log(
+        `Unable to save search data for thread ${thread.id} and message ${message.id}`,
+        e,
+      );
     }
   }
 }
