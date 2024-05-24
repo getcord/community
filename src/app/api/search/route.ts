@@ -9,9 +9,11 @@ import { NextRequest, NextResponse } from 'next/server';
 async function getSearchResultsFromIndex({
   index,
   embedding,
+  limit,
 }: {
   index: string;
   embedding: number[];
+  limit: number;
 }) {
   const response = await fetch(
     `${process.env.SEARCH_DATA_API_HOST}/api/chatContext`,
@@ -23,8 +25,8 @@ async function getSearchResultsFromIndex({
       body: JSON.stringify({
         secret: process.env.SEARCH_DATA_API_SECRET,
         index,
-        limit: DEFAULT_SEARCH_LIMIT,
         embedding,
+        limit,
       }),
     },
   );
@@ -48,10 +50,12 @@ export async function GET(request: NextRequest) {
     getSearchResultsFromIndex({
       embedding: searchTermEmbedding,
       index: COMMUNITY_SEARCH_INDEX,
+      limit: DEFAULT_SEARCH_LIMIT,
     }),
     getSearchResultsFromIndex({
       embedding: searchTermEmbedding,
       index: DOCS_SEARCH_INDEX,
+      limit: DEFAULT_SEARCH_LIMIT,
     }),
   ]);
 
