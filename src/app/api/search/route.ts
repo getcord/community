@@ -8,8 +8,7 @@ import { createEmbedding } from '@/lib/search/openai';
 import { NextRequest, NextResponse } from 'next/server';
 import {
   SingleResultData,
-  parseResultsFromCommunity,
-  parseResultsFromCord,
+  parseSearchResuls,
 } from '@/app/api/search/parseSearchResults';
 
 async function getSearchResultsFromIndex({
@@ -43,12 +42,7 @@ async function getSearchResultsFromIndex({
   if (response.ok) {
     const data = await response.json();
     if (Array.isArray(data)) {
-      if (index === COMMUNITY_SEARCH_INDEX) {
-        results = await parseResultsFromCommunity(data);
-      }
-      if (index === DOCS_SEARCH_INDEX) {
-        results = parseResultsFromCord(data);
-      }
+      results = await parseSearchResuls(index, data);
     }
   }
 
