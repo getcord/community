@@ -1,6 +1,6 @@
 .searchContainer {
   flex: 1;
-  margin: 0 28px;
+  margin: 0 56px;
   position: relative;
   background-color: transparent;
   z-index: 4;
@@ -17,32 +17,28 @@
   display: flex;
   height: 100%;
   position: relative;
-  padding: 0 10px;
   border: 1px solid var(--cord-grey);
   border-radius: 20px;
   z-index: 2;
-  gap: 8px;
+  gap: 16px;
 }
 .inputContainer:focus-within {
-  box-shadow: 0 0 2px var(--cord-purple);
-  border: none;
+  border: 1px solid var(--cord-purple-highlight);
 }
 .inputContainer:focus-within .inputIcon {
   color: var(--cord-purple);
 }
 
 .inputIcon {
+  padding-left: 16px;
   color: var(--cord-grey-dark);
 }
 
 .input {
   border: none;
   outline: none;
-  isolation: isolate;
   flex: 1;
   height: -webkit-fill-available;
-  margin: 2px;
   background-color: inherit;
-  font-size: 14px;
   color: var(--color-grey);
 }
