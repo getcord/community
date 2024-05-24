@@ -9,7 +9,12 @@ export type SingleResultData = {
   content: string;
 };
 
-function assertResultType(result: any): true | undefined {
+type RawSearchResult = {
+  chunk: string;
+  url: string;
+  title: string;
+};
+function assertResultType(result: any): RawSearchResult | undefined {
   if (
     result &&
     typeof result === 'object' &&
@@ -21,8 +26,48 @@ function assertResultType(result: any): true | undefined {
     'title' in result &&
     typeof result.title === 'string'
   ) {
-    return true;
+    return result;
   }
+}
+export async function parseResultsFromCommunity(
+  results: any[],
+): Promise<SingleResultData[]> {
+  const parsedData = [];
+
+  for (const result of results) {
+    const typedResult = assertResultType(result);
+    if (typedResult) {
+      const { chunk, title, url } = typedResult;
+      const chunkArary = chunk.split('\n');
+      const categoriesString = chunkArary.find((content: string) =>
+        content.startsWith('Categories: '),
+      );
+      const categories = categoriesString
+        ? (categoriesString
+            .substring('Categories: '.length)
+            .split(', ') as Category[])
+        : undefined;
+
+      const threadID = extractThreadIDFromURL(url);
+      let content;
+      if (threadID) {
+        // Just call the thread api to get first message rather than relying
+        // on regex magic and hoping the messages are in correct order (we only
+        // do this only if there's no threadID available)
+        content = (await getFirstMessageInThread(threadID)) ?? '';
+      } else {
+        content = extractFirstMessageFromConversationChunk(chunk);
+      }
+
+      parsedData.push({
+        title,
+        url,
+        categories,
+        content,
+      });
+    }
+  }
+  return parsedData;
 }
 
 async function getFirstMessageInThread(
@@ -57,41 +102,18 @@ function extractThreadIDFromURL(url: string): string | undefined {
   return undefined;
 }
 
-export async function parseResultsFromCommunity(
-  results: any[],
-): Promise<SingleResultData[]> {
-  const parsedData = [];
+function extractFirstMessageFromConversationChunk(chunk: string): string {
+  const lines = chunk.split('\n');
+  const filteredLines = lines.filter(
+    (line) => !line.startsWith('Categories:') && !line.startsWith('Title:'),
+  );
 
-  for (const result of results) {
-    if (assertResultType(result)) {
-      const { chunk, title, url } = result;
-      const chunkArary = chunk.split('\n');
-      const categoriesString = chunkArary.find((content: string) =>
-        content.startsWith('Categories: '),
-      );
-      const categories = categoriesString
-        ? (categoriesString
-            .substring('Categories: '.length)
-            .split(', ') as Category[])
-        : undefined;
-
-      const threadID = extractThreadIDFromURL(url);
-      let content = '';
-      if (threadID) {
-        // Just call the the thread api to get first message rather
-        // than trying to break down and figure our which part of the
-        // conversation is the main question and what's not just 'sounds good, thanks'
-        // so we can have render a useful preview in the FE
-        content = (await getFirstMessageInThread(threadID)) ?? '';
-      }
-      parsedData.push({
-        title,
-        url,
-        categories,
-        content,
-      });
-    }
-  }
-
-  return parsedData;
+  // Remove author names (anything before the first colon followed by a space)
+  const messages = filteredLines.map((line) => {
+    const result = line.replace(/^[^:]*:\s*/gm, '');
+    return result;
+  });
+  // when getting the messages from cord to save to the db, we've sorted by DESC
+  // so first message in list should hopefully be the first one in thread
+  return messages[0];
 }

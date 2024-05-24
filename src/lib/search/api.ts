@@ -22,7 +22,7 @@ export async function storeChunk(
 }
 
 export async function deleteURLFromIndex(index: string, url: string) {
-  await fetch(`${process.env.SEARCH_DATA_API_HOST}/api/chatContext`, {
+  await fetch(`${process.env.SEARCH_DATA_API_HOST}/api/deleteURLFromIndex`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
