@@ -3,25 +3,37 @@ import {
   DOCS_SEARCH_INDEX,
   DEFAULT_SEARCH_LIMIT,
 } from '@/consts';
-import { getSearchResults } from '@/lib/search/api';
 import { createEmbedding } from '@/lib/search/openai';
 import { NextRequest, NextResponse } from 'next/server';
 
 async function getSearchResultsFromIndex({
-  searchTerm,
   index,
+  embedding,
 }: {
-  searchTerm: string;
   index: string;
+  embedding: number[];
 }) {
-  const searchTermVector = await createEmbedding(searchTerm);
-  const results = await getSearchResults(
-    index,
-    searchTermVector,
-    DEFAULT_SEARCH_LIMIT,
+  const response = await fetch(
+    `${process.env.SEARCH_DATA_API_HOST}/api/chatContext`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        secret: process.env.SEARCH_DATA_API_SECRET,
+        index,
+        limit: DEFAULT_SEARCH_LIMIT,
+        embedding,
+      }),
+    },
   );
+  if (response.ok) {
+    const results = await response.json();
+    return { index, results };
+  }
 
-  return { index, results };
+  return { index, results: undefined };
 }
 
 export async function GET(request: NextRequest) {
@@ -31,13 +43,14 @@ export async function GET(request: NextRequest) {
     return;
   }
 
+  const searchTermEmbedding = await createEmbedding(searchTerm);
   const allData = await Promise.all([
     getSearchResultsFromIndex({
-      searchTerm,
+      embedding: searchTermEmbedding,
       index: COMMUNITY_SEARCH_INDEX,
     }),
     getSearchResultsFromIndex({
-      searchTerm,
+      embedding: searchTermEmbedding,
       index: DOCS_SEARCH_INDEX,
     }),
   ]);
