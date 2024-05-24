@@ -1,5 +1,6 @@
 import { fetchCordRESTClientApi } from '@/app/fetchCordRESTApi';
 import { Category } from '@/app/types';
+import { COMMUNITY_SEARCH_INDEX } from '@/consts';
 import { ClientThreadData } from '@cord-sdk/types';
 
 export type SingleResultData = {
@@ -9,79 +10,86 @@ export type SingleResultData = {
   content: string;
 };
 
-type RawSearchResult = {
-  chunk: string;
-  url: string;
-  title: string;
-};
-function assertResultType(result: any): RawSearchResult | undefined {
-  if (
-    result &&
-    typeof result === 'object' &&
-    'chunk' in result &&
-    typeof result.chunk === 'string' &&
-    'url' in result &&
-    typeof result.url === 'string' &&
-    'score' in result &&
-    'title' in result &&
-    typeof result.title === 'string'
-  ) {
-    return result;
-  }
-}
-export async function parseResultsFromCommunity(
+export async function parseSearchResuls(
+  index: string,
   results: any[],
 ): Promise<SingleResultData[]> {
-  const parsedData = [];
+  const parsedData: SingleResultData[] = [];
 
   for (const result of results) {
-    const typedResult = assertResultType(result);
-    if (typedResult) {
-      const { chunk, title, url } = typedResult;
-      const chunkArary = chunk.split('\n');
-      const categoriesString = chunkArary.find((content: string) =>
-        content.startsWith('Categories: '),
-      );
-      const categories = categoriesString
-        ? (categoriesString
-            .substring('Categories: '.length)
-            .split(', ') as Category[])
-        : undefined;
+    if (
+      result &&
+      typeof result === 'object' &&
+      'chunk' in result &&
+      typeof result.chunk === 'string' &&
+      'url' in result &&
+      typeof result.url === 'string' &&
+      'score' in result &&
+      'title' in result &&
+      typeof result.title === 'string'
+    ) {
+      if (index === COMMUNITY_SEARCH_INDEX) {
+        const structuredData = await parseResultsFromCommunity(
+          result.title,
+          result.url,
+          result.chunk,
+        );
 
-      const threadID = extractThreadIDFromURL(url);
-      let content;
-      if (threadID) {
-        // Just call the thread api to get first message rather than relying
-        // on regex magic and hoping the messages are in correct order (we only
-        // do this only if there's no threadID available)
-        content = (await getFirstMessageInThread(threadID)) ?? '';
+        parsedData.push(structuredData);
       } else {
-        content = extractFirstMessageFromConversationChunk(chunk);
       }
-
-      parsedData.push({
-        title,
-        url,
-        categories,
-        content,
-      });
     }
   }
   return parsedData;
 }
 
-async function getFirstMessageInThread(
-  threadID: string,
-): Promise<string | undefined> {
-  const result = await fetchCordRESTClientApi<ClientThreadData>(
-    'anonymous',
-    `/thread/${threadID}?initialFetchCount=${1}`,
+async function parseResultsFromCommunity(
+  title: string,
+  url: string,
+  chunk: string,
+): Promise<SingleResultData> {
+  const chunkArray = chunk.split('\n');
+
+  const categoriesString = chunkArray.find((content: string) =>
+    content.startsWith('Categories: '),
   );
-  if (!(result?.thread && result?.thread?.firstMessage)) {
-    return undefined;
+  const categories = categoriesString
+    ? (categoriesString
+        .substring('Categories: '.length)
+        .split(', ') as Category[])
+    : undefined;
+
+  const threadID = extractThreadIDFromURL(url);
+
+  // If we have threadID, just call the thread api to get first message otherwise
+  // do some string manipulation magic on the plaintext conversation chunk.
+  let content = '';
+  if (threadID) {
+    const threadResults = await fetchCordRESTClientApi<ClientThreadData>(
+      'anonymous',
+      `/thread/${threadID}?initialFetchCount=${1}`,
+    );
+
+    content = threadResults?.thread?.firstMessage?.plaintext ?? '';
+  } else {
+    const filteredChunks = chunkArray.filter(
+      (value) =>
+        !value.startsWith('Categories:') && !value.startsWith('Title:'),
+    );
+
+    // when getting the messages from cord to save to the db, we've sorted by DESC
+    // so first message in list should hopefully be the first one in thread
+    const maybeFirstMessage = filteredChunks[0];
+    // Remove author names (anything before the first colon followed by a space)
+    content = maybeFirstMessage.replace(/^[^:]*:\s*/gm, '');
   }
 
-  return result?.thread?.firstMessage.plaintext;
+  return {
+    title,
+    url,
+    categories,
+    content,
+  };
 }
 
 const COMMUNITY_HOST_NAME = 'community.cord.com';
@@ -100,20 +108,4 @@ function extractThreadIDFromURL(url: string): string | undefined {
   }
 
   return undefined;
-}
-
-function extractFirstMessageFromConversationChunk(chunk: string): string {
-  const lines = chunk.split('\n');
-  const filteredLines = lines.filter(
-    (line) => !line.startsWith('Categories:') && !line.startsWith('Title:'),
-  );
-
-  // Remove author names (anything before the first colon followed by a space)
-  const messages = filteredLines.map((line) => {
-    const result = line.replace(/^[^:]*:\s*/gm, '');
-    return result;
-  });
-  // when getting the messages from cord to save to the db, we've sorted by DESC
-  // so first message in list should hopefully be the first one in thread
-  return messages[0];
 }
