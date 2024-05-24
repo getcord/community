@@ -37,6 +37,7 @@ export async function parseSearchResuls(
 
         parsedData.push(structuredData);
       } else {
+        // TODO: clean results from cord/docs
       }
     }
   }
