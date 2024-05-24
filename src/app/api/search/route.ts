@@ -9,11 +9,9 @@ import { NextRequest, NextResponse } from 'next/server';
 async function getSearchResultsFromIndex({
   searchTerm,
   index,
-  limit,
 }: {
   searchTerm: string;
   index: string;
-  limit: number;
 }) {
   const searchTermVector = await createEmbedding(searchTerm);
   const response = await fetch(
@@ -27,7 +25,7 @@ async function getSearchResultsFromIndex({
         secret: process.env.SEARCH_DATA_API_SECRET,
         index,
         embedding: searchTermVector,
-        limit,
+        limit: DEFAULT_SEARCH_LIMIT,
       }),
     },
   );
@@ -50,12 +48,10 @@ export async function GET(request: NextRequest) {
     getSearchResultsFromIndex({
       searchTerm,
       index: COMMUNITY_SEARCH_INDEX,
-      limit: DEFAULT_SEARCH_LIMIT,
     }),
     getSearchResultsFromIndex({
       searchTerm,
       index: DOCS_SEARCH_INDEX,
-      limit: DEFAULT_SEARCH_LIMIT,
     }),
   ]);
 
