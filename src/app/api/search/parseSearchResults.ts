@@ -9,7 +9,12 @@ export type SingleResultData = {
   content: string;
 };
 
-function assertResultType(result: any) {
+type RawSearchResult = {
+  chunk: string;
+  url: string;
+  title: string;
+};
+function assertResultType(result: any): RawSearchResult | undefined {
   if (
     result &&
     typeof result === 'object' &&
@@ -47,8 +52,8 @@ export async function parseResultsFromCommunity(
       let content;
       if (threadID) {
         // Just call the thread api to get first message rather than relying
-        // on regex magic and hoping the messages are in correct order
-        // (do all this only if we don't have a threadID)
+        // on regex magic and hoping the messages are in correct order (we only
+        // do this only if there's no threadID available)
         content = (await getFirstMessageInThread(threadID)) ?? '';
       } else {
         content = extractFirstMessageFromConversationChunk(chunk);
@@ -62,7 +67,6 @@ export async function parseResultsFromCommunity(
       });
     }
   }
-
   return parsedData;
 }
 
@@ -101,7 +105,7 @@ function extractThreadIDFromURL(url: string): string | undefined {
 function extractFirstMessageFromConversationChunk(chunk: string): string {
   const lines = chunk.split('\n');
   const filteredLines = lines.filter(
-    (line) => !line.startsWith('Categories:') && !line.startsWith('title:'),
+    (line) => !line.startsWith('Categories:') && !line.startsWith('Title:'),
   );
 
   // Remove author names (anything before the first colon followed by a space)
