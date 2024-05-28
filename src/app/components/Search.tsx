@@ -3,7 +3,7 @@ import { useCallback, useRef, useState } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import styles from './search.module.css';
 
-export default function Search() {
+export default function SearchBox() {
   const [searchValue, setSearchValue] = useState('');
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
 
@@ -18,8 +18,7 @@ export default function Search() {
       },
     );
 
-    const data = await res.json();
-    console.log({ data });
+    await res.json();
   }, []);
 
   const onChange = useCallback(
