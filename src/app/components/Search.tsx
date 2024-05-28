@@ -83,7 +83,7 @@ function SearchResultsDisplay({ results, index }: SearchResultsDisplayProps) {
   );
 }
 
-export default function Search() {
+export default function SearchBox() {
   const [searchValue, setSearchValue] = useState('');
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
   const [results, setResults] = useState([]);
