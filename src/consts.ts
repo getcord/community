@@ -15,3 +15,5 @@ export const CLACK_APP_SECRET = process.env.CLACK_APP_SECRET!;
 export const THREAD_INITIAL_FETCH_COUNT = 100;
 
 export const COMMUNITY_SEARCH_INDEX = 'community';
+export const DOCS_SEARCH_INDEX = 'cord';
+export const DEFAULT_SEARCH_LIMIT = 7;
