@@ -47,8 +47,6 @@ export default function Search() {
     [search, searchValue],
   );
 
-  const inputRef = useRef<HTMLInputElement>(null);
-
   return (
     <div className={styles.searchContainer}>
       <div className={styles.inputContainer}>
@@ -58,7 +56,6 @@ export default function Search() {
           className={styles.inputIcon}
         />
         <input
-          ref={inputRef}
           tabIndex={1}
           type="text"
           value={searchValue}
