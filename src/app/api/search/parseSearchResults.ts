@@ -46,7 +46,7 @@ export async function parseSearchResuls(
         // Ignore results coming from community since the data we have
         // in the 'cord' index contains everything under cord.com -
         // including community.cord.com results.
-        if (result.url.includes(COMMUNITY_HOST_NAME)) {
+        if (!result.url.includes(COMMUNITY_HOST_NAME)) {
           /*
             Regex to extract useful plaintext data from markdown results from web scraper
             1. remove all images eg ![logo](cord.com)) or [![test](cord.com)) logo] -> ''
