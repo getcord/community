@@ -5,6 +5,10 @@ import {
 } from '@/consts';
 import { createEmbedding } from '@/lib/search/openai';
 import { NextRequest, NextResponse } from 'next/server';
+import {
+  SingleResultData,
+  parseSearchResuls,
+} from '@/app/api/search/parseSearchResults';
 
 async function getSearchResultsFromIndex({
   index,
@@ -14,7 +18,10 @@ async function getSearchResultsFromIndex({
   index: string;
   embedding: number[];
   limit: number;
-}) {
+}): Promise<{
+  index: string;
+  results: SingleResultData[];
+}> {
   const response = await fetch(
     `${process.env.SEARCH_DATA_API_HOST}/api/chatContext`,
     {
@@ -30,12 +37,15 @@ async function getSearchResultsFromIndex({
       }),
     },
   );
+  let results: SingleResultData[] = [];
   if (response.ok) {
-    const results = await response.json();
-    return { index, results };
+    const data = await response.json();
+    if (Array.isArray(data)) {
+      results = await parseSearchResuls(index, data);
+    }
   }
 
-  return { index, results: undefined };
+  return { index, results };
 }
 
 export async function GET(request: NextRequest) {
