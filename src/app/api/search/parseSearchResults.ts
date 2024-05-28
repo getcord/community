@@ -4,8 +4,8 @@ import { COMMUNITY_SEARCH_INDEX } from '@/consts';
 import { ClientThreadData } from '@cord-sdk/types';
 
 export type SingleResultData = {
-  url: any;
-  title: string | undefined;
+  url: string;
+  title: string;
   categories: Category[] | undefined;
   content: string;
 };
