@@ -2,6 +2,7 @@ import {
   COMMUNITY_SEARCH_INDEX,
   DOCS_SEARCH_INDEX,
   DEFAULT_SEARCH_LIMIT,
+  DOCS_SEARCH_LIMIT,
 } from '@/consts';
 import { createEmbedding } from '@/lib/search/openai';
 import { NextRequest, NextResponse } from 'next/server';
@@ -65,7 +66,7 @@ export async function GET(request: NextRequest) {
     getSearchResultsFromIndex({
       embedding: searchTermEmbedding,
       index: DOCS_SEARCH_INDEX,
-      limit: DEFAULT_SEARCH_LIMIT,
+      limit: DOCS_SEARCH_LIMIT,
     }),
   ]);
 

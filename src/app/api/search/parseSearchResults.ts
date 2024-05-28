@@ -1,11 +1,11 @@
 import { fetchCordRESTClientApi } from '@/app/fetchCordRESTApi';
 import { Category } from '@/app/types';
-import { COMMUNITY_SEARCH_INDEX } from '@/consts';
+import { COMMUNITY_SEARCH_INDEX, DEFAULT_SEARCH_LIMIT } from '@/consts';
 import { ClientThreadData } from '@cord-sdk/types';
 
 export type SingleResultData = {
-  url: string;
-  title: string;
+  url: any;
+  title: string | undefined;
   categories: Category[] | undefined;
   content: string;
 };
@@ -37,7 +37,34 @@ export async function parseSearchResuls(
 
         parsedData.push(structuredData);
       } else {
-        // TODO: clean results from cord/docs
+        // For results from cord/docs, we've fetched more than we need so that
+        // we can filter out community.cord.com results so make sure to return
+        // the results as soon as we've gotten enough.
+        if (parsedData.length >= DEFAULT_SEARCH_LIMIT) {
+          return parsedData;
+        }
+        // Ignore results coming from community since the data we have
+        // in the 'cord' index contains everything under cord.com -
+        // including community.cord.com results.
+        if (!result.url.includes(COMMUNITY_HOST_NAME)) {
+          /*
+            Regex to extract useful plaintext data from markdown results from web scraper
+            1. remove all images eg ![logo](cord.com)) or [![test](cord.com)) logo] -> ''
+            2. remove link structure, but leave text eg  [link](cord.com) -> 'cord.com'
+            3. extra space cleaned up
+          */
+          const content = result.chunk
+            .replace(/!\[.*?\]\(.*?\)/g, '')
+            .replace(/\[(.*?)\]\(.*?\)/g, '$1')
+            .replace(/\s+/g, ' ');
+
+          parsedData.push({
+            title: result.title,
+            url: result.url,
+            content,
+            categories: undefined,
+          });
+        }
       }
     }
   }
@@ -107,6 +134,4 @@ function extractThreadIDFromURL(url: string): string | undefined {
   } catch (error) {
     console.error('Invalid URL:', error);
   }
-
-  return undefined;
 }
