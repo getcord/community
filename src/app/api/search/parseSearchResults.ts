@@ -46,7 +46,7 @@ export async function parseSearchResuls(
         // Ignore results coming from community since the data we have
         // in the 'cord' index contains everything under cord.com -
         // including community.cord.com results.
-        if (result.url !== COMMUNITY_HOST_NAME) {
+        if (result.url.includes(COMMUNITY_HOST_NAME)) {
           /*
             Regex to extract useful plaintext data from markdown results from web scraper
             1. remove all images eg ![logo](cord.com)) or [![test](cord.com)) logo] -> ''
@@ -71,7 +71,7 @@ export async function parseSearchResuls(
   return parsedData;
 }
 
-export async function parseResultsFromCommunity(
+async function parseResultsFromCommunity(
   title: string,
   url: string,
   chunk: string,
@@ -118,17 +118,6 @@ export async function parseResultsFromCommunity(
     categories,
     content,
   };
-}
-
-export function getContentFromChunk(chunk: string): string {
-  let content = chunk;
-  // Remove Markdown image syntax
-  content = content.replace(/!\[.*?\]\(.*?\)/g, '');
-  // Remove Markdown links but keep the link text
-  content = content.replace(/\[(.*?)\]\(.*?\)/g, '$1').trim();
-  content = content.replace(/\s+/g, ' ');
-
-  return content;
 }
 
 const COMMUNITY_HOST_NAME = 'community.cord.com';
