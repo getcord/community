@@ -19,15 +19,6 @@ export async function parseSearchResuls(
   results: any[],
 ): Promise<SingleResultData[]> {
   const parsedData: SingleResultData[] = [];
-  if (index === DOCS_SEARCH_INDEX) {
-    // For results from cord/docs, we've fetched more than we need so that
-    // we can filter out community.cord.com results to avoid redundancy.
-    // To avoid doing unnecessary work, we return the results as soon as
-    // we've gotten enough.
-    if (parsedData.length >= DEFAULT_SEARCH_LIMIT) {
-      return parsedData;
-    }
-  }
 
   for (const result of results) {
     if (
@@ -50,6 +41,12 @@ export async function parseSearchResuls(
 
         parsedData.push(structuredData);
       } else {
+        // For results from cord/docs, we've fetched more than we need so that
+        // we can filter out community.cord.com results so make sure to return
+        // the results as soon as we've gotten enough.
+        if (parsedData.length >= DEFAULT_SEARCH_LIMIT) {
+          return parsedData;
+        }
         // Ignore results coming from community since the data we have
         // in the 'cord' index contains everything under cord.com -
         // including community.cord.com results.
