@@ -17,14 +17,13 @@ function SingleSearchResultDisplay({
   title,
   categories,
   content,
-  index,
-}: SingleResultData & { index: number }) {
+}: SingleResultData) {
   if (!title || !content) {
     return;
   }
   return (
     <li className={styles.resultsListItem}>
-      <Link href={url} className={styles.resultCard} tabIndex={index + 1}>
+      <Link href={url} className={styles.resultCard}>
         <span className={styles.resultTitle}>{title}</span>
         {categories && (
           <span className={styles.categories}>
@@ -67,14 +66,8 @@ function SearchResultsDisplay({ results, index }: SearchResultsDisplayProps) {
           {results.length > 0 && !collapsed && (
             <>
               <ol className={styles.resultsList}>
-                {results.map((data: SingleResultData, index) => {
-                  return (
-                    <SingleSearchResultDisplay
-                      key={index}
-                      index={index}
-                      {...data}
-                    />
-                  );
+                {results.map((data: SingleResultData, i) => {
+                  return <SingleSearchResultDisplay key={i} {...data} />;
                 })}
               </ol>
               <Divider />
@@ -145,7 +138,7 @@ export default function Search() {
   }, [setResults]);
 
   useEffect(() => {
-    if (!search && !results.length) {
+    if (!results.length) {
       return;
     }
 
@@ -159,7 +152,7 @@ export default function Search() {
     return () => {
       window.removeEventListener('keyup', callback);
     };
-  }, [search, results, closeSearch]);
+  }, [results, closeSearch]);
 
   return (
     <div className={styles.container}>
@@ -197,10 +190,10 @@ export default function Search() {
 
         {results.length > 0 && (
           <div className={styles.searchResults}>
-            {results.map((res: SearchResultsDisplayProps, index) => {
+            {results.map((res: SearchResultsDisplayProps, i) => {
               return (
                 <SearchResultsDisplay
-                  key={index}
+                  key={i}
                   results={res.results}
                   index={res.index}
                 />
