@@ -149,6 +149,4 @@ function extractThreadIDFromURL(url: string): string | undefined {
   } catch (error) {
     console.error('Invalid URL:', error);
   }
-
-  return undefined;
 }
