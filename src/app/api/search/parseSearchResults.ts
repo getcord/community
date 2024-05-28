@@ -1,10 +1,6 @@
 import { fetchCordRESTClientApi } from '@/app/fetchCordRESTApi';
 import { Category } from '@/app/types';
-import {
-  COMMUNITY_SEARCH_INDEX,
-  DEFAULT_SEARCH_LIMIT,
-  DOCS_SEARCH_INDEX,
-} from '@/consts';
+import { COMMUNITY_SEARCH_INDEX, DEFAULT_SEARCH_LIMIT } from '@/consts';
 import { ClientThreadData } from '@cord-sdk/types';
 
 export type SingleResultData = {
