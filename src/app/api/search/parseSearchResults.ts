@@ -1,10 +1,6 @@
 import { fetchCordRESTClientApi } from '@/app/fetchCordRESTApi';
 import { Category } from '@/app/types';
-import {
-  COMMUNITY_SEARCH_INDEX,
-  DEFAULT_SEARCH_LIMIT,
-  DOCS_SEARCH_INDEX,
-} from '@/consts';
+import { COMMUNITY_SEARCH_INDEX, DEFAULT_SEARCH_LIMIT } from '@/consts';
 import { ClientThreadData } from '@cord-sdk/types';
 
 export type SingleResultData = {
@@ -19,15 +15,6 @@ export async function parseSearchResuls(
   results: any[],
 ): Promise<SingleResultData[]> {
   const parsedData: SingleResultData[] = [];
-  if (index === DOCS_SEARCH_INDEX) {
-    // For results from cord/docs, we've fetched more than we need so that
-    // we can filter out community.cord.com results to avoid redundancy.
-    // To avoid doing unnecessary work, we return the results as soon as
-    // we've gotten enough.
-    if (parsedData.length >= DEFAULT_SEARCH_LIMIT) {
-      return parsedData;
-    }
-  }
 
   for (const result of results) {
     if (
@@ -50,6 +37,12 @@ export async function parseSearchResuls(
 
         parsedData.push(structuredData);
       } else {
+        // For results from cord/docs, we've fetched more than we need so that
+        // we can filter out community.cord.com results so make sure to return
+        // the results as soon as we've gotten enough.
+        if (parsedData.length >= DEFAULT_SEARCH_LIMIT) {
+          return parsedData;
+        }
         // Ignore results coming from community since the data we have
         // in the 'cord' index contains everything under cord.com -
         // including community.cord.com results.
@@ -78,7 +71,7 @@ export async function parseSearchResuls(
   return parsedData;
 }
 
-export async function parseResultsFromCommunity(
+async function parseResultsFromCommunity(
   title: string,
   url: string,
   chunk: string,
@@ -127,17 +120,6 @@ export async function parseResultsFromCommunity(
   };
 }
 
-export function getContentFromChunk(chunk: string): string {
-  let content = chunk;
-  // Remove Markdown image syntax
-  content = content.replace(/!\[.*?\]\(.*?\)/g, '');
-  // Remove Markdown links but keep the link text
-  content = content.replace(/\[(.*?)\]\(.*?\)/g, '$1').trim();
-  content = content.replace(/\s+/g, ' ');
-
-  return content;
-}
-
 const COMMUNITY_HOST_NAME = 'community.cord.com';
 function extractThreadIDFromURL(url: string): string | undefined {
   try {
@@ -152,6 +134,4 @@ function extractThreadIDFromURL(url: string): string | undefined {
   } catch (error) {
     console.error('Invalid URL:', error);
   }
-
-  return undefined;
 }
