@@ -83,7 +83,13 @@ function SearchResultsDisplay({ results, index }: SearchResultsDisplayProps) {
   );
 }
 
-export default function SearchBox({ className }: { className?: string }) {
+export default function SearchBox({
+  fullPage,
+  className,
+}: {
+  fullPage?: boolean;
+  className?: string;
+}) {
   const [searchValue, setSearchValue] = useState('');
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
   const [results, setResults] = useState<SearchResultsDisplayProps[]>([]);
@@ -151,11 +157,17 @@ export default function SearchBox({ className }: { className?: string }) {
     return () => {
       window.removeEventListener('keyup', onKeyUp);
     };
-  }, [results, closeSearch]);
+  }, [results, closeSearch, fullPage]);
 
   return (
-    <div className={cx(styles.container, className)}>
-      {results.length > 0 && (
+    <div
+      className={cx(
+        styles.container,
+        { [styles.inFullPageDisplay]: fullPage },
+        className,
+      )}
+    >
+      {results.length > 0 && !fullPage && (
         <div className={styles.overlay} onClick={closeSearch} />
       )}
 
@@ -178,8 +190,8 @@ export default function SearchBox({ className }: { className?: string }) {
             onChange={onChange}
             onKeyUp={onKeyUp}
             placeholder="Search"
-            autoFocus={false}
             className={styles.input}
+            autoFocus={fullPage ? true : false}
           />
         </div>
 

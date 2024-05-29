@@ -3,6 +3,9 @@
   position: relative;
   margin: 0 56px;
 }
+.inFullPageDisplay.container {
+  z-index: 0;
+}
 
 .overlay {
   position: fixed;
@@ -25,20 +28,25 @@
   align-items: center;
   display: flex;
   height: 100%;
+  width: 100%;
   position: relative;
   border: 1px solid var(--cord-grey);
   border-radius: 20px;
   z-index: 2;
   gap: 8px;
 }
-.inputContainer:focus-within {
+.container:not(.inFullPageDisplay) .inputContainer:focus-within {
   border: 1px solid var(--cord-purple-highlight);
 }
 .inputContainer:focus-within .inputIcon {
   color: var(--cord-purple);
 }
 
-.inputContainer.resultsDisplayed {
+.inFullPageDisplay .inputContainer {
+  border: 2px solid var(--cord-purple);
+}
+
+.container:not(.inFullPageDisplay) .inputContainer.resultsDisplayed {
   border: none;
   border-bottom: 1px solid var(--cord-grey);
   border-bottom-left-radius: 0;
@@ -65,9 +73,21 @@
   color: var(--color-grey);
   margin: 8px;
 }
+.inFullPageDisplay .input {
+  z-index: auto;
+}
 
 /* Search Results Display  */
 .searchResults {
+  background-color: var(--cord-grey-light);
+  padding: 24px;
+  border-radius: 20px;
+}
+.inFullPageDisplay .searchResults {
+  margin-top: 24px;
+}
+
+.container:not(.inFullPageDisplay) .searchResults {
   position: absolute;
   right: 0;
   left: 0;
@@ -76,8 +96,8 @@
   box-shadow: 12px 12px 40px -10px var(--cord-black);
   max-height: 60vh;
   overflow-y: auto;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
 }
 .noResultsMessage {
   color: var(--cord-grey-dark);
@@ -134,14 +154,43 @@
   color: var(--cord-grey-dark);
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .resultDescription {
   color: var(--cord-grey-dark);
-  display: block;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   margin-top: 8px;
+  word-break: break-word;
+  text-overflow: ellipsis;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 480px) {
+  .searchResults {
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    margin-top: 24px;
+  }
+
+  .resultCard,
+  .resultTitle,
+  .resultsOrigin {
+    font-size: 0.9rem;
+  }
+
+  .resultCard {
+    padding: 8px;
+  }
+
+  .container {
+    margin: 0;
+  }
+}
+
+@media (max-width: 1024px) {
 }

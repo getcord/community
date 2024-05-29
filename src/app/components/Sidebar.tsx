@@ -15,13 +15,14 @@ import {
   Cog6ToothIcon,
   DocumentTextIcon,
   HomeIcon,
+  MagnifyingGlassIcon,
   UserIcon,
 } from '@heroicons/react/24/outline';
 import Button from '../ui/Button';
 import { notification, thread } from '@cord-sdk/react';
 import Image from 'next/image';
 import classNames from 'classnames';
-import { RefObject, useEffect, useRef } from 'react';
+import { RefObject, useEffect, useRef, useState } from 'react';
 
 const resources = [
   {
@@ -63,6 +64,7 @@ export default function Sidebar({
 }) {
   const pathname = usePathname();
   const summary = notification.useSummary();
+
   const categoriesRef = useRef<HTMLUListElement>(null);
   useEffect(() => {
     if (categoriesRef.current) {
@@ -134,6 +136,16 @@ export default function Sidebar({
             </Link>
           </li>
         )}
+
+        <li
+          className={cx(styles.listItem, styles.searchNavLink, {
+            [styles.listItemActive]: pathname === '/search',
+          })}
+        >
+          <Link href="/search" aria-label="search" className={styles.link}>
+            <ResourceItem resourceType="Search" navOpen={navOpen} />
+          </Link>
+        </li>
       </ul>
       <ul
         ref={categoriesRef}
@@ -307,5 +319,7 @@ function NavItemPrefix({ navFor }: { navFor: string }) {
       return <Cog6ToothIcon width={'14px'} />;
     case 'Changelog':
       return <ClipboardDocumentListIcon width={'14px'} />;
+    case 'Search':
+      return <MagnifyingGlassIcon width={'14px'} />;
   }
 }
