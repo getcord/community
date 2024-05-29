@@ -16,6 +16,9 @@
     left: 0;
     right: 0;
   }
+  .searchBox {
+    display: none;
+  }
 }
 
 .content {
