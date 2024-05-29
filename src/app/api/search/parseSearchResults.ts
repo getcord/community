@@ -1,6 +1,7 @@
 import { fetchCordRESTClientApi } from '@/app/fetchCordRESTApi';
 import { Category } from '@/app/types';
 import { COMMUNITY_SEARCH_INDEX, DEFAULT_SEARCH_LIMIT } from '@/consts';
+import { normalizeUrl } from '@/utils';
 import { ClientThreadData } from '@cord-sdk/types';
 
 export type SingleResultData = {
@@ -15,6 +16,7 @@ export async function parseSearchResuls(
   results: any[],
 ): Promise<SingleResultData[]> {
   const parsedData: SingleResultData[] = [];
+  const uniqueUrls = new Set<string>();
 
   for (const result of results) {
     if (
@@ -43,10 +45,13 @@ export async function parseSearchResuls(
         if (parsedData.length >= DEFAULT_SEARCH_LIMIT) {
           return parsedData;
         }
-        // Ignore results coming from community since the data we have
-        // in the 'cord' index contains everything under cord.com -
-        // including community.cord.com results.
-        if (!result.url.includes(COMMUNITY_HOST_NAME)) {
+        const normalizedUrl = normalizeUrl(result.url);
+        // Ignore results coming from community as data from 'cord' index contains
+        // everything under cord.com - including community.cord.com
+        if (
+          !result.url.includes(COMMUNITY_HOST_NAME) &&
+          !uniqueUrls.has(normalizedUrl)
+        ) {
           /*
             Regex to extract useful plaintext data from markdown results from web scraper
             1. remove all images eg ![logo](cord.com)) or [![test](cord.com)) logo] -> ''
@@ -64,6 +69,7 @@ export async function parseSearchResuls(
             content,
             categories: undefined,
           });
+          uniqueUrls.add(normalizedUrl);
         }
       }
     }
