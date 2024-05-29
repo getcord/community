@@ -73,3 +73,8 @@ export function getCategoriesString(metadata: EntityMetadata): string {
   );
   return categories.join(', ');
 }
+
+export function normalizeUrl(url: string): string {
+  //  remove trailing '/'
+  return url.replace(/\/+$/, '');
+}

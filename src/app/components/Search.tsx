@@ -142,15 +142,14 @@ export default function SearchBox() {
       return;
     }
 
-    const callback = (e: globalThis.KeyboardEvent) => {
+    const onKeyUp = (e: globalThis.KeyboardEvent) => {
       if (e.key === 'Escape') {
         closeSearch();
       }
     };
-
-    window.addEventListener('keyup', callback);
+    window.addEventListener('keyup', onKeyUp);
     return () => {
-      window.removeEventListener('keyup', callback);
+      window.removeEventListener('keyup', onKeyUp);
     };
   }, [results, closeSearch]);
 
