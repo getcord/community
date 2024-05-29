@@ -39,7 +39,7 @@ function SingleSearchResultDisplay({
 }
 
 type SearchResultsDisplayProps = {
-  results: SingleResultData[] | undefined;
+  results: SingleResultData[];
   index: string;
 };
 function SearchResultsDisplay({ results, index }: SearchResultsDisplayProps) {
@@ -48,7 +48,7 @@ function SearchResultsDisplay({ results, index }: SearchResultsDisplayProps) {
 
   return (
     <div className={styles.resultsIndexContainer}>
-      {results ? (
+      {results.length > 0 ? (
         <>
           <div
             className={styles.resultsOrigin}
@@ -63,7 +63,7 @@ function SearchResultsDisplay({ results, index }: SearchResultsDisplayProps) {
               {collapsed ? 'Show' : 'Hide'} results from {displayOrigin}
             </span>
           </div>
-          {results.length > 0 && !collapsed && (
+          {!collapsed && (
             <>
               <ol className={styles.resultsList}>
                 {results.map((data: SingleResultData, i) => {
@@ -86,7 +86,7 @@ function SearchResultsDisplay({ results, index }: SearchResultsDisplayProps) {
 export default function SearchBox() {
   const [searchValue, setSearchValue] = useState('');
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<SearchResultsDisplayProps[]>([]);
 
   const search = useCallback(async (searchTerm: string) => {
     const res = await fetch(
@@ -160,11 +160,7 @@ export default function SearchBox() {
         <div className={styles.overlay} onClick={closeSearch} />
       )}
 
-      <div
-        className={cx(styles.searchContainer, {
-          [styles.searchContainerWithResults]: results.length > 0,
-        })}
-      >
+      <div className={styles.searchContainer}>
         <div
           className={cx(styles.inputContainer, {
             [styles.resultsDisplayed]: results.length > 0,

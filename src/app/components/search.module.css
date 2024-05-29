@@ -1,6 +1,7 @@
 .container {
   flex: 1;
   position: relative;
+  margin: 0 56px;
 }
 
 .overlay {
@@ -13,16 +14,10 @@
 
 .searchContainer {
   flex: 1;
-  margin: 0 56px;
   position: relative;
   background-color: transparent;
   z-index: 4;
   height: 100%;
-}
-@media (max-width: 1024px) {
-  .searchContainer {
-    margin: 0 12px;
-  }
 }
 
 .inputContainer {
@@ -78,7 +73,7 @@
   left: 0;
   background-color: var(--cord-grey-light);
   padding: 24px;
-  box-shadow: 16px 16px 40px -12px var(--cord-black);
+  box-shadow: 12px 12px 40px -10px var(--cord-black);
   max-height: 60vh;
   overflow-y: auto;
   border-bottom-left-radius: 20px;
@@ -134,6 +129,7 @@
 .resultCard:hover .resultTitle {
   color: var(--cord-purple);
 }
+
 .categories {
   color: var(--cord-grey-dark);
   display: flex;
