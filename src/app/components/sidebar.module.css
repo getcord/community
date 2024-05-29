@@ -114,6 +114,11 @@
     padding: 18px 20px;
   }
 }
+@media (min-width: 1024px) {
+  .searchNavLink {
+    display: none;
+  }
+}
 
 .listItemActive {
   background-color: var(--cord-purple-light);

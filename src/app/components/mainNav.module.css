@@ -11,3 +11,9 @@
   overflow-x: hidden;
   overflow-y: auto;
 }
+
+@media (max-width: 1024px) {
+  .mainNav {
+    grid-template-columns: auto auto;
+  }
+}
