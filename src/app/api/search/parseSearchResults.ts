@@ -15,7 +15,7 @@ export async function parseSearchResuls(
   results: any[],
 ): Promise<SingleResultData[]> {
   const parsedData: SingleResultData[] = [];
-
+  const uniqueUrls = new Set<string>();
   for (const result of results) {
     if (
       result &&
@@ -43,10 +43,12 @@ export async function parseSearchResuls(
         if (parsedData.length >= DEFAULT_SEARCH_LIMIT) {
           return parsedData;
         }
-        // Ignore results coming from community since the data we have
-        // in the 'cord' index contains everything under cord.com -
-        // including community.cord.com results.
-        if (!result.url.includes(COMMUNITY_HOST_NAME)) {
+        // Ignore results coming from community as data from 'cord' index contains
+        // everything under cord.com - including community.cord.com
+        if (
+          !result.url.includes(COMMUNITY_HOST_NAME) &&
+          !uniqueUrls.has(result.url)
+        ) {
           /*
             Regex to extract useful plaintext data from markdown results from web scraper
             1. remove all images eg ![logo](cord.com)) or [![test](cord.com)) logo] -> ''
@@ -58,6 +60,7 @@ export async function parseSearchResuls(
             .replace(/\[(.*?)\]\(.*?\)/g, '$1')
             .replace(/\s+/g, ' ');
 
+          uniqueUrls.add(result.url);
           parsedData.push({
             title: result.title,
             url: result.url,
