@@ -144,7 +144,7 @@ export default function SearchBox({
   }, [setResults]);
 
   useEffect(() => {
-    if (fullPage || !results.length) {
+    if (!results.length) {
       return;
     }
 
