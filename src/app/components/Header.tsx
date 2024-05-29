@@ -20,7 +20,7 @@ export default function Header({ user }: { user: User }) {
         <Link href="/" aria-label="home" className={styles.mainLink}>
           <Image alt="cord logo" src={logo} height={24} /> Community
         </Link>
-        <SearchBox />
+        {pathname !== '/search' && <SearchBox className={styles.searchBox} />}
         {!name ? (
           <Button behaveAs="a" href={`/api/auth/login?returnTo=${pathname}`}>
             Sign in to comment

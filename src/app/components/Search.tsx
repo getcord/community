@@ -83,7 +83,7 @@ function SearchResultsDisplay({ results, index }: SearchResultsDisplayProps) {
   );
 }
 
-export default function SearchBox() {
+export default function SearchBox({ className }: { className?: string }) {
   const [searchValue, setSearchValue] = useState('');
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
   const [results, setResults] = useState<SearchResultsDisplayProps[]>([]);
@@ -154,7 +154,7 @@ export default function SearchBox() {
   }, [results, closeSearch]);
 
   return (
-    <div className={styles.container}>
+    <div className={cx(styles.container, className)}>
       {results.length > 0 && (
         <div className={styles.overlay} onClick={closeSearch} />
       )}
