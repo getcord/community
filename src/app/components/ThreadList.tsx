@@ -87,7 +87,7 @@ export function ThreadListHeader({
   category?: Category;
 }) {
   return (
-    <section className={styles.header}>
+    <>
       <div
         style={{
           padding: 16,
@@ -136,6 +136,7 @@ export function ThreadListHeader({
           </p>
         </div>
       </div>
+    <section className={styles.header}>
       <h1 className={styles.pageTitle}>
         {category ? mapCategoryEndpointsToTitles(category) : 'All Posts'}
       </h1>
@@ -145,5 +146,6 @@ export function ThreadListHeader({
         </Button>
       )}
     </section>
+    </>
   );
 }
